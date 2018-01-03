@@ -1,0 +1,32 @@
+<ion-modal-view>
+  <ion-header-bar>
+    <h1 class="title">选择可写字段</h1>
+    <button class="button button-positive button-clear" ng-click="modal.hide()">确定</button>
+  </ion-header-bar>
+  <ion-content>
+    <div class="list">
+      <div class="item item-checkbox" ng-repeat="item in run.itemArr">
+        <div ng-if="item && item != '[A@]' && item != '[B@]'">
+          <label class="checkbox">
+              <input type="checkbox" ng-init="form.field[$index] = item" ng-model="form.field[$index]" ng-true-value="'{{item}}'" ng-false-value="">
+          </label>
+          {{item}}
+        </div>
+
+        <div ng-if="item && item == '[A@]'">
+          <label class="checkbox">
+              <input type="checkbox" ng-init="form.field[$index] = '[A@]'" ng-model="form.field[$index]" ng-true-value="'[A@]'" ng-false-value="">
+          </label>
+          流程公共附件
+        </div>
+
+        <div ng-if="item && item == '[B@]'">
+          <label class="checkbox">
+              <input type="checkbox" ng-init="form.field[$index] = '[B@]'" ng-model="form.field[$index]" ng-true-value="'[B@]'" ng-false-value="">
+          </label>
+          文号/名称
+        </div>
+      </div>
+    </div>
+  </ion-content>
+</ion-modal-view>

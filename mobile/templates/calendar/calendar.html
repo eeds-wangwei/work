@@ -1,0 +1,49 @@
+<ion-view title="{{title}}" hide-back-button="true">
+  <ion-nav-buttons side="left">
+    <button class="button back-button button-clear header-item"  ui-sref="portal"  nav-direction="back">
+      <i class="icon ion-ios-arrow-back"></i>
+      门户
+    </button>
+  </ion-nav-buttons>
+
+	<ion-nav-buttons side="right">
+    <button class="button button-icon button-clear button-positive" ui-sref='calendar-create'>创建</button>
+  </ion-nav-buttons>
+
+  <ion-content>
+    <ion-list class="calendar-list">
+      <div ng-repeat="calendar in calendars">
+        <!-- 日期项 -->
+        <ion-item ng-if="calendar.isDateField && calendar.dayFormToday != 0" class="item-divider">
+          {{calendar.dateField}}
+          <em class="item-note">{{calendar.dayFormToday|dayFormToday}}</em>
+        </ion-item>
+
+        <!-- 当前日期 -->
+        <ion-item ng-if="calendar.isDateField && calendar.dayFormToday == 0" class="item-divider positive" current-date>
+          {{calendar.dateField}}
+          <em class="item-note">{{calendar.dayFormToday|dayFormToday}}</em>
+        </ion-item>
+
+        <!-- 日程项 -->
+        <ion-item ng-if="!calendar.isDateField" ng-class="{
+          'calendar-finish': calendar.status == '1'
+        }"
+        style="border-left-color: {{calendar.category|calendarTheme}}"
+        ng-href="#calendar/{{calendar.calendarid}}"
+        type="item-text-wrap"
+        >
+          <h2>{{calendar.subject}}</h2>
+          <p ng-if="calendar.isalldayevent == 1">全天</p>
+          <p ng-if="calendar.isalldayevent == 0">
+            {{calendar.starttime|date:'HH:mm'}}-{{calendar.endtime|date:'HH:mm'}}
+            <span ng-if="calendar.instancetype == 1"> [周期性日程]</span>
+          </p>
+        </ion-item>
+      </div>
+    </ion-list>
+    <div class="list-empty-tip" ng-if="calendars.loaded && !calendars.length">
+      最近没什么安排~
+    </div>
+  </ion-content>
+</ion-view>

@@ -1,0 +1,77 @@
+<form name="signUpForm">
+<ion-view title="编辑信息" class="activity-create">
+  <ion-nav-buttons side="left">
+    <button class="button back-button button-clear header-item" ui-sref="portal" ng-if="!hasBackView()">
+      <i class="icon ion-ios-arrow-back"></i>
+      门户
+    </button>
+  </ion-nav-buttons>
+
+  <ion-nav-buttons side="right">
+    <button class="button back-button button-clear header-item button-energized" ng-disabled="signUpForm.$invalid" ng-click="save()">
+      提交
+    </button>
+  </ion-nav-buttons>
+
+  <ion-content class="activity-info">
+    <div class="list list-indent">
+      <!-- fieldtype: 
+        0 单行文本
+        1 多行文本
+        2 数字
+        3 是否
+      -->
+      <label class="item" ng-repeat-start="field in fields" ng-class="{
+        'item-input': field.fieldtype == '0' || field.fieldtype == '2',
+        'item-toggle': field.fieldtype == '3'
+      }">
+        <span class="input-label">{{ field.fieldtitle }}</span>
+        <!-- 单行文本或数字 -->
+        <div class="input-content" ng-if="field.fieldtype == '0' || field.fieldtype == '2'">
+          <input type="text"
+            name="{{ field.fieldname }}"
+            ng-model="form[field.fieldname]"
+            ng-required="field.fieldrule == '1'"
+            ng-pattern="field.fieldtype == '2' ? '\\d*' : ''"
+            placeholder="{{ field.fieldrule == '1' ? '必填' : '' }} {{ field.fieldtype == '2' ? '（数字）' : '' }}"
+            >
+        </div>
+
+        <!-- 多行文本 -->
+        <textarea ng-if="field.fieldtype == '1'"
+          name="{{ field.fieldname }}"
+          ng-model="form[field.fieldname]"
+          ng-required="field.fieldrule == '1'"
+          placeholder="{{ field.fieldrule == '1' ? '必填' : '' }}"
+          ></textarea>
+
+        <!-- 是否 -->
+        <label class="toggle toggle-positive" ng-if="field.fieldtype == '3'">
+          <input type="checkbox" ng-model="form[field.fieldname]" ng-true-value="true" ng-false-value="false">
+          <div class="track">
+            <div class="handle"></div>
+          </div>
+        </label>
+      </label>
+  
+      <!-- 类型为是否时，出现备注 -->
+      <label class="item" ng-repeat-end ng-if="field.fieldtype == '3' && form[field.fieldname]">
+        <span class="input-label">备注</span>
+         <textarea name="field.fieldname" ng-model="note[field.fieldname]"
+            placeholder="请输入相关备注信息 {{ field.fieldrule == '2' ? '（必填）' : ''}}"
+            ng-required="field.fieldrule == '2'"
+            ></textarea>
+      </label>
+      
+      <!--
+      <label class="item item-input item-input-tip" ng-if="signUpForm[field.fieldname].$invalid">
+        <span class="input-label"></span>
+        <div class="input-content assertive" ng-if="signUpForm[field.fieldname].$error.pattern">请填写数字</div>
+        <div class="input-content assertive" ng-if="signUpForm[field.fieldname].$error.required">不能为空</div>
+      </label>
+      -->
+    </div>
+
+  </ion-content>
+</ion-view>
+</form>

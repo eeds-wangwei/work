@@ -1,0 +1,74 @@
+<ion-view title="看日志" hide-back-button="true" class="lightyellow-bg subheader-nav-pane">
+  <ion-nav-buttons side="left">
+    <button class="button back-button button-clear header-item" ui-sref="diary.index" nav-direction="back">
+      <i class="icon ion-ios-arrow-back"></i>
+      日志
+    </button>
+  </ion-nav-buttons>
+
+  <ion-header-bar class="bar-subheader">
+    <div class="subheader-nav row">
+      <span class="col col-33 active">我的日志</span>
+      <span class="col col-33" ui-sref="diary.review" nav-direction="none">点评下属</span>
+      <span class="col col-33" ui-sref="diary.follow" nav-direction="none">交流日志</span>
+    </div>
+  </ion-header-bar>
+
+  <ion-content delegate-handle="diaryPersonalScroll">
+    
+    <ion-refresher on-refresh="refresh()"></ion-refresher>
+
+    <div class="list-empty-tip" ng-if="list.length === 0 ">
+      <i class="news-icon-empty"></i>
+      <p class="margin-top">这里空空如也~</p>
+    </div>
+
+    <ion-list class="diary-list">
+      <div class="item item-divider" ng-repeat-start="(key,list) in list | groupBy:groupByYearMonth">{{ key }}</div>
+      <ion-item ng-repeat-end ng-repeat="diary in list" ui-sref="diary.detail({ id: diary.diaryid, type: 'personal' })">
+        <img class="stamp-img" ng-if="diary.stampParams" ng-src="{{ diary.stampParams.stamp | fullUrl }}">
+        
+        <i class="item-note ion-ios-locked-outline fsl" ng-if="diary.islock"></i>
+
+        <h2 class="coyness">
+          {{ diary.diarytime * 1000 | date:'EEEE' }}&nbsp;
+          <i class="icon-annex" ng-if="diary.attachmentid"></i>
+        </h2>
+        <span class="fs11 insipid">
+          {{ diary.diarytime * 1000 | date: 'MM-dd' }} &nbsp;&nbsp;{{diary.addtime * 1000 | humanizedDate }} &nbsp;{{ diary.addtime * 1000 | date : 'HH:mm' }}
+        </span>
+
+        <p>{{ diary.content || '[图片]' }}</p>
+
+        <span class="item-note insipid" >
+          <i class="icon-comment"></i>
+          <span class="fs11 vam">{{ diary.commentcount }} &nbsp;</span>
+          <i class="icon-review"></i>
+          <span class="fs11 vam">{{ diary.readercount }} &nbsp;</span>
+        </span>
+        
+        <!-- 锁定时不允许编辑 -->
+        <ion-option-button 
+          class="button-edit light fs32"
+          ng-if="!diary.islock"
+          ui-sref="diary.edit({ id:diary.diaryid})"
+          stop-propagation="click"
+          >
+          <div class="w100p text-center"><i class="ion-ios-compose-outline"></i></div>
+        </ion-option-button>
+        <ion-option-button
+          class="button-delete light fs32"
+          ng-if="!diary.islock"
+          ng-click="remove(diary)"
+          stop-propagation="click"
+          >
+          <div class="w100p text-center"><i class="ion-ios-trash-outline"></i></div>
+        </ion-option-button>
+      </ion-item>
+    </ion-list>
+
+    <button class="button button-full button-clear button-positive no-animation" ng-click="loadMore()" ng-if="pages.page < pages.pageCount - 1">加载更多</button>
+  </ion-content>
+</ion-view>
+
+

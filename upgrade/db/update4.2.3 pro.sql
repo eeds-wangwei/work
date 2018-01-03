@@ -1,0 +1,1 @@
+ALTER TABLE `{{flow_run}}` ADD COLUMN `saveflag` TINYINT (1) NOT NULL DEFAULT '0' COMMENT '保存标记(0-未保存,1-已保存)针对工作流第一步，发起后，如果不想要，可以直接删除，不用保存或者转交';

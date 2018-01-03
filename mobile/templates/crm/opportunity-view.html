@@ -1,0 +1,84 @@
+<ion-view title="商机信息" hide-nav-bar="true" class="crm-bg">
+  <!-- <ion-nav-bar class="bar-crm">
+    <ion-nav-back-button></ion-nav-back-button>
+  </ion-nav-bar>
+
+  <ion-nav-buttons side="right">
+    <button class="button button-clear header-item button-icon ion-ios-more" ng-click="moreOperation()">
+    </button>
+  </ion-nav-buttons>
+ -->
+
+  <ion-content>
+    <!--头部信息-->
+    <div class="item item-text-wrap crm-mn-card crm-opportunity-view-header">
+      <i class="item-note ion-ios-plus-outline" ng-click="openAttachModal()"></i>
+      <div class="crm-mn-card-title">{{ opp.subject || '----' }}</div>
+      <div>
+        <span class="fss vam">归属人</span>&nbsp;&nbsp;
+        <crm-user uid="{{ opp.uid }}" class="crm-user-light"></crm-user>
+      </div>
+      <div class="crm-mn-card-footer">
+        <span class="fss">所属客户</span>
+        <span class="fss">{{ opp.client.fullname || '暂无' }}</span>
+      </div>
+    </div>
+
+    <!--商机tbs-->
+    <div class="crm-nb-tabs row">
+      <div class="col col-50" ng-class="{'active':activeTab === 'survey' }"  ng-click="setActiveTab('survey')">详情</div>
+      <div class="col col-50" ng-class="{'active':activeTab === 'event' }"  ng-click="setActiveTab('event')">跟进</div>
+    </div>
+
+    <!--客户详情-->
+    <div ng-if="activeTab === 'survey'">
+      <div class="item-divider crm-divider" ng-if="opp.contacts.length">联系人</div>
+      <div class="list-avatar-group" ng-if="opp.contacts.length">
+        <crm-contact-item ng-repeat="contact in opp.contacts" contact="contact" mode="attach"></crm-contact-item>
+      </div>
+      
+      <div class="item-divider crm-divider">详细信息</div>
+      <!-- @Todo: 需要后端返回状态 -->
+      <!-- <div class="item item-input item-indent">
+        <span class="input-label">商机状态</span>
+        <div class="input-content text-right">{{ opp.status }}</div>
+      </div> -->
+      <div class="item item-input item-indent">
+        <span class="input-label">预计收入</span>
+        <div class="input-content text-right">{{ opp.expectincome }} 元</div>
+      </div>
+      <!-- 标签组 -->
+      <div class="item item-input item-indent" ng-repeat="tagGroup in tagGroups">
+        <span class="input-label">{{ tagGroup.name }}</span>
+        <div class="input-content text-right">
+          {{ (tagGroup.taglist | where:{ tagid: opp.tags[tagGroup.groupid] })[0].name }}
+        </div>
+      </div>
+      <div class="item item-input item-indent">
+        <span class="input-label">成交机率</span>
+        <div class="input-content text-right">{{ opp.dealchance }}%</div>
+      </div>
+      <div class="item item-input item-indent">
+        <span class="input-label">关联客户</span>
+        <div class="input-content text-right">{{ opp.client && opp.client.fullname }}</div>
+      </div>
+
+      <div class="item-divider crm-divider" ng-if="opp.attaches.length">附件</div>
+      <attach-list attach="opp.attaches" ng-if="opp.attaches.length"></attach-list>
+
+      <div class="padding-vertical padding-horizontal15" ng-if="opp.canEdit" ui-sref="crm.editOpportunity({ oid: opp.oid })">
+        <button class="button button-block button-positive">编辑</button>
+      </div>
+    </div>
+
+    <div ng-if="activeTab === 'event'">
+      <div class="list">
+        <crm-event-item ng-repeat="ev in eventList" ev="ev">
+        </crm-event-item>
+      </div>
+
+      <crm-empty-tip ng-if="!eventList.length"></crm-empty-tip>
+    </div>
+  </ion-content>
+
+</ion-view>

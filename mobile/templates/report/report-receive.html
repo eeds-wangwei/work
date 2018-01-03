@@ -1,0 +1,141 @@
+<ion-view title="汇报" hide-back-button="true">
+  <ion-nav-buttons side="left">
+    <button class="button back-button button-clear header-item" ui-sref="report.index" nav-direction="back">
+      <i class="icon ion-ios-arrow-back"></i>
+      汇报
+    </button>
+  </ion-nav-buttons>
+
+  <ion-nav-buttons side="right">
+    <button class="button back-button button-clear header-item" ng-click="addRead()" ng-if="list.length">
+      <i class="icon-readed"></i>
+    </button>
+  </ion-nav-buttons>
+
+  <ion-header-bar class="bar-subheader">
+    <div class="subheader-nav rp-subheader-nav row" stop-propagation="tap">
+      <span class="col col-50 active" nav-direction="none">我收到的</span>
+      <span class="col col-50" ui-sref="report.send" nav-direction="none">我发出的</span>
+    </div>
+
+    <div class="bar has-header search-header-bar" ng-hide="search.show == true" ng-if="list.length">
+      <button class="button button-block button-small fsm button-light" ng-click="search.key = ''; search.show = true">
+        <i class="ion-ios-search fsu vam"></i>&nbsp; 搜索
+      </button>
+    </div>
+
+    <div class="bar item-input-inset search-header-bar rp-list-search-header-bar" ng-show="search.show == true" ng-if="list.length">
+      <label class="item-input-wrapper">
+        <i class="ion-ios-search fsu coyness"></i>
+        <input type="text"  placeholder="搜索" ng-model="search.key" focus-on="search.show" >
+      </label>
+      <button type="button" class="button button-positive button-clear" ng-click="search.show = false; search.result = []">
+        取消
+      </button>
+    </div>
+  </ion-header-bar>
+
+  <ion-content class="rp-list-has-subheader" delegate-handle="reportReceiveListScroll">
+    <div ng-hide="search.show == true">
+      <ion-refresher on-refresh="refresh()"></ion-refresher>
+      <div class="positive padding-top20 text-center" ng-if="loading">正在加载...</div>
+
+      <div class="list-empty-tip" ng-if="list.length === 0 && !loading">
+        <i class="news-icon-empty"></i>
+        <p class="margin-top">这里空空如也~</p>
+      </div>
+
+      <ion-list class="list list-avatar-group diary-list">
+        <div class="item item-divider lightyellow-bg" ng-repeat-start="(key, value) in (list | groupBy: groupByTime)"> {{ key }}</div>
+        <div class="item item-complex rp-receive-list" ng-repeat-end ng-repeat="item in value"  ui-sref="report.view({ repid: item.repid })" ng-click="readReport(item)">
+          <a class="item-content">
+            <div class="rp-list-unread-flag" ng-if="item.isreview == 0"></div>
+            <div class="item item-avatar" ng-class="{'margin-left15': item.isreview == 0}" >
+              <img avatar="{{ item.uid | avatar | defaultAvatar }}">
+              <h3 class="common">{{ item.uid | userInfo: 'realname' }}</h3>
+              <i class="rp-tpl-icon rp-tpl-icon-12 rp-tpl-icon-{{item.icon}}"></i>
+              <span class="fs11 coyness rp-subject">{{item.subject}}</span>
+            </div>
+            <img class="item-note rp-list-stamp" ng-if="item.bigstamp" ng-src="{{ item.bigstamp | fullUrl }}"/>
+            <p class="nowrap" ng-repeat="summary in item.record">
+              <span class="coyness">{{ summary.fieldname }}:</span>
+              <span>{{ summary.content | htmlToPlaintext}}</span>
+            </p>
+            <span class="fs09 insipid">{{ item.addtime *1000 | date:"MM-dd HH:mm"}}</span>
+          <span class="item-note insipid" >
+              <i class="icon-comment"></i>
+              <span class="fs11 vam">{{ item.commentcount}}&nbsp;</span>&nbsp;
+              <i class="icon-review"></i>
+              <span class="fs11 vam">{{ item.readcount }}&nbsp;</span>
+          </span>
+          </a>
+        </div>
+      </ion-list>
+
+      <button class="button button-full button-clear button-positive no-animation" ng-click="loadMore()" ng-if="list.hasMore">加载更多</button>
+
+    </div>
+
+    <!--搜索结果列表-->
+    <div ng-show="search.show == true" >
+      <!-- if(有搜索结果): -->
+      <ion-list class="list list-avatar-group diary-list" ng-if="search.result.list.length">
+        <div class="item item-divider lightyellow-bg" ng-repeat-start="(key, value) in (search.result.list | groupBy: groupByTime)"> {{ key }}</div>
+        <div class="item item-complex rp-receive-list" ng-repeat-end ng-repeat="item in value"  ui-sref="report.view({ repid: item.repid })" ng-click="readReport(item)">
+          <a class="item-content">
+            <div class="rp-icon-unread-flag" ng-if="item.isreview == 0"></div>
+            <div class="item item-avatar" ng-class="{'margin-left15': item.isreview == 0}" >
+              <img avatar="{{ item.uid | avatar | defaultAvatar }}">
+              <h3 class="common">{{ item.uid | userInfo: 'realname' }}</h3>
+              <i class="rp-tpl-icon rp-tpl-icon-12 rp-tpl-icon-{{item.icon}}"></i>
+              <span class="fs11 coyness rp-subject">{{item.subject}}</span>
+            </div>
+            <img class="item-note rp-list-stamp" ng-if="item.bigstamp" ng-src="{{ item.bigstamp | fullUrl }}"/>
+            <p class="nowrap" ng-repeat="summary in item.record"><span class="coyness">{{ summary.fieldname }}:</span>{{ summary .content }}</p>
+            <span class="fs09 insipid">{{ item.addtime *1000 | date:"MM-dd HH:mm" }}</span>
+          <span class="item-note insipid" >
+              <i class="icon-comment"></i>
+              <span class="fs11 vam">{{ item.commentcount}}&nbsp;</span>&nbsp;
+              <i class="icon-review"></i>
+              <span class="fs11 vam">{{ item.readcount }}&nbsp;</span>
+          </span>
+          </a>
+        </div>
+      </ion-list>
+
+      <!-- elseif(未开始搜索): -->
+      <div
+          class="margin-top margin-bottom padding text-center coyness"
+          ng-if="!search.result.list.length && !search.key && !search.searching"
+          >请输入汇报标题进行搜索~
+      </div>
+
+      <!-- elseif(搜索中): -->
+      <div
+          class="margin-top margin-bottom padding text-center coyness"
+          ng-if="search.searching && !search.result.list.length"
+          >搜索中...
+      </div>
+
+      <!-- elseif(没有搜索结果): -->
+      <div
+          class="margin-top margin-bottom padding text-center coyness"
+          ng-if="search.key && !search.searching && !search.result.list.length"
+          >没有找到相关的汇报~
+      </div>
+      <!-- endif; -->
+    </div>
+  </ion-content>
+
+  <ion-footer-bar  class="row rp-footer-bar">
+    <div class="col col-50" ng-class="{'active': activeTab == 'unread'}" ng-click="setTab('unread')">
+      <i class="icon-unapproval"></i>
+      <p>未读</p>
+    </div>
+    <div class="col col-50" ng-class="{'active': activeTab == 'all'}" ng-click="setTab('all')">
+      <i class="icon-sorting"></i>
+      <p>全部</p>
+    </div>
+  </ion-footer-bar>
+
+</ion-view>

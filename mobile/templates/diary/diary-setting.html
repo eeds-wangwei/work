@@ -1,0 +1,39 @@
+<ion-modal-view title="设置" class="lightyellow-bg">
+
+  <ion-header-bar>
+    <button class="button back-button buttons button-clear header-item" ng-click="settingModel.hide()" style="display: flex;">
+      <span class="icon fs32" style="margin-top: -2px">×</span>
+    </button>
+    <h1 class="title">设置</h1>
+    <button class="button back-button buttons button-clear header-item"  ng-click="submit()">
+      确认
+    </button>
+  </ion-header-bar>
+
+  <ion-content>
+    <!-- 判断后台是否开启了共享功能 -->
+    <ion-item class="item-divider padding lightyellow-bg" ng-if="dashboardConfig.sharepersonnel != 0">默认分享</ion-item>
+    <div class="light-bg diary-item-select-user" ng-if="dashboardConfig.sharepersonnel != 0">
+      <user-avatar-selector ng-model="formData.defaultShareList" name="setting-share" ></user-avatar-selector>
+    </div>
+
+    <ion-item class="margin-top20  light-bg diary-setting-label">
+      只看直属下属
+      <label class="toggle toggle-positive item-note">
+        <input type="checkbox" ng-model="formData.direct" ng-true-value="1" ng-false-value="0">
+        <div class="track">
+          <div class="handle"></div>
+        </div>
+      </label>
+    </ion-item>
+    
+    <!-- 判断后台是否开启了关注功能 -->
+    <ion-item class="item-divider padding lightyellow-bg" ng-if="dashboardConfig.attention != 0">
+      我关注的
+    </ion-item>
+    <ul class="light-bg diary-item-select-user" ng-if="dashboardConfig.attention != 0">
+      <user-avatar-selector ng-model="formData.attentionList" name="setting-attention" ></user-avatar-selector>
+    </ul>
+
+  </ion-content>
+</ion-modal-view>

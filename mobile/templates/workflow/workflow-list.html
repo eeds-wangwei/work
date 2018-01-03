@@ -1,0 +1,41 @@
+<ion-view title="{{title}}">
+
+  <ion-content>
+    <ion-refresher on-refresh="refresh()"></ion-refresher>
+
+    <div class="list-empty-tip" ng-if="list.checkNoData()">暂无相关工作</div>
+
+    <ion-list>
+      <a class="item"
+        ng-repeat="flow in list.items"
+        type="item-text-wrap"
+        on-hold="showMenu(flow)"
+        ui-sref="{{sref}}"
+      >
+        <h2 ng-class="{'positive': flow.flag == '1'}">{{flow.runName}}</h2>
+        <p>
+          <!-- flow.flag 步骤状态(1-未接收,2-办理中,3-转交下一步，下一步经办人无人接收,4-已办结,5-自由流程预设步骤,6-已挂起,) -->
+          <span 
+            ng-if="flow.flag == 1 || flow.flag == 2"
+            class="label label-small dark-bg dark-border light"
+          >{{flow.flowprocess}}</span>
+
+          <span ng-if="flow.flag == 3 || flow.flag == 4">[{{flow.runid}}]</span>
+
+          <span ng-if="flow.flag == 1 || flow.flag == 2">
+            <em class="positive" ng-if="flow.opflag == 1">(主办)</em>
+            <em class="assertive" ng-if="flow.opflag != 1">(经办)</em>
+          </span>
+          <span>{{flow.stepname}}</span>
+          <span class="item-note">
+            <i ng-if="flow.focus" class="icon ion-star assertive"></i>
+            <time class="fss">{{flow.begintime * 1000|humanizedTime:'yyyy年MM月dd日'}}</time>
+          </span>
+        </p>
+      </a>
+    </ion-list>
+        
+    <button class="button button-full button-clear button-positive" ng-if="list.items.length && list.hasMore" ng-click="list.loadMore()">加载更多</button>
+
+  </ion-content>
+</ion-view>

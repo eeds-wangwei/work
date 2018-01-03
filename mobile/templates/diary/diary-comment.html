@@ -1,0 +1,34 @@
+<ion-modal-view class="lightyellow-bg" >
+  <ion-header-bar>
+    <button class="button back-button buttons button-clear header-item" ng-click="commentModel.hide()">
+      <span class="icon fs32" style="margin-top: -3px">×</span>
+    </button>
+    <h1 class="title">点评日志</h1>
+    <button class="button-icon icon button button-clear"
+            ng-disabled="!comment.content || comment.submitting"
+            ng-click="comment.submit()">点评</button>
+  </ion-header-bar>
+
+  <ion-content class="has-header diary-comment-textarea">
+    <textarea placeholder="好想说点什么..." ng-model="comment.content"></textarea>
+    <div class="fss coyness light-bg margin padding  diary-comment-counting">
+      <charcount ng-model="comment.content"></charcount>个字
+    </div>
+
+    <div class="padding light-bg" ng-if="dashboardConfig.stampenable != 0 && commentType == 'comment'">
+      <div class="diary-comment-stamp-box" ng-click="comment.isStampsBoxShow = !comment.isStampsBoxShow" style="background-color: {{ comment.stamp ? '#8ed1ff': '#b2c0d1' }}">
+        <i class="icon18-favor"></i>
+      </div>
+      <img ng-if="comment.stamp" ng-src="{{ comment.stamp.icon | fullUrl }}">
+    </div>
+    <item class="diary-comment-stamps" ng-show="comment.isStampsBoxShow">
+      <ul class="row light-bg" ng-repeat="rowStamps in comment.stamps | chunkBy:4">
+        <li class="col col-25" ng-repeat="stamp in rowStamps" ng-click="comment.stamp = stamp; comment.isStampsBoxShow = false" >
+          <img ng-src="{{ stamp.icon | fullUrl }}" alt="{{ stamp.code }}">
+        </li>
+      </ul>
+    </item>
+
+  </ion-content>
+
+</ion-modal-view>

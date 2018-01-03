@@ -1,0 +1,36 @@
+<ion-view title="工作流" hide-back-button="true">
+  <ion-nav-buttons side="left">
+    <button class="button back-button button-clear header-item" ui-sref="portal" nav-direction="back">
+      <i class="icon ion-ios-arrow-back"></i>
+      门户
+    </button>
+  </ion-nav-buttons>
+  
+  <ion-nav-buttons side="right">
+    <button class="button button-clear button-positive" ui-sref="workflow.create"> 发起工作</button>
+  </ion-nav-buttons>
+
+  <ion-content>
+    <ion-list>
+      <ion-item class="item-icon-left" ui-sref="workflow.todo">
+        <i class="icon ion-ios-briefcase"></i>
+        待办工作
+      </ion-item>
+
+      <ion-item class="item-icon-left" ui-sref="workflow.trans">
+        <i class="icon ion-ios-redo"></i>
+        已办结
+      </ion-item>
+
+      <ion-item class="item-icon-left" ui-sref="workflow.done">
+        <i class="icon ion-checkmark"></i>
+        已完成
+      </ion-item>
+
+      <ion-item class="item-icon-left" ui-sref="workflow.follow">
+        <i class="icon ion-ios-star"></i>
+        我的关注
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

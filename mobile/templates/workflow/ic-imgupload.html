@@ -1,0 +1,15 @@
+<div class="wfic-imgupload">
+  <div class="wfic-imgupload-img" ng-if="hasSrc()">
+    <img
+      ng-src="{{ localSrc || (originSrc | fullUrl) }}"
+      alt="{{ data['data-title'] }}"
+      style="width: {{ width }}px; height: {{ height }}px;">
+    <div class="ion-ios-upload-outline">
+      <input type="file" file-on-change="updateFile" accept="image/gif,image/jpeg,image/png" />
+    </div>
+  </div>
+
+  <div class="ion-ios-plus-empty" ng-if="!hasSrc()">
+    <input type="file" file-on-change="updateFile" accept="image/gif,image/jpeg,image/png"/>
+  </div>
+</div>

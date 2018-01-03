@@ -1,0 +1,7 @@
+<ion-scroll direction="x" scrollbar-x="false">
+  <div class="ib-tabs">
+    <div class="ib-tab-item" ng-repeat="tab in tabs" ng-click="tabTo($index)" ng-class="{ 'active': $index === activeIndex }">{{ tab.text }}</div>
+  </div>
+</ion-scroll>
+<div class="search-tab-bar-btn" ng-click="searchModal.showModal()"> <i class="ion-ios-search"></i>
+</div>

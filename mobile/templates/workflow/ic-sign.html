@@ -1,0 +1,8 @@
+<div class="wfic-sign">
+  <a href="javascript:;" class="anchor" ng-if="!src" ng-click="modal.show()">点击开始签名</a>
+  <div class="wfic-sign-view" ng-if="src">
+    <i class="ion-ios-close assertive" ng-click="remove()"></i>
+    <img ng-src="{{ src }}" alt="签名" ng-click="modal.show()">
+  </div>
+  <ic-error-tip error="$error" title="data['data-title']"></ic-error-tip>
+</div>

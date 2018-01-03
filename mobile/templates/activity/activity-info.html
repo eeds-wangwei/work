@@ -1,0 +1,40 @@
+<ion-view title="我的信息" class="activity-bg">
+  <ion-nav-buttons side="left">
+    <button class="button back-button button-clear header-item" ng-if="!hasBackView()" ui-sref="activity.index">
+      <i class="icon ion-ios-arrow-back"></i> 活动中心
+    </button>
+  </ion-nav-buttons>
+
+  <ion-content class="activity-info">
+    <div class="item activity-notice-bar">您已经报名成功，请继续关注活动后续通知</div>
+    <div class="list list-indent activity-list" ng-repeat="info in infos">
+      <div class="padding-vertical">
+        <label class="item item-input" ng-repeat-start="field in info.formdata">
+          <span class="input-label item-text-wrap">{{ field.fieldtitle }}</span>
+          <div class="input-content common" ng-if="field.fieldtype != '3'">{{ field.value || '无' }}</div>
+          <!-- 是否 -->
+          <div class="input-content common" ng-if="field.fieldtype == '3'">{{ field.value === '0.' ? '否' : '是' }}</div>
+        </label>
+        <label class="item item-input" ng-repeat-end ng-if="field.fieldtype == '3' && field.value !=='0.'">
+          <span class="input-label item-text-wrap">备注</span>
+          <div class="input-content common">{{ field.value.slice(2) || '无' }}</div>
+        </label>
+      </div>
+      <div class="item row activity-operate-bar">
+        <div class="col col-50">
+          <button class="button button-small button-block button-outline button-positive fsl" ui-sref="activity.create({ id: activityId, formdataid: info.formdataid })">编辑</button>
+        </div>
+        <div class="col col-50">
+          <button class="button button-small button-block button-assertive fsl" ng-click="removeItem(info)">删除</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="padding">
+      <div class="padding-horizontal">
+        <button class="button button-block button-positive" ui-sref="activity.create({ id: activityId })">继续报名</button>
+      </div>
+    </div>
+  </ion-content>
+
+</ion-view>

@@ -1,0 +1,81 @@
+<ion-view title="{{ corp ? '企业详情' : '部门详情' }}" class="lightyellow-bg">
+  <ion-content overflow-scroll="true" class="contact-group-info">
+    <!--企业信息-->
+    <div class="item item-thumbnail-left contact-info" ng-if="corp" style="background-image: url({{ corp.bgbig|fullUrl }})">
+      <div class="item-image">
+        <img ng-src="{{corp.logourl | fullUrl }}" alt="{{corp.corpname}}" ng-if="corp.logourl">
+        <span class="dept-img-ctnr" ng-if="!corp.logourl" > <i class="dept-img"></i></span>
+      </div>
+      <h2><strong>{{ corp.corpname }} </strong></h2>
+    </div>
+
+    <!--部门信息-->
+    <div class="item item-thumbnail-left contact-info" ng-if="dept" style="background-image: url({{ dept.bgbig|fullUrl }})">
+      <div class="item-image">
+        <span class="dept-img-ctnr"> <i class="dept-img"></i></span>
+      </div>
+      <h2> <strong>{{ dept.deptname }}</strong></h2>
+    </div>
+
+    <!--企业信息-->
+    <div class="list list-indent contact-info-list" ng-if="corp" >
+
+      <div class="item item-input">
+        <span class="input-label">企业简称</span>
+        {{ (corp.corpname) || '暂无' }}
+      </div>
+
+      <div class="item item-input">
+        <span class="input-label">系统URL</span>
+        {{ (corp.systemurl) || '暂无' }}
+      </div>
+
+      <div class="item item-input">
+        <span class="input-label">电话</span>
+        <a href="tel:{{corp.phone}}" class="positive" ng-if="!corp.phone">{{ corp.phone }}</a>
+        <span ng-if="!corp.phone">暂无</span>
+      </div>
+
+      <div class="item item-input">
+        <span class="input-label">传真</span>
+        {{ (corp.fax) || '暂无' }}
+      </div>
+
+      <div class="item item-input">
+        <span class="input-label">地址</span>
+        {{ (corp.address) || '暂无' }}
+      </div>
+    </div>
+
+    <!--部门信息-->
+    <div class="list list-indent contact-info-list" ng-if="dept">
+
+      <div class="item item-input">
+        <span class="input-label">电话</span>
+        <a href="tel:{{ dept.phone }}" class="positive" ng-if="dept.phone">{{ dept.phone }}</a>
+        <span ng-if="!dept.phone">暂无</span>
+      </div>
+
+      <div class="item item-input">
+        <span class="input-label">传真</span>
+        {{ (dept.fax) || '暂无'  }}
+      </div>
+
+      <div class="item item-input">
+        <span class="input-label">部门主管</span>
+        {{ (dept.managername) || '暂无' }}
+      </div>
+
+      <div class="item item-input">
+        <span class="input-label">地址</span>
+      {{ (dept.address) || '暂无' }}
+      </div>
+
+      <div class="item item-input">
+        <span class="input-label">部门职能</span>
+        {{ (dept.func) || '暂无' }}
+      </div>
+    </div>
+
+  </ion-content>
+</ion-view>

@@ -1,0 +1,37 @@
+<ion-view title="任务指派" >
+  <ion-nav-buttons side="left">
+    <button class="button back-button button-clear header-item" ng-if="!hasBackView()" ui-sref="portal" nav-direction="back">
+      <i class="icon ion-ios-arrow-back"></i>
+      门户
+    </button>
+  </ion-nav-buttons>
+
+  <ion-nav-buttons side="right">
+    <button class="button button-clear button-positive" ui-sref="assignment.create"> 新建任务</button>
+  </ion-nav-buttons>
+
+  <ion-content>
+    <div class="list">
+      <div class="item item-icon-left item-complex" ui-sref="assignment.unfinished">
+        <a class="item-content" target="_self">
+          <i class="icon ion-ios-settings-strong"></i> 未完成
+        </a>
+      </div>
+      <div class="item item-icon-left item-complex" ui-sref="assignment.finished">
+        <a class="item-content" target="_self">
+          <i class="icon ion-ios-checkmark-outline"></i> 已完成
+        </a>
+      </div>
+
+      <div class="item item-divider">我的下属</div>
+
+      <a class="item item-avatar" ng-repeat="user in users" ui-sref="assignment.unfinished({ uid: user.uid })">
+        <img ng-src="{{user.avatar_middle|fullUrl}}">
+        <span class="item-note positive" ng-click="openSubordinateModal($event, user.uid)" ng-if="user.hasSub">查看下属</span>
+        <h3>{{user.realname}}</h3>
+        <p>{{user.deptname}} · {{user.posname}}</p>
+      </a>
+    </div>
+
+  </ion-content>
+</ion-view>

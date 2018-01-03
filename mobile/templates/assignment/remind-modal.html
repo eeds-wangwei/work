@@ -1,0 +1,31 @@
+<!-- 设置提醒模板 -->
+<ion-modal-view>
+  <ion-header-bar>
+    <button class="button button-icon icon" ng-click="remindModal.hide()">取消</button>
+    <h1 class="title">设置提醒</h1>
+  </ion-header-bar>
+  <ion-content>
+    <form name="remindForm">
+      <div class="list">
+        <div class="item item-input">
+          <span class="input-label">提醒时间</span>
+          <input type="date" name="remindTime" ng-model="remindData.remindTime" data-tap-disabled="true" required/>
+        </div>
+        <div class="item item-input">
+          <span class="input-label">提醒内容</span>
+          <input type="text" name="remindContent" ng-model="remindData.remindContent">
+        </div>
+      </div>
+      <div class="padding">
+        <button type="button"
+          class="button button-positive button-block"
+          ng-click="remind()"
+          ng-disabled="remindForm.$invalid || remindSubmitting"
+        >
+          <span ng-if="remindSubmitting">提交中...</span>
+          <span ng-if="!remindSubmitting">确定</span>
+        </button>
+      </div>
+    </form>
+  </ion-content>
+</ion-modal-view>

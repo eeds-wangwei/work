@@ -1,0 +1,58 @@
+<ion-modal-view class="crm-bg">
+  <!-- <ion-header-bar>
+    <button class="button button-icon" ng-click="modal.hide()">取消</button>
+    <h1 class="title">选择联系人</h1>
+    <button class="button button-icon  ion-ios-plus-empty"  ng-click="modal.hide()" ui-sref="crm.addContact({ client: opts.client })"></button>
+  </ion-header-bar>
+   -->
+  <!-- 搜索框 -->
+  <div class="bar bar-header search-header-bar stable-bg" ng-hide="searchMode">
+    <button class="button button-block button-small fsm button-light" ng-click="searchMode = true">
+      <i class="ion-ios-search fsu vam"></i>&nbsp;姓名、手机号
+    </button>
+  </div>
+
+  <div class="bar bar-header item-input-inset search-header-bar" ng-hide="!searchMode">
+    <label class="item-input-wrapper">
+      <i class="ion-ios-search fsu coyness"></i>
+      <input type="text" placeholder="搜索" ng-model="search.key" focus-on="searchMode" focus-delay="200">
+    </label>
+    <button type="button" class="button button-positive button-clear" ng-click="searchMode = false; search.key = ''">
+      取消
+    </button>
+  </div>
+
+  <ion-content class="has-header has-footer">
+    <div class="list us-list crm-ctt-select-list">
+      <!-- <ion-checkbox ng-repeat="contact in contacts" ng-model="form[contact.contactid]">
+        {{ contact.name }}
+      </ion-checkbox> -->
+
+      <div class="item item-complex item-avatar item-indent item-checkbox" ng-repeat="contact in contacts|filterBy:['name']:search.key">
+        <div class="item-content">
+          <label class="checkbox">
+            <input type="checkbox" ng-model="contact.checked">
+          </label>
+          <img width="34" height="34" avatar="{{ contact.avatar | fullUrl }}" class="item-image" />
+          <h2>
+            {{ contact.name }}
+            <small class="fss insipid">{{ contact.department }} <span ng-if="contact.department && contact.position">•</span> {{ contact.position }}</small>
+          </h2>
+          <p class="fss coyness">{{ contact.company || '暂无' }}</p>
+        </div>
+      </div>
+
+      <crm-empty-tip ng-if="!contacts || !contacts.length" text="您需要先创建一个联系人"></crm-empty-tip>
+    </div>
+  </ion-content>
+
+  <div class="bar bar-footer us-footer-bar">
+    <div class="us-scroll-wrap">
+      <div class="padding positive">已选：{{ getSelected().length }}人</div>
+    </div>
+    <div class="us-footer-button-bar">
+      <button type="button" class="button button-light" ng-click="modal.hide()">取消</button>
+      <button type="button" class="button button-positive" ng-click="save()" ng-disabled="!contacts.length">确定</button>
+    </div>
+  </div>
+</ion-modal-view>

@@ -1,0 +1,25 @@
+<div class="item item-complex item-text-wrap item-indent crm-common-item crm-event-item">
+  <!-- 普通事件 -->
+  <a class="item-content" ng-if="ev.type === '0'" ui-sref="crm.eventView(ev)">
+    <div class="item-note fss insipid">{{ ev.createtime * 1000 | humanizedDateTime }}</div>
+    <crm-user uid="{{ ev.uid }}"></crm-user>
+    <h2 class="padding-vertical">{{ ev.content }}</h2>
+    <div ng-transclude></div>
+    <div>
+      <!-- @Todo: 等接口 -->
+      <i class="crm-icon-date vam"></i> <span class="fss coyness vam">{{ ev.begin * 1000 | date:'MM-dd' }}</span>
+      &nbsp;&nbsp;
+      <crm-tags-section tags="ev.tags"></crm-tags-section>
+    </div>
+  </a>
+
+  <!-- 系统事件 -->
+  <div class="item-content" ng-if="ev.type === '1'">
+    <div class="item-note fss insipid">{{ ev.createtime * 1000 | humanizedDateTime }}</div>
+    <crm-user uid="{{ ev.uid }}"></crm-user>
+    <h2>
+      {{ ev.content | htmlToPlaintext }}
+    </h2>
+    <!-- <div ng-transclude></div> -->
+  </div>
+</div>

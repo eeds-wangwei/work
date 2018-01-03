@@ -1,0 +1,40 @@
+<ion-modal-view class="crm-bg">
+  <ion-header-bar>
+    <button class="button button-icon" ng-click="modal.hide()">取消</button>
+    <h1 class="title">选择商机</h1>
+  </ion-header-bar>
+  
+  <!-- 搜索框 -->
+  <div class="bar bar-header search-header-bar stable-bg" ng-hide="searchMode">
+    <button class="button button-block button-small fsm button-light" ng-click="searchMode = true">
+      <i class="ion-ios-search fsu vam"></i>&nbsp;商机名
+    </button>
+  </div>
+
+  <div class="bar bar-header item-input-inset search-header-bar" ng-hide="!searchMode">
+    <label class="item-input-wrapper">
+      <i class="ion-ios-search fsu coyness"></i>
+      <input type="text" placeholder="搜索" ng-model="search.key" focus-on="searchMode" focus-delay="200">
+    </label>
+    <button type="button" class="button button-positive button-clear" ng-click="searchMode = false; search.key = ''">
+      取消
+    </button>
+  </div>
+
+  <ion-content class="has-header has-mb-footer">
+    <div class="list">
+      <div class="item item-indent common-black" ng-click="select(opp)" ng-repeat="opp in opps|filterBy:['subject']:search.key as result">
+        {{ opp.subject }}
+        <span class="item-note ion-checkmark fsu positive" ng-if="selected == opp.oid"></span>
+      </div>
+
+      <crm-empty-tip ng-if="!result.length" text="您需要先创建一个商机"></crm-empty-tip>
+    </div>
+  </ion-content>
+
+  <ion-footer-bar class="mb-footer">
+    <button class="button button-block button-light" ng-click="modal.hide()">
+      取消
+    </button>
+  </ion-footer-bar>
+</ion-modal-view>

@@ -1,0 +1,12 @@
+<div class="wfic-fileupload">
+  <div class="item item-avatar padding-vertical" ng-if="file">
+    <div class="item-image">
+      <img ng-src="{{file.type|fileIconByExtname:'lt'}}" alt="{{ file.name }}" width="44" height="44">
+    </div>
+    <h2>{{file.name}}</h2>
+    <p>
+      <a href="javascript:;" class="anchor" ng-if="file.src && file.read == 1" ng-click="download()">下载</a>
+      <span ng-if="file.read == 0">无下载权限</span>
+    </p>
+  </div>
+</div>

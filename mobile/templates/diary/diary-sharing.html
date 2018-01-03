@@ -1,0 +1,19 @@
+<ion-modal-view  class="lightyellow-bg">
+
+  <ion-header-bar>
+    <button class="button buttons button-clear header-item ion-ios-close-empty fs32" ng-click="sharingModel.hide()">
+    </button>
+    <h1 class="title">共享人员</h1>
+    <button class="button buttons button-clear header-item" ng-disabled="!formData.shareuid" ng-click="sharingModel.hide()">完成</button>
+  </ion-header-bar>
+
+  <ion-content class="has-header">
+    <ion-item class="item-divider lightyellow-bg padding-top padding-bottom">
+      选择您要分享的同事
+    </ion-item>
+     <div class="light-bg diary-item-select-user">
+       <user-avatar-selector ng-model="formData.shareuid" name="share"></user-avatar-selector>
+     </div>
+  </ion-content>
+
+</ion-modal-view>

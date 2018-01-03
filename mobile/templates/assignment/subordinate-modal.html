@@ -1,0 +1,23 @@
+<!-- 下属列表 -->
+<ion-modal-view>
+  <ion-header-bar>
+    <button class="button button-icon icon" ng-click="closeSubordinateModal()" ng-if="subordinates.length <= 1">取消</button>
+    <button class="button button-icon icon ion-ios-arrow-back back-button" ng-click="backSubordinateModal()" ng-if="subordinates.length > 1">
+      返回
+    </button>
+    <h1 class="title">我的下属</h1>
+  </ion-header-bar>
+  <ion-content>
+  <div class="list">
+    <a class="item item-avatar" ng-repeat="user in subordinates[subordinates.length-1]" ui-sref="assignment.unfinished({ uid: user.uid })">
+      <img ng-src="{{user.avatar_middle|fullUrl}}">
+      <!-- 由于 PC 将层级简化成了两级，所以这里不再出现查看下属
+      <span class="item-note positive" ng-click="openSubordinateModal($event, user.uid)" ng-if="user.hasSub">查看下属</span>
+      -->
+      <h3>{{user.realname}}</h3>
+      <p>{{user.deptname}} · {{user.posname}}</p>
+    </a>
+  </div>
+  </ion-content>
+</ion-modal-view>
+

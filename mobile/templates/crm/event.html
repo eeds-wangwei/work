@@ -1,0 +1,48 @@
+<ion-view title="跟进" class="crm-bg" hide-nav-bar="true">
+  <!-- <ion-nav-bar class="bar-crm">
+    <ion-nav-back-button default-nav-back-button ng-click="goBack()">{{ backTitle() }}</ion-nav-back-button>
+  </ion-nav-bar>
+
+  <ion-nav-buttons side="right">
+    <button class="button button-clear header-item button-icon ion-ios-plus-empty" ui-sref="crm.addEvent"></button>
+  </ion-nav-buttons>
+ -->
+
+  <ion-header-bar search-tab-bar="tabs" search-modal="search" on-tab="onTab($tab)" no-tap-scroll="true">
+  </ion-header-bar>
+
+  <crm-filter filter-groups="filterGroups" on-select="selectFilterItem"></crm-filter>
+
+  <ion-content class="crm-filter-header">
+    <ion-refresher on-refresh="eventList.reload()"></ion-refresher>
+
+    <div class="list">
+
+      <crm-event-item class="item item-complex item-text-wrap crm-common-item"
+        ng-repeat="ev in eventList.list"
+        ev="ev">
+        <div>
+          <i class="crm-icon-client"></i>
+          <span class="fss coyness">
+            {{ ev.client && ev.client.fullname ? ev.client.fullname : '未关联客户' }}
+          </span>
+        </div>
+      </crm-event-item>
+
+      <div ng-if="eventList.hasMore">
+        <button class="button button-clear button-positive button-block no-animation" ng-click="eventList.load()" ng-disabled="eventList.loading">
+          {{ eventList.loading ? '加载中...' : '加载更多' }}
+        </button>
+      </div>
+      
+      <div class="margin-top margin-bottom padding text-center coyness" ng-if="!eventList.hasMore && eventList.list.length">没有更多了...</div>
+    </div>
+    <crm-empty-tip ng-if="!eventList.list.length && !eventList.loading"></crm-empty-tip>
+  </ion-content>
+
+  <div class="fixed-toolbar">
+    <button class="fixed-toolbar-btn button button-positive" ui-sref="crm.addEvent">
+      <i class="ion-ios-plus-empty"></i>
+    </button>
+  </div>
+</ion-view>

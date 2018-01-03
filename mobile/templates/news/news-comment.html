@@ -1,0 +1,18 @@
+<ion-modal-view class="lightyellow-bg">
+  <ion-header-bar>
+    <button class="button back-button buttons button-clear header-item" ng-click="commentModal.hide()">
+      <span class="icon fs32" style="margin-top: -3px">×</span>
+    </button>
+    <h1 class="title">评论</h1>
+    <button class="button-icon icon button button-clear"
+      ng-disabled="!comment.content"
+      ng-click="submit()">完成</button>
+  </ion-header-bar>
+
+  <ion-content class="has-header diary-comment-textarea">
+    <textarea placeholder="好想说点什么..." ng-model="comment.content"></textarea>
+    <div class="fss coyness light-bg margin padding diary-comment-counting">
+      <charcount ng-model="comment.content"></charcount>个字
+    </div>
+  </ion-content>
+</ion-modal-view>

@@ -1,0 +1,28 @@
+<ion-modal-view>
+  <ion-header-bar>
+    <button class="button back-button buttons button-clear header-item" ng-click="chargeModel.hide();">
+      <span class="icon fs32" style="margin-top: -3px" >×</span>
+    </button>
+
+    <h1 class="title">选择主管</h1>
+
+    <button class="button back-button buttons button-clear header-item" ng-click="addManager()">
+      <span class="positive">完成</span>
+    </button>
+  </ion-header-bar>
+
+  <ion-content class="lightyellow-bg">
+    <div class="list rp-charge-list">
+      <div class="item item-checkbox" ng-repeat="manager in managers">
+        <label class="checkbox">
+          <input type="checkbox" ng-model="uptype[manager.uptype]">
+        </label>
+        {{ manager .upname }}
+      </div>
+    </div>
+    <div class="item-divider padding lightyellow-bg coyness">
+      一级主管指直属上级，二级主管指直属上级的主管以此类推。
+    </div>
+
+  </ion-content>
+</ion-modal-view>

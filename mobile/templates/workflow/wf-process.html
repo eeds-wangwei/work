@@ -1,0 +1,28 @@
+<div class="wf-card">
+  <div class="wf-card-header">
+    <h4 class="wf-card-title">进度</h4>
+  </div>
+  <div class="wf-process-card" ng-repeat="rp in process" ng-class="{'active': rp.delivertime == '0'}">
+    <span 
+      class="label light"
+      ng-class="{
+        'energized-bg': rp.delivertime == '0',
+        'energized-border': rp.delivertime == '0',
+        'dark-bg': rp.delivertime != '0',
+        'dark-border': rp.delivertime != '0'
+      }"
+    >{{rp.flowprocess}}</span>
+    <h4>
+    [{{rp.name}}] 由 [{{rp.opuser}}] 主办
+    </h4>
+    <div ng-if="rp.delivertime == '0'">
+      <div class="energized">执行中</div>
+      <div class="coyness">持续：<span ng-bind-html="rp.timestr"></span></div>
+    </div>
+    <div ng-if="rp.delivertime != '0'">
+      <div class="coyness">用时：{{rp.timestr}}</div>
+      <div class="coyness">开始：<span ng-bind-html="rp.processtime"></span></div>
+      <div class="coyness">结束：<span ng-bind-html="rp.delivertime"></span></div>
+    </div>
+  </div>
+</div>

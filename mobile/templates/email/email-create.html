@@ -1,0 +1,89 @@
+<ion-view title="写邮件" cache-view="false">
+  <ion-nav-buttons side="right">
+    <button type="button" class="button button-clear button-positive" ng-disabled="isDisabledSubmit()" ng-click="submit()">发送</button>
+  </ion-nav-buttons>
+
+  <form name="emailForm" class="email-form">
+    <ion-content>
+      <div class="list">
+        <div class="item item-text-wrap item-user-select clearfix">
+          <span class="fl">收件人：</span>
+          <i class="icon ion-ios-plus positive" user-selector-trigger ng-model="form.toids"></i>
+          <user-selector ng-model="form.toids" name="toids" ng-value="form.toids" required></user-selector>
+        </div>
+
+        <div class="padding positive text-right" ng-click="showOther()" ng-show="!isShowOther">
+          添加抄送 / 密送
+        </div>
+
+        <div class="item item-text-wrap item-user-select clearfix" ng-show="isShowOther">
+          <span class="fl">抄送给：</span>
+          <i class="icon ion-ios-plus positive" user-selector-trigger ng-model="form.ccids"></i>
+          <user-selector ng-model="form.ccids" name="ccids" ng-value="form.ccids"></user-selector>
+        </div>
+        
+        <div class="item item-text-wrap item-user-select clearfix" ng-show="isShowOther">
+          <span class="fl">密送给：</span>
+          <i class="icon ion-ios-plus positive" user-selector-trigger ng-model="form.mcids"></i>
+          <user-selector ng-model="form.mcids" name="mcids" ng-value="form.mcids"></user-selector>
+        </div>
+
+        <label class="item item-input">
+          <span class="input-label">主 题：</span>
+          <input type="text" name="subject" ng-model="form.subject" placeholder="输入邮件主题" required>
+        </label>
+      </div>
+
+      <textarea name="content" ng-model="form.content" class="padding-horizontal w100p" placeholder="输入邮件内容" rows="16"></textarea>
+
+      <!-- 在有原始邮件数据的时候（回复、转发）才出现 -->
+      <div class="padding" ng-if="source">
+        <h5> ---- 原始邮件 --- </h5>
+
+        <!-- 原始邮件信息 -->
+        <div id="email_info">
+          <hr />
+          <div id="origin_email_{{source.emailid}}">
+            <table class="email-source-table">
+              <tbody>
+                <tr>
+                  <td width="20%">发件人</td>
+                  <td>
+                    {{source.fromwebmail != '' ? source.fromwebmail : source.fromid|userInfo:'realname'}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>发件时间</td>
+                  <td>
+                    {{source.sendtime * 1000|date:'yyyy-MM-dd HH:mm（EEEE）'}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>收件人</td>
+                  <td>
+                    {{source.toids|userInfo:'realname'}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>抄送</td>
+                  <td>
+                    {{source.copytoids}}
+                  </td>
+                </tr>
+                <tr>
+                  <td>主题</td>
+                  <td>
+                    {{source.subject}}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <!-- 原始邮件内容 -->
+        <div ng-bind-html="source.content"></div>
+      </div>
+    </ion-content>
+  </form>
+</ion-view>

@@ -1,0 +1,10 @@
+<a class="item-content">
+  <span class="item-note fss insipid">
+    {{ client.createtime * 1000 | humanizedDateTime }}
+  </span>
+  <h2>{{ client.name }}</h2>
+  <crm-user uid="{{ client.uid }}"></crm-user>
+  <div class="crm-client-item-footer">
+    <crm-tags-section tags="client.tags"></crm-tags-section>
+  </div>
+</a>

@@ -1,0 +1,38 @@
+<ion-view class="lightyellow-bg">
+  <ion-nav-title>{{ title }}</ion-nav-title>
+
+  <ion-nav-buttons side="right">
+    <button class="button-icon button button-clear no-animation" ng-if="dashboardConfig.attention != 0 && isattention === 0" ng-click="attention()">关注</button>
+    <button class="button-icon button button-clear no-animation" ng-if="dashboardConfig.attention != 0 && isattention === 1" ng-click="unattention()">取消关注</button>
+  </ion-nav-buttons>
+
+  <ion-content>
+    <ion-refresher on-refresh="refresh()"></ion-refresher>
+  
+    <div class="list-empty-tip" ng-if="list.length === 0 ">
+      <i class="news-icon-empty"></i>
+      <p class="margin-top">这里空空如也~</p>
+    </div>
+
+    <ion-list class="diary-list">
+      <div class="item item-divider" ng-repeat-start="(key,list) in list | groupBy:groupByMonth"> {{ key }}</div>
+      <ion-item ng-repeat-end ng-repeat="diary in list" ui-sref="diary.detail({ id: diary.diaryid, type: 'personal' })">
+        <img class="stamp-img" ng-if="diary.stampParams" ng-src="{{ diary.stampParams.stamp | fullUrl }}">
+        <h2 class="coyness">{{ diary.diarytime * 1000 | date:'EEEE' }}&nbsp;&nbsp;<i class="icon-annex" ng-if="diary.attachmentid"></i></h2>
+        <span class="fs11 insipid">
+          {{ diary.diarytime * 1000 | date: 'MM-dd' }} &nbsp;&nbsp;{{diary.addtime * 1000 | humanizedDate }} &nbsp;{{ diary.addtime * 1000 | date : 'HH:mm' }}
+        </span>
+        <p>{{ diary.content || '[图片]' }}</p>
+        <span class="item-note insipid" >
+          <i class="icon-comment"></i>
+          <span class="fs11 vam">{{ diary.commentcount }} &nbsp;</span>
+          <i class="icon-review"></i>
+          <span class="fs11 vam">{{ diary.readercount }} &nbsp;</span>
+        </span>
+      </ion-item>
+    </ion-list>
+
+    <button class="button button-full button-clear button-positive no-animation" ng-click="loadMore()" ng-if="pages.page < pages.pageCount - 1">加载更多</button>
+  </ion-content>
+
+</ion-view>

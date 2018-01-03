@@ -1,0 +1,164 @@
+<ion-view title="转交下一步">
+  
+  <form name="flowHandoverForm" ng-submit="save()">
+  <ion-content>
+
+    <!-- 步骤信息 -->
+    <div class="item item-divider">步骤信息</div>
+
+    <div class="list card">
+      <div class="item item-text-wrap" ng-repeat="(index, step) in run.prcsUser">
+        <span class="label light dark-bg">{{index}}</span>
+        <span ng-bind-html="step.userName" ng-class="{'assertive': $last }"></span>
+      </div>
+    </div>
+    
+    <!-- 下一步骤 -->
+    <div class="list card">
+      <div class="item item-divider">第 {{ getPresetIndex(0, run.processid)}} 步：(下一步骤)</div>
+      <!-- if(下步骤有预设): -->
+      <div ng-if="run.preset != ''">
+        <div class="item item-text-wrap">
+          {{run.preset}}
+          <p><span class="assertive">本步骤为预设步骤</span></p>
+        </div>
+        
+        <input type="hidden" name="preset" value="1" />
+        <input type="hidden" name="prcsUser" value="1" />
+        <input type="hidden" name="prcsUserOp" id="prcsUserOp" value="1" />
+        <input type="hidden" name="topflag" value="1" />
+      </div>
+
+      <!-- elseif(下步骤没有预设): -->
+      <div ng-if="run.preset == ''">
+        <div class="item item-input item-select">
+          <span class="input-label">主办人选项</span>
+          <select 
+            name="topflag"
+            ng-model="form.next.topflag">
+            <option value="0">主办</option>
+            <option value="1">先接收者为主办人</option>
+            <option value="2">无主办人会签</option>
+          </select>
+        </div>
+
+        <!-- 没有经办权限时，不显示主办、经办 -->
+        <!-- 主办人选项 ‘先接收者为主办’ 跟 ‘无主办人会签’ 都不用选主办人 -->
+        <div 
+          class="item item-text-wrap item-user-select clearfix"
+          ng-hide="form.next.topflag == '1' || form.next.topflag == '2'"
+        >
+          <span class="fl">主办</span>
+          <i class="icon ion-ios-plus positive"
+            ng-model="form.next.prcsUserOp"
+            user-selector-trigger
+            max-selection="1"
+            >
+          </i>
+          <user-selector
+            ng-model="form.next.prcsUserOp"
+            name="prcsUserOp"
+            required>
+          </user-selector>
+        </div>
+        
+        <div class="item item-text-wrap item-user-select clearfix">
+          <span class="fl">经办</span>
+          <i class="icon ion-ios-plus positive"
+            ng-model="form.next.prcsUser"
+            user-selector-trigger
+            >
+          </i>
+          <user-selector
+            ng-model="form.next.prcsUser"
+            name="prcs_user">
+          </user-selector>
+        </div>
+
+        <div class="item positive">
+          <a ng-click="modal.show()">设置可写字段</a>
+        </div>
+      </div>
+      <!-- endif; -->
+    </div>
+    
+    <!-- 预设步骤 -->
+    <div class="list card" ng-repeat="preset in form.preset">
+      <div class="item item-divider">
+        第 {{getPresetIndex($index, run.processid)}} 步：(预设步骤)
+        <!-- <a ng-click="removePreset($index)" class="positive item-note">移除</a> -->
+        <a ng-click="removePreset($index)" class="icon ion-ios-close fr" style="font-size: 24px;"></a>
+      </div>
+      <div>
+        <div class="item item-input item-select">
+          <span class="input-label">主办人选项</span>
+          <select 
+            name="topflag{{$index + 1}}"
+            ng-model="preset.topflag">
+            <option value="0">主办</option>
+            <option value="1">先接收者为主办人</option>
+            <option value="2">无主办人会签</option>
+          </select>
+        </div>
+
+        <!-- 没有经办权限时，不显示主办、经办 -->
+        <!-- 主办人选项 ‘先接收者为主办’ 跟 ‘无主办人会签’ 都不用选主办人 -->
+        <div 
+          class="item item-text-wrap item-user-select clearfix"
+          ng-hide="preset.topflag == '1' || preset.topflag == '2'"
+        >
+          <span class="fl">主办</span>
+          <i class="icon ion-ios-plus positive"
+            ng-model="preset.prcsUserOp"
+            user-selector-trigger
+            max-selection="1"
+            >
+          </i>
+          <user-selector
+            name="prcsUserOp{{$index + 1}}"
+            ng-model="preset.prcsUserOp"
+            required>
+          </user-selector>
+        </div>
+        
+        <div class="item item-text-wrap item-user-select clearfix">
+          <span class="fl">经办</span>
+          <i class="icon ion-ios-plus positive"
+            ng-model="preset.prcsUser"
+            user-selector-trigger
+            >
+          </i>
+          <user-selector
+            name="prcsUser{{$index + 1}}"
+            ng-model="preset.prcsUser">
+          </user-selector>
+        </div>
+      </div>
+    </div>
+    
+    <!-- 判断是滞允许预设步骤 -->
+    <div class="padding-horizontal" ng-if="run.preset == '' && run.freePreset == '1' ">
+      <button type="button" class="button button-block" ng-click="addPreset()">增加预设步骤</button>
+    </div>
+      
+
+    <!-- 事务提醒 -->
+    <div class="item item-divider">事务提醒</div>
+    <div>
+      <div class="item item-input">
+        <span class="input-label">提醒内容</span>
+        <input type="text" placeholder="请输入提醒内容" ng-model="form.message" name="message">
+      </div>
+    </div>
+  </ion-content>
+
+  <ion-footer-bar>
+    <div class="tabs tabs-light tabs-icon-only toolbar-tabs">
+      <div class="tab-item">
+        <button type="submit" class="button button-block button-clear button-positive" ng-disabled="!validate()">确定</button>
+      </div>
+    </div>
+  </ion-footer-bar>
+
+  </form>
+</ion-view>

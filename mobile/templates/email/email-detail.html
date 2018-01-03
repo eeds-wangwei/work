@@ -1,0 +1,58 @@
+<ion-view title="查看邮件" hide-back-button="true">
+    
+  <ion-nav-buttons side="left">
+    <button class="button back-button button-clear header-item" ng-if="hasBackView()" ng-click="$ionicGoBack()"  nav-direction="back">
+      <i class="icon ion-ios-arrow-back"></i>
+      返回
+    </button>
+    <button class="button back-button button-clear header-item" ng-if="!hasBackView()" ui-sref="email.index" nav-direction="back">
+      <i class="icon ion-ios-arrow-back"></i>
+      邮件中心
+    </button>
+  </ion-nav-buttons>
+
+  <ion-content>
+    <div class="padding-horizontal">
+      <h4 ng-class="{
+          'assertive': mail.important == '2',
+          'balanced': mail.important == '1'
+        }">{{mail.subject}}</h4>
+    </div>
+    <div class="padding-horizontal clearfix detail-info">
+
+      <span class="positive fr" ng-click="showInfoDetail=!showInfoDetail">
+        {{ showInfoDetail ? '隐藏详细' : '查看详细' }}
+      </span>
+
+      <p>{{mail.fromid|userInfo:'realname'}} {{mail.sendtime * 1000|date:'yyyy年MM月dd日'}}</p>
+      <div ng-show="showInfoDetail">
+        <p>发件人：{{mail.fromid|userInfo:'realname'}}</p>
+        <p>收件人：{{mail.toids|userInfo:'realname'}}</p>
+        <p ng-if="mail.copytoids">抄送给：{{mail.copytoids|userInfo:'realname'}}</p>
+      </div>
+    </div>
+    <!-- 文章内容 -->
+    <div class="padding editor-content" img-preview  ng-bind-html="mail.content"></div>
+    
+    <!-- 附件 -->
+    <attach-list attach="mail.attach" ng-if="mail.attachmentid" class="list-inset"></attach-list>
+  </ion-content>
+
+  <ion-footer-bar>
+    <!-- <button>标记为待办</button> -->
+    <div class="tabs tabs-light tabs-icon-only">
+      <a class="tab-item" ng-click="toggleMark()">
+        <i class="icon ion-ios-star" ng-class="{'assertive': mail.ismark == '1'}"></i>
+      </a>
+      <a class="tab-item" ng-click="reply()">
+        <i class="icon ion-reply"></i>
+      </a>
+      <a class="tab-item" ng-click="replyAll()">
+        <i class="icon ion-reply-all"></i>
+      </a>
+      <a class="tab-item" ng-click="remove()">
+        <i class="icon ion-ios-trash"></i>
+      </a>
+    </div>
+  </ion-footer-bar>
+</ion-view>

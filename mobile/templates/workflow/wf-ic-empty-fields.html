@@ -1,0 +1,15 @@
+<div ng-if="fields && fields.length">
+  <div ng-if="emptyFieldShown">
+    <div class="item item-input item-indent item-text-wrap" ng-repeat="item in fields">
+      <span class="input-label coyness">{{item['data-title']}}：</span>
+    </div>
+  </div>
+
+  <div class="item padding-vertical text-center fss" ng-click="toggleFieldShown()">
+    {{ emptyFieldShown ? '收起表单空项' : '查看表单空项' }}
+    <i ng-class="{
+      'ion-ios-arrow-down': !emptyFieldShown,
+      'ion-ios-arrow-up': emptyFieldShown
+    }"></i>
+  </div>
+</div>

@@ -1,0 +1,47 @@
+<ion-tabs class="tabs-icon-top" ng-class="{ 'tabs-item-hide': $root.hideTabs }">
+
+  <!-- Article-Published Tab -->
+  <ion-tab title="已发布" icon="ion-ios-filing" href="#/news/published">
+    已发布
+    <ion-nav-view name="news-published"></ion-nav-view>
+  </ion-tab>
+
+  <!-- Article-Unread Tab -->
+  <ion-tab title="未读" icon="ion-ios-list-outline" href="#/news/unread">
+    未读
+    <ion-nav-view name="news-unread"></ion-nav-view>
+  </ion-tab>
+
+  <!-- Article-Read Tab -->
+  <ion-tab title="已读" icon="ion-ios-list" href="#/news/read">
+    已读
+    <ion-nav-view name="news-read"></ion-nav-view>
+  </ion-tab>
+
+  <ion-tab title="按分类" icon="ion-ios-folder" href="#/news/category">
+    按分类
+    <ion-nav-view name="news-category"></ion-nav-view>
+  </ion-tab>
+
+</ion-tabs>
+
+<!--<ion-view  title="新闻">-->
+  <!--<ion-footer-bar class="row">-->
+    <!--<div class="col col-25">-->
+      <!--<i class="icon-issuance"></i>-->
+      <!--已发布-->
+    <!--</div>-->
+    <!--<div class="col col-25">-->
+      <!--<i class="icon-unread"></i>-->
+      <!--未读-->
+    <!--</div>-->
+    <!--<div class="col col-25">-->
+      <!--<i class="icon-unapproval"></i>-->
+      <!--未审核-->
+    <!--</div>-->
+    <!--<div class="col col-25">-->
+      <!--<i class="icon-sorting"></i>-->
+      <!--已发布-->
+    <!--</div>-->
+  <!--</ion-footer-bar>-->
+<!--</ion-view>-->

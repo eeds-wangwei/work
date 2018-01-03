@@ -1,0 +1,10 @@
+<div class="list attach-list">
+  <div class="item item-avatar" ng-repeat="att in attach">
+    <a class="fr anchor" ng-click="download(att)">查看</a>
+    <div class="item-image">
+      <img ng-src="{{att.iconsmall|filetypeIcon}}" alt="{{ att.filename }}" width="44" height="44">
+    </div>
+    <h2>{{att.filename}}</h2>
+    <p>{{att.dateline * 1000|date:'yyyy-MM-dd'}}&nbsp;&nbsp;&nbsp;&nbsp;{{att.filesize}}</p>
+  </div>
+</div>

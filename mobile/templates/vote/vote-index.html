@@ -1,0 +1,48 @@
+<ion-view title="调查投票">
+  
+  <ion-header-bar class="bar-subheader" ng-if="stateName === 'vote.index'">
+    <div class="vote-header row">
+      <span class="col col-50" ng-class="{'active': activeTab === 'nonparticipator'}" ng-click="setParticipationTab('nonparticipator')" >未参与</span>
+      <span class="col col-50" ng-class="{'active': activeTab === 'participate'}"  ng-click="setParticipationTab('participate')">已参与</span>
+    </div>
+  </ion-header-bar>
+
+  <ion-header-bar class="bar-subheader" ng-if="stateName === 'vote.mine'">
+    <div class="vote-header row">
+      <span class="col col-50" ng-class="{'active': statusTab === 'underway'}" ng-click="setStatusTab('underway')">进行中</span>
+      <span class="col col-50" ng-class="{'active': statusTab === 'end'}" ng-click="setStatusTab('end')">已结束</span>
+    </div>
+  </ion-header-bar>
+
+
+  <ion-content class="has-subheader" delegate-handle="voteReceiveScroll">
+    <ion-refresher on-refresh="refresh()"></ion-refresher>
+
+    <div class="positive padding-top20 text-center" ng-if="loading">正在加载...</div>
+    <div class="list-empty-tip" ng-if="list.length === 0 && !loading">
+      <i class="news-icon-empty"></i>
+      <p class="margin-top coyness">什么投票都没有哟！</p>
+    </div>
+
+    <div class="list">
+      <div class="item vote-item" ui-sref="vote.view({ id: item.voteid })" ng-repeat="item in list">
+        <div class="item-note">{{ item. usernum }}人参与</div>
+        <span class="common-black">{{ item.subject }}</span>
+        <span class="vote-status-ctnr" ng-class="{'light-gray': item.status === 2 }">{{ item.status === 2 ? '已结束': '进行中'}}</span><!--{{ item.status === '0'? '进行中'：'已结束'}} 假设后端返回0为正在进行中 1已结束-->
+        <p>截止时间: {{ item.endtime * 1000 | date: 'yyyy-MM-dd' }}</p>
+      </div>
+    </div>
+  </ion-content>
+
+  <ion-footer-bar class="row vote-footer">
+    <div class="col col-50" ng-class="{'active': stateName === 'vote.index' }" ui-sref="vote.index" nav-direction="none">
+      <i class="icon-vote"></i>
+      <p>调查投票</p>
+    </div>
+    <div class="col col-50" ng-class="{'active': stateName === 'vote.mine' }" ui-sref="vote.mine" nav-direction="none">
+      <i class="icon-originate"></i>
+      <p>我发起的</p>
+    </div>
+  </ion-footer-bar>
+
+</ion-view>

@@ -1,0 +1,75 @@
+<form name="eventForm">
+<ion-view title="{{ stateName == 'crm.addEvent' ? '新建跟进' : '编辑跟进' }}" hide-nav-bar="true" class="crm-bg">
+
+  <!-- <ion-nav-bar class="bar-crm">
+    <ion-nav-back-button default-nav-back-button ng-click="goBack()">{{ backTitle() }}</ion-nav-back-button>
+  </ion-nav-bar>
+
+  <ion-nav-buttons side="right">
+    <button class="button button-clear header-item" ng-click="submit()" ng-disabled="eventForm.$invalid">
+      完成
+    </button>
+  </ion-nav-buttons> -->
+
+  <ion-content class="crm-cm-form">
+    <div class="padding"></div>
+
+    <div class="list">
+      <div class="item item-indent crm-event-pb">
+        <textarea class="w100p" placeholder="请输入内容" rows="7" name="content" ng-model="form.content" required></textarea>
+      </div>
+    </div>
+
+    <div class="list">
+      <!-- 标签组 -->
+      <div class="item item-input item-select item-enter item-indent" ng-repeat="tagGroup in tagGroups">
+        <span class="input-label">{{ tagGroup.name }}</span>
+        <select
+          ng-options="tag.tagid as tag.name for tag in tagGroup.taglist"
+          ng-model="form.tags[tagGroup.groupid]">
+        </select>
+        <i class="ion-ios-arrow-right"></i>
+      </div>
+      <div class="item item-input item-enter item-indent" ng-click="selectClient()">
+        <span class="input-label">关联客户<span class="assertive">*</span></span>
+        <div class="input-content">{{ form.client && form.client.fullname }}</div>
+        <i class="ion-ios-arrow-right"></i>
+        <input type="hidden" name="client" ng-model="form.client" required>
+      </div>
+      <div class="item item-input item-enter item-indent" ng-if="form.cid" ng-click="selectOpportunity()">
+        <span class="input-label">关联商机</span>
+        <div class="input-content">{{ form.opportunity && form.opportunity.subject }}</div>
+        <i class="ion-ios-arrow-right"></i>
+      </div>
+      <!-- @Todo: 跟进时间 -->
+      <!-- <div class="item item-input item-enter item-indent">
+        <span class="input-label">跟进时间</span>
+        <input type="date" placeholder="请输入跟进时间" name="" ng-model="">
+        <i class="ion-ios-arrow-right"></i>
+      </div> -->
+    </div>
+
+    <div class="list" ng-if="form.cid">
+      <crm-contact-item ng-repeat="contact in form.contacts" contact="contact" mode="edit" on-remove="detachContact(contact)">
+      </crm-contact-item>
+      <div class="item padding-vertical text-center" ng-click="attachContact()">
+        <i class="ion-plus vam"></i>&nbsp;
+        添加关联联系人
+      </div>
+    </div>
+    
+    <div class="padding-horizontal">
+      <button class="button button-block button-positive" ng-click="submit()" ng-disabled="eventForm.$invalid">保存</button>
+    </div>
+
+    <div class="padding-horizontal15" ng-if="stateName === 'crm.editEvent'">
+      <button class="button button-block button-light" ng-click="removeEvent()" ng-disabled="!form.canDel">
+        <span class="assertive" ng-if="form.canDel">删除</span>
+        <small ng-if="!form.canDel">无删除权限</small>
+      </button>
+    </div>
+
+    <div class="padding"></div>
+  </ion-content>
+</ion-view>
+</form>

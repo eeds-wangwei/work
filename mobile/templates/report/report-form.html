@@ -1,0 +1,111 @@
+<form name="reportForm">
+  <ion-view title="{{ subject }}" hide-back-button="true">
+    <ion-nav-buttons side="left">
+      <button class="button button-clear" ng-click="saveDraft()">
+        <i class="icon ion-ios-arrow-back"></i>
+        汇报
+      </button>
+    </ion-nav-buttons>
+
+    <ion-nav-buttons side="right">
+      <button class="button button-clear" ng-click="submit()" ng-disabled="reportForm.$invalid">
+        <span class="positive">完成</span>
+      </button>
+    </ion-nav-buttons>
+
+    <ion-content>
+      <div  class="rp-widget-item" ng-repeat="item in formData.fields" >
+        <label class="item item-input rp-remarks-item" ng-if="item.fieldtype == 1">
+          <span class="input-label coyness">{{item.fieldname}}<em class="assertive" ng-if="item.iswrite == 1">*</em></span>
+          <textarea placeholder="请输入文字" ng-model="item.content" ng-required="item.iswrite == 1"></textarea>
+        </label>
+
+        <label class="item item-input" ng-if="item.fieldtype == 2">
+          <span class="input-label coyness">{{item.fieldname}}<em class="assertive" ng-if="item.iswrite == 1">*</em></span>
+          <input type="text" placeholder="请输入文字" ng-model="item.content" ng-required="item.iswrite == 1">
+        </label>
+        
+        <label class="item item-input" ng-if="item.fieldtype == 3">
+          <span class="input-label coyness">{{item.fieldname}}<em class="assertive" ng-if="item.iswrite == 1">*</em></span>
+          <input type="text" placeholder="请输入数字" ng-model="item.content" ng-required="item.iswrite == 1">
+        </label>
+
+        <label class="item item-input" ng-if="item.fieldtype == 4">
+          <span class="input-label coyness">{{item.fieldname}}<em class="assertive" ng-if="item.iswrite == 1">*</em></span>
+          <input type="datetime-local" name="date" placeholder="请选择时间与日期" ng-model="item.content" ng-required="item.iswrite == 1">
+          <span class="padding-horizontal">
+            <i class="rp-icon-calendar"></i>
+          </span>
+        </label>
+
+        <label class="item item-input" ng-if="item.fieldtype == 5">
+          <span class="input-label coyness">{{item.fieldname}}<em class="assertive" ng-if="item.iswrite == 1">*</em></span>
+          <input type="time" name="date" placeholder="请选择时间"  ng-model="item.content" ng-required="item.iswrite == 1">
+          <span class="padding-horizontal">
+            <i class="rp-icon-calendar"></i>
+          </span>
+        </label>
+
+        <label class="item item-input" ng-if="item.fieldtype == 6">
+          <span class="input-label coyness">{{item.fieldname}}<em class="assertive" ng-if="item.iswrite == 1">*</em></span>
+          <input type="date" placeholder="请输入日期" ng-model="item.content" ng-required="item.iswrite == 1">
+          <span class="padding-horizontal">
+            <i class="rp-icon-calendar"></i>
+          </span>
+        </label>
+
+        <label class="item item-input item-select" ng-if="item.fieldtype == 7">
+          <span class="input-label coyness">{{item.fieldname}}<em class="assertive" ng-if="item.iswrite == 1">*</em></span>
+          <select  ng-options="value for value in item.fieldvalue" ng-model="item.content" ng-init="item.content = item.content || item.fieldvalue[0]" ng-required="item.iswrite == 1">
+          </select>
+        </label>
+
+        <label class="item item-input rp-remarks-item" ng-if="item.fieldtype == 8">
+          <span class="input-label coyness">{{item.fieldname}}<em class="assertive" ng-if="item.iswrite == 1">*</em></span>
+          <textarea placeholder="请输入文字" ng-model="item.content" ng-required="item.iswrite == 1"></textarea>
+        </label>
+      </div>
+
+
+      <address-fetcher ng-model="formData.place">
+        <div class="item-divider rp-form-address-bar lightyellow-bg coyness">
+          <i class="rp-icon-location"></i>
+          <span class="insipid" ng-if="!formData.place">获取所在位置</span>
+          <span class="insipid" ng-if="formData.place">{{ $parent.locationing ? '定位中...' : formData.place }}</span>
+        </div>
+      </address-fetcher>
+
+      <div class="item rp-remarks-item">
+        <div class="input-label coyness">备注</div>
+        <textarea placeholder="请输入内容" ng-model="formData.remark"></textarea>
+      </div>
+
+      <div class="item rp-annex-item" click-input>
+        <span>{{ uploading? '正在上传文件...': '附件' }}</span>
+        <i ng-if="!uploading" class="item-note ion-ios-plus-outline fs24 positive"></i>
+        <ion-spinner class="rp-form-spinner item-note"  ng-if="uploading"></ion-spinner>
+        <input type="file"  multiple accept="image/*" file-on-change="addImage">
+      </div>
+      <div class="rp-attach list-avatar-group list" ng-if="accessories.length">
+        <div class="item item-avatar" ng-repeat="annex in accessories">
+          <img ng-src="{{ annex.type | fileIconByExtname }}">
+          <i class="ion-minus-circled assertive" ng-hide="annex.uploading" ng-click="removeImage($index)"></i>
+          <span class="item-note positive" ng-if="annex.uploading" ng-click="annex.cancel && annex.cancel.resolve()">取消</span>
+          <!--上传进度-->
+          <!--<span class="rp-file-icon-start">-->
+            <!--<span class="rp-file-icon-upload" ></span>-->
+          <!--</span>-->
+          <h2>{{ annex.name }}</h2>
+          <p>{{ annex.size }}</p>
+        </div>
+      </div>
+
+
+      <div class="light-bg rp-item-select-user">
+        <p>汇报给</p>
+        <user-avatar-selector ng-model="formData.toid" name="report-toids" required ></user-avatar-selector>
+      </div>
+
+    </ion-content>
+  </ion-view>
+</form>

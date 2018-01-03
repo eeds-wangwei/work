@@ -1,0 +1,15 @@
+<ion-modal-view class="gloomy-bg">
+  <ion-header-bar>
+    <button class="button button-icon button-clear" ng-click="rollbackModal.hide()">取消</button>
+    <h1 class="title">选择回退步骤</h1>
+    <button class="button button-icon button-clear" ng-click="rollbackModal.save()">确定</button>
+  </ion-header-bar>
+  
+  <ion-content>
+
+    <div class="list">
+      <ion-radio ng-model="rollbackData.stepId" ng-repeat="step in flow.backlist" ng-value="step.id"><span class="label">{{ step.id }}</span>&nbsp;&nbsp;{{ step.name }}</ion-radio>
+    </div>
+
+  </ion-content>
+</ion-modal-view>

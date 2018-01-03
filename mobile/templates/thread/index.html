@@ -1,0 +1,53 @@
+<ion-view title="我的主线" class="gloomy-bg">
+  <ion-nav-buttons side="left">
+    <button class="button back-button button-clear header-item" ng-if="!hasBackView()" ui-sref="portal" nav-direction="back">
+      <i class="icon ion-ios-arrow-back"></i>
+      门户
+    </button>
+  </ion-nav-buttons>
+
+  <ion-content>
+    <ion-refresher
+      on-refresh="refresh()">
+    </ion-refresher>
+
+    <div class="list">
+      <div class="item item-divider" ng-if="(list.items|filter:isAttention).length">已关注</div>
+      <a class="item item-avatar"
+        ng-repeat="th in list.items|filter:isAttention"
+        ng-include="'thread-item.html'"
+        ui-sref="thread.view({ id: th.threadid })"
+      >
+      </a>
+
+      <div class="item item-divider">我的主线</div>
+      <a class="item item-avatar"
+        ng-repeat="th in list.items"
+        ng-include="'thread-item.html'"
+        ui-sref="thread.view({ id: th.threadid })"
+      >
+      </a>
+    </div>
+
+    <h5 class="padding text-center coyness" ng-if="!refreshing && list.loading">
+      加载中...
+    </h5>
+    <h5 class="padding text-center coyness" ng-if="list.checkNoData()">
+      暂无进行中的主线
+    </h5>
+
+    <button type="button" class="button button-full button-light margin-top20" ui-sref="thread.finished">查看已结束的主线</button>
+  </ion-content>
+</ion-view>
+
+<script type="text/ng-template" id="thread-item.html">
+  <img ng-src="{{ th.chargeuid | avatar }}">
+  <span class="item-note ion-ios-star fs24" ng-if="th.isAttention"></span>
+  <h2>{{ th.subject }}</h2>
+  <p>
+    {{ th.chargeuid | userInfo:'realname' }} 负责
+    <span ng-if="getDayLeft(th.endtime) > 0">| 剩 {{ getDayLeft(th.endtime) }} 天</span>
+    <span ng-if="getDayLeft(th.endtime) < 0">| <span class="assertive">已过期</span></span>
+    <span class="label energized-border energized-bg light fss" ng-if="isInCharge(th)">我负责</span>
+  </p>
+</script>

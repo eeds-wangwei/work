@@ -1,0 +1,217 @@
+<ion-view title="CRM" hide-nav-bar="true" style="background-color: #ebeff6">
+  <!-- <ion-nav-bar class="bar-crm"></ion-nav-bar> -->
+
+  <!-- <ion-nav-buttons side="right">
+    <button class="button button-clear header-item button-icon ion-ios-plus-empty" ng-click="openAddMenu()"></button>
+  </ion-nav-buttons> -->
+
+  <ion-content>
+    <ion-refresher on-refresh="reload()"></ion-refresher>
+
+    <div class="crm-tabs margin-bottom20">
+      <div class="row">
+        <div class="col col-25" ui-sref="crm.client">
+          <div class="crm-fab crm-fab-skyblue">
+            <i class="icon-attach-client"></i>
+          </div>
+          <p>客户</p>
+        </div>
+
+        <div class="col col-25" ui-sref="crm.contact">
+          <div class="crm-fab crm-fab-melon">
+            <i class="icon-attach-contact"></i>
+          </div>
+          <p>联系人</p>
+        </div>
+
+        <div class="col col-25" ui-sref="crm.opportunity">
+          <div class="crm-fab crm-fab-mint">
+            <i class="icon-attach-opportunity"></i>
+          </div>
+          <p>商机</p>
+        </div>
+        <div class="col col-25" ui-sref="crm.event">
+          <div class="crm-fab crm-fab-stone">
+            <i class="icon-attach-event"></i>
+          </div>
+          <p>跟进</p>
+        </div>
+      </div>
+    </div>
+   
+    <!-- 销售简报 -->
+    <div class="crm-d-card">
+      <div class="crm-d-card-hd">今日销售简报</div>
+      <div class="crm-d-card-bd crm-d-today">
+        <div class="crm-d-card-block">
+          <div class="row crm-tags-grid">
+            <div class="col col-25">
+              <div>
+                <span class="crm-d-card-mf">{{ todayReport.clients || 0 }}</span>个
+              </div>
+              <div class="crm-d-card-label">新客户</div>
+            </div>
+            <div class="col col-25">
+              <div>
+                <span class="crm-d-card-mf">{{ todayReport.opportunitys || 0 }}</span>个
+              </div>
+              <div class="crm-d-card-label">新商机</div>
+            </div>
+            <div class="col col-25">
+              <div>
+                <span class="crm-d-card-mf">{{ todayReport.events || 0 }}</span>个
+              </div>
+              <div class="crm-d-card-label">新跟进</div>
+            </div>
+            <div class="col col-25">
+              <div>
+                <span class="crm-d-card-mf">{{ todayReport.contacts || 0 }}</span>个
+              </div>
+              <div class="crm-d-card-label">新联系人</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="crm-nb-tabs row">
+        <div class="col col-25" ng-repeat="tab in CRM_REPORT_TIMETYPES"
+          ng-class="{'active': reportTimeType === tab.type }"
+          ng-click="setReportTimeType(tab.type)">{{ tab.text }}</div>
+      </div>
+      <div class="crm-d-card-bd">
+        <div class="crm-d-card-block">
+          <div class="row">
+            <div class="col col-50">
+              <div>
+                <span class="crm-d-card-mf">{{ report.clients || 0 }}</span>个
+              </div>
+              <div class="crm-d-card-label">新客户</div>
+            </div>
+            <div class="col col-50">
+              <div>
+                <span class="crm-d-card-mf">{{ report.opportunitys || 0 }}</span>个
+              </div>
+              <div class="crm-d-card-label">新商机</div>
+            </div>
+          </div>
+        </div>
+        <div class="crm-d-card-block">
+          <div class="row">
+            <div class="col col-50">
+              <div>
+                <span class="crm-d-card-mf">{{ report.events || 0 }}</span>条
+              </div>
+              <div class="crm-d-card-label">新跟进</div>
+            </div>
+            <div class="col col-50">
+              <div>
+                <span class="crm-d-card-mf">{{ report.contacts || 0 }}</span>个
+              </div>
+              <div class="crm-d-card-label">新联系人</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div> 
+  
+    <!-- 业绩目标 -->
+    <div class="crm-d-card">
+      <div class="crm-d-card-hd">
+        业绩目标<small class="coyness">（{{ now | date:'yyyy.MM' }}）</small>
+        <i class="ion-ios-help-outline" ng-click="showTargetSetupTip()"></i>
+      </div>
+      <div class="crm-d-card-bd">
+        <div class="crm-d-card-block">
+          <div class="row">
+            <div class="col col-50">
+              <div ng-if="target.newClientCount">
+                <div>
+                  <span class="crm-d-card-mf">{{ target.newClientCount.finish }}</span>
+                  <span class="crm-d-card-sf" ng-if="target.newClientCount.target && target.newClientCount.target != 0">/{{ target.newClientCount.target }}</span>个
+                </div>
+                <div class="crm-d-card-processbar" ng-if="target.newClientCount.target && target.newClientCount.target != 0">
+                  <processbar value="{{ target.newClientCount.finish|percent:target.newClientCount.target }}" color="#21b5ff"></processbar>
+                </div>
+              </div>
+              <div ng-if="!target.newClientCount" class="crm-d-card-sf insipid">未设置目标</div>            
+              <div class="crm-d-card-label">新客户</div>
+            </div>
+            <div class="col col-50">
+              <div ng-if="target.newOppCount">
+                <div>
+                  <span class="crm-d-card-mf">{{ target.newOppCount.finish }}</span>
+                  <span class="crm-d-card-sf" ng-if="target.newOppCount.target && target.newOppCount.target != 0">/{{ target.newOppCount.target }}</span>个
+                </div>
+                <div class="crm-d-card-processbar" ng-if="target.newOppCount.target && target.newOppCount.target != 0">
+                  <processbar value="{{ target.newOppCount.finish|percent:target.newOppCount.target }}" color="#a7d85a"></processbar>
+                </div>
+              </div>
+              <div ng-if="!target.newOppCount" class="crm-d-card-sf insipid">未设置目标</div>
+              <div class="crm-d-card-label">新商机</div>
+            </div>
+          </div>
+        </div>
+        <div class="crm-d-card-block">
+          <div ng-if="target.newOppIncome">
+            <span class="crm-d-card-of">{{ target.newOppIncome.finish | currency:'':0 }}</span>
+            <span class="crm-d-card-sf" ng-if="target.newOppIncome.target && target.newOppIncome.target != 0">/{{ target.newOppIncome.target | currency:'':0 }}</span>元
+          </div>
+          <div ng-if="!target.newOppIncome" class="crm-d-card-sf insipid">未设置目标</div>
+          <div class="crm-d-card-label">新商机金额</div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- 商机详情 -->
+    <div class="crm-d-card">
+      <div class="crm-d-card-hd">商机详情<small class="coyness">（{{ now | date:'yyyy.MM' }}）</small></div>
+      <div class="crm-d-card-bd">
+        <div class="crm-d-card-block">
+          <div class="margin-bottom20">
+            <div>
+              <span class="crm-d-card-mf">{{ oppSurver.underway }}</span>个
+            </div>
+            <div class="crm-d-card-label">进行中商机</div>
+          </div>
+
+          <div class="row crm-tags-grid" ng-repeat="tagRow in oppSurver.tagopp|chunkBy:3" ng-class="{ 'margin-bottom20': !$last }">
+            <div class="col col-33" ng-repeat="tag in tagRow">
+              <div>
+                <span class="crm-tags-cell-em">{{ tag.counts }}</span>
+                个
+              </div>
+              <div class="crm-d-card-label ellipsis">{{ tag.name }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="crm-d-card-line"></div>
+        <div class="crm-d-card-block">
+          <div class="row">
+            <div class="col col-50">
+              <div>
+                <span class="crm-d-card-mf">{{ oppSurver.turnover }}</span>个
+              </div>
+              <div class="crm-d-card-label">已成交商机</div>
+            </div>
+            <div class="col col-50">
+              <div>
+                <span class="crm-d-card-of">{{ (oppSurver.finishincome || 0) | currency:'':0 }}</span>元
+              </div>
+              <div class="crm-d-card-label">已达成金额</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="portal-footer text-center">
+      <i class="footer-logo"></i>
+      <copyright></copyright>
+    </div>
+  </ion-content>
+
+  <div class="fixed-toolbar">
+    <button class="fixed-toolbar-btn button button-positive" ng-click="newModal.show()">
+      <i class="ion-ios-plus-empty"></i>
+    </button>
+  </div>
+</ion-view>

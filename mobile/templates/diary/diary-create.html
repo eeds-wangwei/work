@@ -1,0 +1,11 @@
+<ion-view title="写日志" hide-tabs class="lightyellow-bg">
+
+  <ion-nav-buttons side="right">
+    <button class="button button-clear" ng-disabled="!allowSubmit() || isSubmitting" ng-click="submit()">提交</button>
+  </ion-nav-buttons>
+  
+  <ion-content>
+    <form name="diaryForm" ng-include="'templates/diary/diary-form.html'">
+    </form>
+  </ion-content>
+</ion-view>

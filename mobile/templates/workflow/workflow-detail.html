@@ -1,0 +1,90 @@
+<ion-view title="查看工作">
+  <ion-nav-buttons side="left">
+    <button class="button back-button button-clear header-item" ng-if="!hasBackView()" ui-sref="workflow.index" nav-direction="back">
+      <i class="icon ion-ios-arrow-back"></i>
+      工作流
+    </button>
+  </ion-nav-buttons>
+  
+  <ion-content class="page-wf">
+
+    <div class="wf-form">
+      <!-- 表单基本信息，非空项（不可填） -->
+      <div class="wf-card no-border-top no-border-bottom">
+        <div class="padding">
+          <h4 class="fsl">{{flow.run.name}}</h4>
+          <div>
+            <p>[{{flow.run.runid}}] {{flow.flow.name}}</p>
+            <p>发起人：{{flow.run.beginuser|userInfo:'realname'}}</p>
+            <p>发起时间：{{flow.run.begintime * 1000|date:'yyyy年MM月dd日，EEEE'}}</p>
+          </div>
+          <div class="view-origin-form">
+            <a ng-click="viewSource()">查看原表</a>
+          </div>
+        </div>
+
+        <wf-ic-value-fields fields="flow.valueArr" hidden-field="flow.hidden"></wf-ic-value-fields>
+      </div>
+
+      <div class="wf-card has-value" ng-class="{'no-border-top': !flow.enableArr || !flow.enableArr.length}">
+        <wf-ic-value-fields fields="flow.enableArr" hidden-field="flow.hidden"></wf-ic-value-fields>
+        <!-- 表单空项（不可填） -->
+        <wf-ic-empty-fields fields="flow.emptyArr"></wf-ic-empty-fields>
+      </div>
+    </div>
+
+    <!--图片-->
+    <div class="wf-card" ng-if="imageAttach.length">
+      <div class="wf-card-header">
+        <h4 class="wf-card-title">图片</h4>
+      </div>
+      <div class="upload-img-box">
+        <div class="img" ng-repeat="item in imageAttach">
+          <img ng-src="{{item.url}}" alt="img" img-preview>
+        </div>
+      </div>  
+    </div>
+
+    <!-- 文件 -->
+    <div class="wf-card" ng-if="fileAttach.length">
+      <div class="wf-card-header">
+        <h4 class="wf-card-title">文件</h4>
+      </div>
+      <div class="file-item" ng-repeat="item in fileAttach">
+        <div class="left">
+          <img ng-src="{{ item.filename | fileIconByFilename:'lt' }}">
+          <div class="info">
+            <p class="name" ng-bind-html="item.filename | wfFilenameFormat"></p>
+            <p class="size">{{item.filesize}}</p>
+          </div>
+        </div>
+        <div class="right">
+          <button class="icon-download" ng-show="item.down && flow.process.attachpriv.indexOf(4) !== -1" ng-click="downloadFile(item)"></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 会签 -->
+    <div class="wf-card" ng-if="flow.feedback.length">
+      <div class="wf-card-header">
+        <h4 class="wf-card-title">会签</h4>
+      </div>
+      <div class="padding feedback" ng-repeat="feedback in flow.feedback">
+        <img ng-src="{{feedback.user.avatar_middle | fullUrl}}">
+        <div class="info">
+          <p class="name">{{feedback.user.realname}}</p>
+          <p class="content">{{feedback.content}}</p>
+          <div class="mata">
+            <span class="label light">{{feedback.processid}}</span>
+            <span class="fsm">{{feedback.name}}</span>
+            <time ng-bind-html="feedback.edittime"></time>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 进度 -->
+    <wf-process process="flow.rpcache"></wf-process>
+  </ion-content>
+
+</ion-view>

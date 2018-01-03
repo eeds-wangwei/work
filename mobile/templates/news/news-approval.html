@@ -1,0 +1,80 @@
+<ion-view title="审核新闻">
+
+  <ion-nav-buttons side="right">
+    <button class="button button-clear header-item" ng-click="checkNews()">
+      <i class="icon-check"></i>
+    </button>
+  </ion-nav-buttons>
+
+  <ion-content>
+    <div class="news-approval-notpass" ng-if="news.back"></div>
+
+    <div class="padding-horizontal15">
+      <h4>{{ news.subject }}</h4>
+    </div>
+
+    <div class="padding-horizontal15 clearfix detail-info">
+      <span class="positive fr" ng-click="showInfoDetail = !showInfoDetail">
+        {{ showInfoDetail ? '收起' : '详情' }}
+      </span>
+
+      <p>{{ news.uptime * 1000 | humanizedDate }}</p>
+      
+      <div ng-show="showInfoDetail">
+        <div class="news-detail">
+          <span class="coyness">发布人：</span>
+          <span> {{ news.author }} </span>
+        </div>
+
+        <div class="news-detail">
+          <span class="coyness">审核人：</span>
+          <span> {{ news.approver }} </span>
+        </div>
+
+        <div class="news-detail">
+          <span class="coyness">类别：</span>
+          <span> {{ news.authorDeptName }} </span>
+        </div>
+
+        <div class="news-detail">
+          <span class="coyness">范围：</span>
+          <span> {{ news.departmentNames }} &nbsp;{{ news.positionNames }}&nbsp; {{ news.uidNames }} </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 文章内容 -->
+    <div ng-show="news.type=='0'" class="padding-vertical padding-horizontal15 editor-content" img-preview ng-bind-html="news.content | editorContent | asHtml"></div>
+    <!-- 图片内容 -->
+    <div ng-show="news.type=='1'" class="padding-vertical padding-horizontal15" img-preview>
+      <div ng-repeat="pic in news.pictureData" class="margin-bottom">
+        <img ng-src="{{ pic.filepath | fullUrl }}" class="full-image"/>
+      </div>
+    </div>
+
+    <div class="news-approval" ng-if="news.approvalStep.length > 0" >
+      <ion-item class="item item-divider">审核复批</ion-item>
+      <div class="item item-avatar" ng-repeat="step in news.approvalStep">
+        <span ng-class="{
+          'upapproval': step.status === 3,
+          'pass' : step.status === 1 ,
+          'not-pass': step.status === 2
+          }">
+          <i class="ion-android-done pass" ng-if="step.status === 1"></i>
+          <i class="ion-android-close not-pass" ng-if="step.status === 2"></i>
+        </span>
+        <div>
+          <h2 class="fsm">{{ step.approver }}<span ng-if="step.status === 1">： 通过</span></h2>
+          <p ng-if="step.status !== 3">{{ step.addtime *1000 | date: 'MM-dd' }} {{ step.addtime * 1000 | date:'HH:mm' }}</p>
+          <p ng-if="step.status === 3"> 未审核 </p>
+        </div>
+
+        <div class="news-reject-content" ng-if="step.status == 2 && step.reason">
+          {{ step.reason }}
+        </div>
+      </div>
+    </div>
+
+  </ion-content>
+
+</ion-view>

@@ -1,0 +1,55 @@
+<ion-view title="已完成">
+  <ion-content>
+    <ion-refresher
+      on-refresh="refresh()">
+    </ion-refresher>
+    
+    <ion-list>
+      <div class="item item-input-inset">
+        <label class="item-input-wrapper">
+          <input type="text" placeholder="搜索关键词" name="keyword" ng-model="prop.keyword">
+        </label>
+        <button class="button button-small button-clear" ng-click="list.search(prop.keyword)">
+          搜索
+        </button>
+      </div>
+      <div
+        class="item item-divider"
+        ng-repeat-start="group in groupedItems"
+      >
+        {{group.finishDate}}
+      </div>
+      <a class="item item-avatar"
+        ng-repeat="item in group.items"
+        on-hold="showMenu(item)"
+        ui-sref="assignment.detail({ id: item.assignmentid })"
+      >
+        <!-- 自己是指派人 -->
+        <div ng-if="isDesignee(item)">
+          <img ng-src="{{item.chargeuid|avatar}}" class="item-image">
+          <h2>{{item.subject}}</h2>
+          <p>
+            安排给 {{item.chargeuid|userInfo:'realname'}}
+            <br>
+            {{item.starttime * 1000|date:'MM月dd日 HH:mm'}} - {{item.endtime * 1000|date:'MM月dd日 HH:mm'}}
+          </p>
+        </div>
+        <!-- 自己是负责人 -->
+        <div ng-if="!isDesignee(item)">
+          <img ng-src="{{item.designeeuid|avatar}}" class="item-image">
+          <h2>{{item.subject}}</h2>
+          <p>
+            发布人 {{item.designeeuid|userInfo:'realname'}}
+            <br>
+            {{item.starttime * 1000|date:'MM月dd日 HH:mm'}} - {{item.endtime * 1000|date:'MM月dd日 HH:mm'}}
+          </p>
+        </div>
+      </a>
+      <div ng-repeat-end></div>
+    </ion-list>
+    <div class="list-empty-tip" ng-if="list.checkNoData()">
+      暂无已完成的任务
+    </div>
+    <button class="button button-full button-clear button-positive" ng-if="list.items.length && list.hasMore" ng-click="list.loadMore()">加载更多</button>
+  </ion-content>
+</ion-view>

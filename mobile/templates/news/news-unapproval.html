@@ -1,0 +1,57 @@
+<ion-view title="新闻" hide-back-button="true" class="gloomy-bg">
+
+  <ion-nav-buttons side="left">
+    <button class="button button-clear back-button header-item" ui-sref="portal">
+      <i class="icon ion-ios-arrow-back"></i>
+      门户
+    </button>
+  </ion-nav-buttons>
+
+  <ion-content>
+    <ion-refresher on-refresh="refresh()"></ion-refresher>
+
+    <div class="list-empty-tip" ng-if="news.length === 0 ">
+      <i class="news-icon-empty"></i>
+      <div class="text-center coyness">这里空空如也！</div>
+    </div>
+
+    <ion-list class="news-list">
+      <ion-item ng-repeat="n in news" ng-click="open(n)">
+        <span class="item-note positive" ng-if="!n.back">待审核</span>
+        <span class="item-note assertive" ng-if="n.back">未通过</span>
+        <h2 ng-bind-html="n.subject | asHtml"></h2>
+
+        <!-- 文章内容 -->
+        <p ng-if="n.type == 0">{{ n.content | htmlToPlaintext }}</p>
+        <!-- 图片内容 -->
+        <p ng-if="n.type == 1">[图片]</p>
+        <!-- 超链接 -->
+        <p ng-if="n.type == 2">[链接]</p>
+
+        <span class="fs11 insipid">{{ n.author}} 上传于 {{ n.uptime * 1000 | humanizedDate }}</span>
+      </ion-item>
+    </ion-list>
+
+    <button class="button button-full button-clear button-positive" ng-if="pages.pageCount > pages.page + 1" ng-click="loadMore()">加载更多</button>
+  </ion-content>
+
+  <ion-footer-bar class="row fs11 coyness text-center news-footer-bar">
+    <div class="col col-25" ui-sref="news.published" nav-direction="none">
+      <i class="icon-issuance"></i>
+      <div>已发布</div>
+    </div>
+    <div class="col col-25" ui-sref="news.unread" nav-direction="none">
+      <i class="icon-unread"></i>
+      <div>未读</div>
+    </div>
+    <div class="col col-25 active">
+      <i class="icon-unapproval"></i>
+      <div>未审核</div>
+    </div>
+    <div class="col col-25" ui-sref="news.category" nav-direction="none">
+      <i class="icon-sorting"></i>
+      <div>分类</div>
+    </div>
+  </ion-footer-bar>
+
+</ion-view>

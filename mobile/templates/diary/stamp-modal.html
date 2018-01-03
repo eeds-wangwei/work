@@ -1,0 +1,15 @@
+<!-- 图章选择 -->
+<ion-modal-view>
+  <ion-header-bar>
+    <button class="button button-icon icon button-clear button-positive" ng-click="stampModal.hide()">取消</button>
+    <h1 class="title">选择图章</h1>
+  </ion-header-bar>
+  <ion-content>
+  <div class="list">
+    <div class="item" ng-repeat="stamp in comment.stamps" ng-click="comment.stamp = stamp; stampModal.hide()">
+      <img ng-src="{{ comment.stampBasePath + stamp.icon | fullUrl }}" alt="{{ stamp.code }}">
+    </div>
+  </div>
+  </ion-content>
+</ion-modal-view>
+

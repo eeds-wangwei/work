@@ -1,0 +1,159 @@
+<ion-view title="转交下一步">
+  
+  <form name="flowHandoverForm" ng-submit="save()">
+  <ion-content>
+
+    <!-- 选择下一步骤 -->
+    <div class="item item-divider">选择下一步骤</div>
+    <div class="list card">
+      <!-- 循环输出可用步骤 -->
+      <div ng-repeat="(index, step) in data.list">
+
+         <!-- data.process.syncdeal(0 为不并发， 1为并发， 2为强制并发) -->
+        <div>
+
+          <!-- 如果流程未达到转交条件则禁用 -->
+          <!-- 强制并发时，默认选中 -->
+          <div class="item item-checkbox item-text-wrap">
+            <label class="checkbox">
+              <input type="checkbox" 
+                name="prcs_choose[]"
+                ng-init="initStep(index, step)"
+                ng-model="form.prcs_choose[index].checked"
+                ng-disabled="!!step.notpass || data.process.syncdeal == 2"
+                ng-change="selectStep(index, step)"
+              >
+            </label>
+            
+            <!-- if(流程到达最后一步): -->
+            <span class="label light dark-bg" ng-if="step.isover">结束</span>
+            <!-- else: -->
+            <span 
+              ng-if="!step.isover"
+              class="label light"
+              ng-class="{ 'assertive-bg': step.notpass, 'dark-bg': !step.notpass }">
+              {{data.prcsto[index]}}
+            </span>
+            <!-- endif;-->
+
+            <span>{{step.prcsname}}</span>
+            <span ng-if="step.notpass">（<em class="assertive">{{step.notpass}}</em>）</span>
+          </div>
+          
+          <div
+            class="item item-text-wrap text-center assertive"
+            ng-if="step.nopriv"
+            ng-show="form.prcs_choose[index].checked">
+            {{step.nopriv}}
+          </div>
+          
+          <!-- 流程的最后步骤（除子流程），不显示主办经办 -->
+          <!-- 没有权限时，不显示主办经办 -->
+          <div
+            ng-if="(!step.isover || (step.isover && data.prcsback)) && !step.nopriv"
+            ng-show="form.prcs_choose[index].checked">
+            <!-- 进入子流程或结束子流程时，不显示主办人选项 -->
+            <div class="item item-input item-select" ng-show="notChildFlow(step)">
+              <span class="input-label">主办人选项</span>
+              <select 
+                name="topflag{{index}}"
+                ng-init="form.topflag[index] = step.topdefault || '0'"
+                ng-disabled="step.topmodify == '0'"
+                ng-model="form.topflag[index]">
+                <option value="0">主办</option>
+                <option value="1">先接收者为主办人</option>
+                <option value="2">无主办人会签</option>
+              </select>
+            </div>
+
+            
+            <!-- 没有经办权限时，不显示主办、经办 -->
+            <!-- 主办人选项 ‘先接收者为主办’ 跟 ‘无主办人会签’ 都不用选主办人 -->
+            <div 
+              class="item item-text-wrap item-user-select clearfix"
+              ng-hide="form.topflag[index] == '1' || form.topflag[index] == '2'"
+            >
+              <span class="fl">主办</span>
+              <i class="icon ion-ios-plus positive"
+                ng-model="form.prcs_user_op[index]"
+                user-selector-trigger
+                max-selection="1"
+                enabled-users="data.list[index].prcsEnabledUsers | removeUserPrefix"
+                >
+              </i>
+              <user-selector
+                ng-init="form.prcs_user_op[index] = step.prcsOpUser"
+                ng-model="form.prcs_user_op[index]"
+                name="prcs_user_op{{index}}"
+                required>
+              </user-selector>
+            </div>
+            
+            <div class="item item-text-wrap item-user-select clearfix">
+              <span class="fl">经办</span>
+              <i class="icon ion-ios-plus positive"
+                ng-model="form.prcs_user[index]"
+                user-selector-trigger
+                enabled-users="data.list[index].prcsEnabledUsers | removeUserPrefix"
+                >
+                </i>
+              <user-selector
+                ng-init="form.prcs_user[index] = step.prcsUser"
+                ng-model="form.prcs_user[index]"
+                name="prcs_user{{index}}">
+              </user-selector>
+            </div>
+          </div>
+          
+        </div>
+      </div>
+      <!-- 循环输出可用步骤 end -->
+
+      <div class="item assertive text-center" ng-if="data.process.syncdeal == 2">
+        此步骤为强制并发
+      </div>
+      
+    </div>
+
+    <!-- 事务提醒 -->
+    <div class="item item-divider">事务提醒</div>
+    <div class="list card">
+    
+      <div class="item item-checkbox">
+        <label class="checkbox">
+          <input type="checkbox" name="remind[1]" ng-model="form.remind[1]">
+        </label>
+        下一步办理人
+      </div>
+
+      <div class="item item-checkbox">
+        <label class="checkbox">
+          <input type="checkbox" name="remind[2]" ng-model="form.remind[2]">
+        </label>
+        发起人
+      </div>
+
+      <div class="item item-checkbox">
+        <label class="checkbox">
+          <input type="checkbox" name="remind[3]" ng-model="form.remind[3]">
+        </label>
+         全部经办人
+      </div>
+
+      <div class="item item-input">
+        <span class="input-label">提醒内容</span>
+        <input type="text" placeholder="请输入提醒内容" ng-model="form.message" name="message">
+      </div>
+    </div>
+  </ion-content>
+
+  <ion-footer-bar>
+    <div class="tabs tabs-light tabs-icon-only toolbar-tabs">
+      <div class="tab-item">
+        <button type="submit" class="button button-block button-clear button-positive" ng-disabled="!validate()">确定</button>
+      </div>
+    </div>
+  </ion-footer-bar>
+
+  </form>
+</ion-view>

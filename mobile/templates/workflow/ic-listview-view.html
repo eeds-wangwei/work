@@ -1,0 +1,31 @@
+<div class="wfic-listview">
+  <ion-scroll direction="x" delegate-handle="ic-listview-{{ data['data-title'] }}">
+    <table>
+      <thead>
+        <tr>
+          <th>序号</th>
+          <th ng-repeat="title in lvTitles track by $index">{{ title }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="(rowIndex, cols) in ([]|range:rows.length)">
+          <td>
+            <strong>{{ rowIndex + 1 }}</strong>
+          </td>
+          <td ng-repeat="(colIndex, col) in ([]|range:lvTitles.length)">
+            <div ng-switch="lvColtypes[$index]" class="ellipsis">
+              <pre ng-switch-when="textarea">{{ rows[rowIndex][colIndex] }}</pre>
+              <span ng-switch-default>{{ rows[rowIndex][colIndex] }}</span>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <td>合计</td>
+        <td ng-repeat="sum in lvSums track by $index">
+          <span ng-if="sum == 1">{{ rows | sumArrayBy:$index }}</span>
+        </td>
+      </tfoot>
+    </table>
+  </ion-scroll>
+</div>

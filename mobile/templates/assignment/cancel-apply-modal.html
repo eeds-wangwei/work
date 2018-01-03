@@ -1,0 +1,25 @@
+<!-- 申请取消模板 -->
+<ion-modal-view>
+  <ion-header-bar>
+    <button class="button button-icon icon" ng-click="cancelModal.hide()">取消</button>
+    <h1 class="title">任务取消申请</h1>
+  </ion-header-bar>
+  <ion-content>
+    <form name="applyCancelForm">
+      <div class="list">
+        <textarea name="reason" class="padding w100p" ng-model="cancelData.cancelReason" placeholder="说说需要取消的理由..."  style="height: 100px;" required></textarea>
+      </div>
+      <div class="padding">
+        <button type="button"
+          class="button button-positive button-block"
+          ng-click="applyCancel()"
+          ng-disabled="applyCancelForm.$invalid || cancelApplySubmitting"
+        >
+          <span ng-if="cancelApplySubmitting">提交中...</span>
+          <span ng-if="!cancelApplySubmitting">确定</span>
+        </button>
+      </div>
+    </form>
+  </ion-content>
+</ion-modal-view>
+

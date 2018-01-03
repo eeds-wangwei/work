@@ -1,0 +1,70 @@
+<div class="wfic-listview">
+  <ion-scroll direction="x" delegate-handle="ic-listview-{{ data['data-title'] }}">
+    <table>
+      <thead>
+        <tr>
+          <th>序号</th>
+          <th ng-repeat="title in lvTitles track by $index">{{ title }}</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- 
+          此处循环之所以用 range filter 建了两个新数组，而不直接用 rows 的原因是
+          这里要的只是 model 的 rowIndex, colIndex 以用来绑定
+          model 输入数据时会同步回 rows，从而触发重渲染模板，最后导致输入框失去焦点
+        -->
+        <tr ng-repeat="(rowIndex, cols) in ([]|range:rows.length)">
+          <td>
+            <strong>{{ rowIndex + 1 }}</strong>
+          </td>
+          <td ng-repeat="(colIndex, col) in ([]|range:lvTitles.length)">
+            <div ng-switch="lvColtypes[$index]" class="ellipsis">
+              <!-- 单行文本 -->
+              <input type="text" ng-switch-when="text" ng-model="rows[rowIndex][colIndex]">
+              <!-- 多行文本 -->
+              <textarea ng-switch-when="textarea" ng-model="rows[rowIndex][colIndex]" rows="3"></textarea>
+              <!-- 下拉选框 -->
+              <select ng-switch-when="select" ng-model="rows[rowIndex][colIndex]" ng-options="item for item in getOptions(colIndex)"></select>
+              <!-- 单选 -->
+              <!-- class="checkbox" -->
+              <label ng-switch-when="radio" ng-repeat="radio in getRadios(colIndex)">
+                <input type="radio" ng-model="rows[rowIndex][colIndex]" ng-value="radio">
+                <span>{{ radio }}</span>
+              </label>
+              <!-- 复选 -->
+              <ic-listview-checkbox ng-switch-when="checkbox" ng-model="rows[rowIndex][colIndex]" list="['A','B','C']"></ic-listview-checkbox>
+              <!-- 日期 -->
+              <label ng-switch-when="date">
+                <input type="date" ng-model="rows[rowIndex][colIndex]" date-str-input>
+                <!-- <span class="positive">{{ rows[rowIndex][colIndex] | date:'yyyy-MM-dd' }}</span> -->
+              </label>
+              <!-- 计算 -->
+              <span ng-switch-when="calc">
+                <span>{{ rows[rowIndex][colIndex] }}</span>
+                <ic-listview-calc ng-model="rows[rowIndex][colIndex]" exp="lvColvalues[colIndex]" row-data="rows[rowIndex]"></ic-listview-calc>
+              </span>
+              <span ng-switch-default>不支持的控件类型</span>
+            </div>
+          </td>
+          <td>
+            <i class="ion-ios-close assertive" ng-click="removeRow(rowIndex)"></i>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <td>合计</td>
+        <td ng-repeat="sum in lvSums track by $index">
+          <span ng-if="sum == 1">{{ rows | sumArrayBy:$index }}</span>
+          <!-- <span ng-if="sum == 0">否</span> -->
+        </td>
+        <td></td>
+      </tfoot>
+    </table>
+  </ion-scroll>
+
+  <button class="button button-block button-clear button-positive" ng-click="addRow()">
+    <i class="ion-ios-plus-empty"></i>
+    添加一行
+  </button>
+</div>

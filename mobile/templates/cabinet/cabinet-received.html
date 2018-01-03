@@ -1,0 +1,34 @@
+<ion-view title="{{ title || '收到的共享' }}">
+  <ion-nav-buttons side="left">
+    <button class="button back-button button-clear header-item" ui-sref="portal" nav-direction="back">
+      <i class="icon ion-ios-arrow-back"></i>
+      门户
+    </button>
+  </ion-nav-buttons>
+
+  <ion-content>
+    <ion-list class="cabinet-list">
+      <div class="item item-input-inset">
+        <label class="item-input-wrapper">
+          <input type="text" placeholder="搜索用户名" name="keyword" ng-model="keyword">
+        </label>
+        <button class="button button-small button-clear" ng-click="search(keyword)">
+          搜索
+        </button>
+      </div>
+      <ion-item 
+        ng-repeat="user in users"
+        class="item item-avatar"
+        type="item-text-wrap"
+        ui-sref="cabinet.user({ fromuid: user.fromuid })">
+        <img  ng-src="{{user.user.avatar_middle|fullUrl}}">
+        <div>
+          <h2>{{user.user.realname}}</h2>
+          <p>
+            {{user.uptime * 1000|date:'yyyy-MM-dd'}}
+          </p>
+        </div>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

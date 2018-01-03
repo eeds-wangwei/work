@@ -1,0 +1,44 @@
+<ion-view title="活动中心" hide-back-button="true" class="activity-bg subheader-nav-pane">
+
+  <ion-nav-buttons side="left">
+    <button class="button back-button button-clear header-item"  ui-sref="portal" nav-direction="back">
+      <i class="icon ion-ios-arrow-back"></i>
+      门户
+    </button>
+  </ion-nav-buttons>
+
+  <ion-header-bar class="bar-subheader">
+      <div class="subheader-nav subheader-nav-activity row">
+        <span class="col col-50" ng-class="{'active': stateName == 'activity.index'}" ui-sref="activity.index" nav-direction="none">全部活动</span>
+        <span class="col col-50" ng-class="{'active': stateName == 'activity.join'}" ui-sref="activity.join" nav-direction="none">我参加的</span>
+      </div>
+    </ion-header-bar>
+
+  <ion-content>
+    
+    <ion-refresher on-refresh="reload()"></ion-refresher>
+
+    <!-- 空值 -->
+    <div class="list-empty-tip" ng-if="!activity.list.length && !activity.loading">
+      <p class="margin-top20">这里空空如也~</p>
+    </div>
+
+    <div class="list activity-list activity-all-list">
+      <a class="item activity-item" ng-repeat="item in activity.list" ui-sref="activity.view({ id: item.activityid })"
+        ng-class="{ 'activity-item-finish': item.flag == 3 }"
+        >
+        <i class="activity-signup-stamp" ng-if="stateName != 'activity.join' && item.issignup"></i>
+        <div class="item-note positive" ng-if="item.flag == 1">进行中</div>
+        <div class="item-note insipid" ng-if="item.flag == 2">未开始</div>
+        <div class="item-note" ng-if="item.flag == 3">已结束</div>
+        <div class="item-note assertive" ng-if="item.flag == 4">异常</div>
+        <h2>{{ item.title }}</h2>
+        <p>{{ item.updatetime * 1000 | date:'yyyy年MM月dd日 HH:mm' }}</p>
+      </a>      
+      <button class="button button-full button-clear button-positive no-animation" ng-click="load()" ng-disabled="activity.loading" ng-if="activity.hasMore">
+        {{ activity.loading ? '加载中...' : '加载更多' }}
+      </button>
+    </div>
+
+  </ion-content>
+</ion-view>

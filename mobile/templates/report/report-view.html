@@ -1,0 +1,75 @@
+<ion-view title="查看">
+
+  <ion-nav-buttons side="right" >
+    <button class="button back-button button-clear header-item" ng-if="currentUserUid === report.uid "  ng-click="operateMore()" >
+      <span class="ion-android-more-vertical fs32"></span>
+    </button>
+  </ion-nav-buttons>
+
+  <ion-content>
+    <div class="item-padding rp-view-list">
+        <div class="item item-avatar" >
+          <img avatar="{{ report.uid | avatar | defaultAvatar }}">
+          <span class="item-note fs11 insipid">{{ report.addtime * 1000 | date : 'MM-dd' }}</span>
+          <h3 class="common">{{ report.uid | userInfo: 'realname' }}</h3>
+          <i class="rp-tpl-icon rp-tpl-icon-12 rp-tpl-icon-{{report.icon}}"></i>
+          <span class="fs11 coyness rp-subject">{{ report.subject}}</span>
+          <img class="rp-view-stamp" ng-if="report.stamp" ng-src="{{ report.stamp | fullUrl}}">
+        </div>
+      <div class="item re-view-record" ng-repeat="item in report.record">
+        <p class="fsl coyness">{{ item.fieldname }}:</p>
+        <div class="rp-view-content" ng-if="item.fieldtype != 8">{{item.content}}</div>
+        <div class="rp-view-content editor-content" ng-if="item.fieldtype == 8" ng-bind-html="item.content | editorContent" img-preview></div>
+      </div>
+      <div class="item re-view-record">
+        <p class="fsl coyness">备注:</p>
+        <div class="common">{{ report.remark | htmlToPlaintext}}</div>
+      </div>
+    </div>
+
+    <div class="item rp-view-addr" ng-if="report.place">
+      <span class="icon-addr"></span>
+      {{ report.place }}
+    </div>
+
+    <!-- 附件 -->
+    <div class="item item-divider padding lightyellow-bg" ng-if="report.attach.length">附件 {{report.attach.length}}</div>
+    <attach-list attach="report.attach" class="list-inset" ng-if="report.attach.length"></attach-list>
+
+    <!-- 评论 -->
+    <div class="rp-comment">
+      <div class="item item-divider lightyellow-bg">
+        <span>评论  {{ commentList.length }}</span>
+        <i class="item-note icon-comment-gray common" ng-click="openComment('comment')"></i>
+      </div>
+      <div class="item text-center" ng-if="commentList.length <=  0">暂时还没有评论哦！</div>
+      <div class="list"  ng-if="commentList.length">
+        <div class="item item-avatar item-text-wrap detail-list item-indent" ng-repeat="cm in commentList | before:4" ng-click="openComment('reply',cm)">
+          <img ng-src="{{ cm.uid | userInfo:'avatar_middle' | fullUrl }}">
+          <span class="item-note insipid fs11">{{ cm.ctime | htmlToPlaintext }}</span>
+          <h2 class="coyness">{{ cm.uid | userInfo:'realname' }}</h2>
+          <p class="somber fsl" ng-bind-html="cm.content | editorContent"></p>
+        </div>
+
+        <div class="item padding text-center common-black" ng-if="commentList.length > 3" ng-click="openCommentDetail()">查看更多</div>
+      </div>
+    </div>
+
+    <div class="news-reader" ng-if="report.readers.length > 0">
+      <div class="item rp-item-divider lightyellow-bg">查阅情况 {{ report.readers.length }} </div>
+      <ul class=" row text-center">
+        <li class="col" ng-repeat="item in [] | range: 6">
+          <div ng-if="report.readers[$index] && ($index < 5 || ($index == 5 && news.readers.length === 6))">
+            <img  avatar="{{ report.readers[$index] | avatar | defaultAvatar  }}">
+            <div class="fsm common-black">{{ report.readers[$index] | userInfo: 'realname' }}</div>
+          </div>
+          <div ng-if="$index == 5  && report.readers.length > 6" ng-click="openReaderDetail()">
+            <span>···</span>
+            <div class="fsm common-black"> 更多</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+  </ion-content>
+</ion-view>

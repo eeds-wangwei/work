@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+	<title>文件下载</title>
+	<style>
+		body{
+			color: #FFF;
+			background: #272B2E url(./img/sharetip_arrow.png) no-repeat top right;
+			-webkit-background-size: 66px 74px;
+			background-size: 66px 74px;
+		}
+		.content{ padding: 80px 10px; font-size: 20px; line-height: 24px; }
+		.footer-logo{
+			position: absolute;
+			bottom: 20px;
+			left: 50%;
+			margin-left: -114px;
+			width: 228px;
+			height: 55px;
+			background: url(./img/app_banner.png) no-repeat;
+			-webkit-background-size: 100%;
+			background-size: 100%;
+		}
+	</style>
+</head>
+<body>
+	<div class="content">
+		点击右上角菜单<br>
+		选择“在浏览器打开”即可下载
+	</div>
+	<div class="footer-logo"></div>
+	<script type="text/javascript">
+		(function(){
+			var matched = window.location.href.match(/\?url=(.*)/);
+			if(matched && matched[1]) {
+				window.location.href = decodeURIComponent(matched[1]);
+			}
+		}());
+	</script>
+</body>
+</html>

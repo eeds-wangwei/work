@@ -1,0 +1,25 @@
+<ion-view title="活动安排">
+  <ion-nav-buttons side="left">
+    <button class="button back-button button-clear header-item" ng-if="!hasBackView()" ui-sref="activity.index">
+      <i class="icon ion-ios-arrow-back"></i> 活动中心
+    </button>
+  </ion-nav-buttons>
+
+  <ion-content class="activity-info">
+    <div class="list list-indent">
+      <div class="item item-input item-text-wrap">
+        <span class="input-label">活动主题</span>
+        <div class="input-content">
+          <span class="positive" ui-sref="activity.view({ id: activity.activityid })">{{ activity.title }}</span>
+        </div>
+      </div>
+
+      <div class="item item-input item-text-wrap" ng-repeat="field in fields">
+        <span class="input-label">{{ field.fieldtitle }}</span>
+        <div class="input-content common">{{ field.value }}</div>
+      </div>
+    </div>
+  </ion-content>
+
+
+</ion-view>

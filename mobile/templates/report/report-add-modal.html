@@ -1,0 +1,33 @@
+<ion-modal-view>
+  <ion-header-bar>
+    <button class="button back-button button-clear header-item" ng-click="addModel.hide()">
+      <span class="icon fs32" style="margin-top: -3px" >×</span>
+    </button>
+    <h1 class="title">模板商城</h1>
+
+    <button class="button back-button buttons button-clear header-item"  ng-click=";openManageModel()">
+      <span class="positive">我的模板</span>
+    </button>
+  </ion-header-bar>
+
+  <ion-content class="sets-ctnr ">
+    <ion-list class="list list-avatar-group light-bg rp-order-list" >
+      <ion-item class="item-divider padding lightyellow-bg" ng-repeat-start="templates in templateData">
+        {{ templates.catename }}
+      </ion-item>
+      <ion-item class="item-avatar" ng-repeat-end ng-repeat="tpl in templates.template">
+        <i class="rp-tpl-icon rp-tpl-icon-30 rp-tpl-icon-{{tpl.pictureurl}}" ></i>
+        <h2>{{tpl.tname}}</h2>
+        <p class="fs09 insipid">提供者:{{tpl.provider }}</p>
+        <p class="fs11 coyness">{{tpl.description }}</p>
+        <button class="button-clear rp-tpl-add-button"
+             ng-class="{ 'added': tpl.isadd ,'add': !tpl.isadd }"
+             ng-disabled="!isAdd || tpl.isadd"
+             ng-click="addTemplate(tpl.tid)">
+          {{ tpl.isadd ? '已添加': '添加'}}
+        </button>
+      </ion-item>
+    </ion-list>
+
+  </ion-content>
+</ion-modal-view>

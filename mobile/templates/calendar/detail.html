@@ -1,0 +1,90 @@
+<ion-view title="{{title}}" hide-back-button="true">
+  <ion-nav-buttons side="left">
+    <button class="button back-button button-clear header-item" ng-if="hasBackView()" ng-click="$ionicGoBack()"  nav-direction="back">
+      <i class="icon ion-ios-arrow-back"></i>
+      返回
+    </button>
+    <button class="button back-button button-clear header-item" ng-if="!hasBackView()" ui-sref="calendar" nav-direction="back">
+      <i class="icon ion-ios-arrow-back"></i>
+      我的日程
+    </button>
+  </ion-nav-buttons>
+
+  <ion-nav-buttons side="right">
+    <button type="submit"
+      class="button button-clear button-positive"
+      ng-if="calendar.editable != 0"
+      ng-disabled="!calendarForm.$valid || isSubmiting"
+      ng-click="submit()"
+    >保存</button>
+  </ion-nav-buttons>
+
+  <form name="calendarForm" novalidate ng-submit="submit()">
+    <ion-content>
+      <div class="padding">
+          <textarea ng-model="calendar.subject" name="title" row="3" placeholder="请输入日程内容" class="w100p" rows="4" required></textarea>
+      </div>
+
+      <div class="list list-inset">
+        <label class="item item-toggle">
+          全天
+          <label class="toggle toggle-balanced">
+            <input type="checkbox" ng-model="calendar.isalldayevent" ng-true-value="'1'" ng-false-value="'0'" name="allDay">
+            <div class="track">
+              <div class="handle"></div>
+            </div>
+          </label>
+        </label>
+
+        <label class="item item-input">
+          <span class="input-label">开始日期</span>
+          <input type="date" ng-model="calendar.startDate" name="startDate" required>
+        </label>
+
+        <label class="item item-input" ng-if="calendar.isalldayevent == '1'">
+          <span class="input-label">结束日期</span>
+        </label>
+
+        <label class="item item-input" ng-if="calendar.isalldayevent == '0'">
+          <span class="input-label">开始时间</span>
+          <input type="time" ng-model="calendar.startTime" name="startTime" required >
+        </label>
+
+        <label class="item item-input" ng-if="calendar.isalldayevent == '0'">
+          <span class="input-label">结束时间</span>
+          <input type="time" ng-model="calendar.endTime" name="endTime" required min="{{calendar.startTime}}">
+        </label>
+      </div>
+
+      <div class="list list-inset">
+        <div class="item item-input">
+          <span class="input-label">颜色</span>
+          <calender-colorpicker ng-model="calendar.category" style="background-color: {{calendar.category|calendarTheme}}"></calender-colorpicker>
+        </div>
+      </div>
+    </ion-content>
+    
+    <!-- 底部操作栏，没有权限操作时，给出提示 -->
+    <ion-footer-bar ng-if="calendar.editable == 0">
+      <div class="title assertive">您没有权限编辑该日程</div>
+    </ion-footer-bar>
+
+    <ion-footer-bar ng-if="calendar.editable != 0 && calendar.calendarid">
+      <button type="button" class="button button-clear button-assertive" ng-click="remove()" ng-disabled="isSubmiting">删除</button>
+      
+      <button type="button" 
+        class="button button-clear button-positive no-animation"
+        ng-if="calendar.status == '1'"
+        ng-disabled="isSubmiting"
+        ng-click="unfinish()"
+      >取消完成</button>
+      
+      <button type="button"
+        class="button button-clear button-positive no-animation"
+        ng-if="calendar.status == '0'"
+        ng-disabled="isSubmiting"
+        ng-click="finish()"
+      >设为完成</button>
+    </ion-footer-bar>
+  </form>
+</ion-view>

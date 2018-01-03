@@ -1,0 +1,43 @@
+<div>
+<!-- 工作流表单字段显示模板 -->
+  <!-- isHidden 保密项则不显示 -->
+  <div class="item item-input item-indent item-text-wrap"
+    ng-if="!isHidden(item) &&
+      item['data-type'] !== 'label' &&
+      item['data-type'] !== 'imgupload' &&
+      item['data-type'] !== 'fileupload' &&
+      item['data-type'] !== 'listview' "
+    ng-repeat-start="item in fields"
+    >
+    <span class="input-label coyness">{{item['data-title']}}：</span>
+    <div class="input-content common ic-{{item['data-type']}}-view" ng-class="{'on': item['origin-value']}">
+      {{ 
+        (item['data-type'] != 'checkbox') ?
+        (item | wfic | htmlToPlaintext) :
+        ''
+      }}</div>
+  </div>
+
+  <!-- 列表控件 -->
+  <div class="item item-indent item-text-wrap" ng-if="!isHidden(item) && item['data-type'] === 'listview'">
+    <h2 class="coyness margin-bottom">{{item['data-title']}}</h2>
+    <ic-listview-view data="item"></ic-listview-view>
+  </div>
+
+  <!-- 图片上传控件 -->
+  <div class="item item-indent item-text-wrap" ng-if="!isHidden(item) && item['data-type'] === 'imgupload'">
+    <h2 class="coyness margin-bottom">{{item['data-title']}}</h2>
+    <ic-imgupload-view data="item"></ic-imgupload-view>
+  </div>
+
+  <!-- 文件上传控件 -->
+  <div class="item item-indent item-text-wrap" ng-if="!isHidden(item) && item['data-type'] === 'fileupload'">
+    <h2 class="coyness margin-bottom">{{item['data-title']}}</h2>
+    <ic-fileupload-view data="item"></ic-fileupload-view>
+  </div>
+
+  <!-- 标签类型 -->
+  <div class="item item-indent item-text-wrap" ng-repeat-end ng-if="item['data-type'] === 'label'">
+    <ic-label data="item"></ic-label>
+  </div>
+</div>

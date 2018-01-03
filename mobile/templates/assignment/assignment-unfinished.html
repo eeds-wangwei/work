@@ -1,0 +1,95 @@
+<ion-view title="未完成{{userName}}">
+  <ion-content>
+    <div class="list asm-list">
+      <!-- 负责的任务 -->
+      <div class="item item-divider">
+        <span ng-if="myself">我</span><span ng-if="!myself">TA</span>负责的任务
+      </div>
+      <ion-item 
+        ng-repeat="item in data.chargeData"
+        class="item-avatar"
+        type="item-text-wrap"
+        on-hold="showMenu(item)"
+        ui-sref="assignment.detail({id: item.assignmentid})"
+        ng-if="!item.isRemove"
+        >
+        <img ng-src="{{item.designeeuid|avatar}}">
+        <div>
+          <span class="item-note asm-label energized" ng-if="item.status == '0'">未读</span>
+          <span class="item-note asm-label positive positive-border" ng-if="item.status == '1'">进行中</span>
+          <span class="item-note asm-label balanced balanced-border" ng-if="item.status == '2'">已完成</span>
+          <span class="item-note asm-label" ng-if="item.status == '4'">已取消</span>
+          <h2>{{item.subject}}</h2>
+          <p>
+            发起人 {{item.designeeuid|userInfo:'realname'}} 
+            <small class="assertive" ng-if="isOverdue(item)">[已过期]</small>
+            <small class="positive" ng-if="haveRemind(item)">[已设提醒]</small>
+            <br>
+            {{item.st}} - {{item.et}}
+          </p>
+        </div>
+      </ion-item>
+      <div class="item text-center" ng-if="!data.chargeData.length">暂无负责的任务</div>
+
+      <!-- 指派的任务 -->
+      <div class="item item-divider">
+        <span ng-if="myself">我</span><span ng-if="!myself">TA</span>指派的任务
+      </div>
+      <ion-item 
+        ng-repeat="item in data.designeeData"
+        class="item-avatar"
+        type="item-text-wrap"
+        on-hold="showMenu(item)"
+        ui-sref="assignment.detail({id: item.assignmentid})"
+        ng-if="!item.isRemove"
+        >
+        <img ng-src="{{item.chargeuid|avatar}}">
+        <div>
+          <span class="item-note asm-label energized" ng-if="item.status == '0'">未读</span>
+          <span class="item-note asm-label positive" ng-if="item.status == '1'">进行中</span>
+          <span class="item-note asm-label" ng-if="item.status == '4'">已取消</span>
+          <h2>{{item.subject}}</h2>
+          <p>
+            安排给 {{item.chargeuid|userInfo:'realname'}}
+            <small class="assertive" ng-if="isOverdue(item)">[已过期]</small>
+            <small class="positive" ng-if="haveRemind(item)">[已设提醒]</small>
+            <br>
+            {{item.st}} - {{item.et}}
+          </p>
+        </div>
+      </ion-item>
+      <div class="item text-center" ng-if="!data.designeeData.length">暂无指派的任务</div>
+
+      <!-- 参与的任务 -->
+      <div class="item item-divider">
+        <span ng-if="myself">我</span><span ng-if="!myself">TA</span>参与的任务
+      </div>
+      <ion-item 
+        ng-repeat="item in data.participantData"
+        class="item-avatar"
+        type="item-text-wrap"
+        on-hold="showMenu(item)"
+        ui-sref="assignment.detail({id: item.assignmentid})"
+        ng-if="!item.isRemove"
+        >
+        <img ng-src="{{item.chargeuid|avatar}}">
+        <div>
+          <span class="item-note asm-label energized" ng-if="item.status == '0'">未读</span>
+          <span class="item-note asm-label positive positive-border" ng-if="item.status == '1'">进行中</span>
+          <span class="item-note asm-label" ng-if="item.status == '4'">已取消</span>
+          <h2>{{item.subject}}</h2>
+          <p>
+            负责人 {{item.chargeuid|userInfo:'realname'}}
+            <small class="assertive" ng-if="isOverdue(item)">[已过期]</small>
+            <small class="positive" ng-if="haveRemind(item)">[已设提醒]</small>
+            <br>
+            {{item.st}} - {{item.et}}
+          </p>
+        </div>
+      </ion-item>
+      <div class="item text-center" ng-if="!data.participantData.length">暂无参与的任务</div>
+    </div>
+  </ion-content>
+</ion-view>
+
+

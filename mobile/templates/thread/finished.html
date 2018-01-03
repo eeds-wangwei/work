@@ -1,0 +1,32 @@
+<ion-view title="已结束的主线" class="gloomy-bg">
+  <ion-content>
+    <ion-refresher
+      on-refresh="refresh()">
+    </ion-refresher>
+
+    <div>
+      <div class="list">
+        <a class="item item-avatar" ng-repeat="th in list.items" ui-sref="thread.view({ id: th.threadid })">
+          <img ng-src="{{ th.chargeuid | avatar }}">
+          <h2>{{ th.subject }}</h2>
+          <p>
+            {{ th.chargeuid | userInfo:'realname' }} 负责
+            <span class="label energized-border energized-bg light fss" ng-if="isInCharge(th)">我负责</span>
+          </p>
+        </a>
+      </div>
+    </div>
+    
+    <h5 class="padding text-center coyness" ng-if="!refreshing && list.loading">
+      加载中...
+    </h5>
+    <h5 class="padding text-center coyness" ng-if="list.checkNoData()">
+      暂无进行中的主线
+    </h5>
+    <button
+      class="button button-full button-clear button-positive no-animation"
+      ng-if="!list.loading && list.items.length && list.hasMore"
+      ng-click="list.loadMore()"
+    >加载更多</button>
+  </ion-content>
+</ion-view>

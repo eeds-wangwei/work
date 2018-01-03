@@ -1,0 +1,34 @@
+<ion-view title="{{title}}" hide-back-button="true">
+  
+  <ion-nav-buttons side="left">
+    <button class="button back-button button-clear header-item" ng-show="rootDir" ui-sref="portal" nav-direction="back">
+      <i class="icon ion-ios-arrow-back"></i>
+      门户
+    </button>
+
+    <button class="button back-button button-clear header-item" ng-if="!rootDir" ng-click="$ionicGoBack()">
+      <i class="icon ion-ios-arrow-back"></i>
+      返回
+    </button>
+  </ion-nav-buttons>
+
+  <ion-content>
+    <ion-list class="news-list">
+      <ion-item class="item-icon-left" ng-repeat="category in categorys" ui-sref="docs.category({ cid: category.catid })">
+        <i class="icon ion-ios-folder"></i>
+        {{category.name}}
+      </ion-item>
+      
+      <ion-item ng-repeat="n in list.docs" ui-sref="docs.categoryDetail({ id: n.docid })">
+        <div class="item-note" ng-bind-html="n.uptime"></div>
+        <h2>{{n.subject}}</h2>
+        <p>
+          {{n.content}}
+        </p>
+      </ion-item>
+    </ion-list>
+
+    <button class="button button-full button-clear button-positive" ng-if="list.docs.length && list.hasMore" ng-click="list.loadMore()">加载更多</button>
+
+  </ion-content>
+</ion-view>

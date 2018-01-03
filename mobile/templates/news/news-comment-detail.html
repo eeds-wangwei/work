@@ -1,0 +1,23 @@
+<ion-modal-view class="lightyellow-bg news-comment-detail" >
+  <ion-header-bar>
+    <button class="button back-button buttons button-clear header-item" ng-click="commentTetailModal.hide()">
+      <span class="icon fs32" style="margin-top: -3px">×</span>
+    </button>
+    <h1 class="title">查看评论</h1>
+    <button class="button-icon icon button button-clear" ng-click="openComment('comment')">
+      <i class="icon-comment-gray"></i>
+    </button>
+  </ion-header-bar>
+
+  <ion-content>
+    <div class="comment" ng-if="commentList" >
+        <div class="item item-avatar item-text-wrap detail-list item-indent"  ng-repeat="cm in commentList" ng-click="openComment('reply', cm)">
+          <img ng-src="{{ cm.uid | userInfo:'avatar_middle'| fullUrl }}">
+          <span class="item-note insipid fs11">{{ cm.ctime * 1000 | date:'MM-dd HH:mm' }}</span>
+          <h2 class="coyness">{{ cm.uid | userInfo:'realname' }}</h2>
+          <p class="somber" ng-bind-html="cm.content | editorContent"></p>
+        </div>
+    </div>
+  </ion-content>
+
+</ion-modal-view>

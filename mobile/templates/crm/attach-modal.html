@@ -1,0 +1,48 @@
+<ion-modal-view class="crm-attach-modal" ng-click="clientAttachModal.hide()">
+  
+  <div class="crm-tabs">
+    <div class="row">
+      <div class="col col-25"
+        ng-if="__attachOpts.newEvent"
+        ui-sref="crm.addEvent(__attachOpts.params)"
+        ng-click="clientAttachModal.hide()"
+        >
+        <div class="crm-fab crm-fab-outline">
+          <i class="icon-attach-event"></i>
+        </div>
+        <p>新建跟进</p>
+      </div>
+
+      <div class="col col-25"
+        ng-if="__attachOpts.newContact"
+        ui-sref="crm.addContact(__attachOpts.params)"
+        ng-click="clientAttachModal.hide()">
+        <div class="crm-fab crm-fab-outline">
+          <i class="icon-attach-contact"></i>
+        </div>
+        <p>新建联系人</p>
+      </div>
+
+      <div class="col col-25" 
+        ng-if="__attachOpts.attachContact"
+        ng-click="selectContact();clientAttachModal.hide()">
+        <div class="crm-fab crm-fab-outline">
+          <i class="icon-attach-contact-link"></i>
+        </div>
+        <p>关联联系人</p>
+      </div>
+      
+      <div class="col col-25"
+        ng-if="__attachOpts.newOpp"
+        ui-sref="crm.addOpportunity(__attachOpts.params)"
+        ng-click="clientAttachModal.hide()"
+        >
+        <div class="crm-fab crm-fab-outline">
+          <i class="icon-attach-opportunity"></i>
+        </div>
+        <p>新建商机</p>
+      </div>
+    </div>
+  </div>
+  
+</ion-modal-view>

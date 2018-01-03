@@ -1,0 +1,8 @@
+<!-- 处理“延期申请” -->
+<div class="media">
+  <img width="60" height="60" ng-src="{{data.applyData.uid|avatar}}" class="circle fl">
+  <div class="media-body">
+    <p><strong>{{data.applyData.uid|userInfo:'realname'}}：</strong> {{data.applyData.reason}}</p>
+    <p><strong>延期时间：</strong> {{data.applyData.startTime}} 至 {{data.applyData.endTime}}</p>
+  </div>
+</div>

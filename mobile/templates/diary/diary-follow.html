@@ -1,0 +1,59 @@
+<ion-view title="看日志" hide-back-button="true" class="lightyellow-bg subheader-nav-pane">
+  <ion-nav-buttons side="left">
+    <button class="button back-button button-clear header-item" ui-sref="diary.index" nav-direction="back">
+      <i class="icon ion-ios-arrow-back"></i>
+      日志
+    </button>
+  </ion-nav-buttons>
+
+  <ion-header-bar class="bar-subheader">
+    <div class="subheader-nav row">
+      <span class="col col-33" ui-sref="diary.personal" nav-direction="none">我的日志</span>
+      <span class="col col-33" ui-sref="diary.review" nav-direction="none">点评下属</span>
+      <span class="col col-33 active">交流日志</span>
+    </div>
+  </ion-header-bar>
+
+  <ion-content>
+  
+    <ion-refresher on-refresh="refresh()"></ion-refresher>
+
+    <div class="list-empty-tip" ng-if="list.length === 0 ">
+      <i class="news-icon-empty"></i>
+      <p class="margin-top">这里空空如也~</p>
+    </div>
+
+    <div class="list diary-list">
+      <div class="item item-divider" ng-repeat-start="(key,list) in list | groupBy: groupByTime">
+        {{ key }}
+        <div class="item-note date-note text-center" ng-if="isToday(key)">今</div>
+      </div>
+      <div class="item item-complex" ng-repeat-end ng-repeat="diary in list" ui-sref="diary.detail({id: diary.diaryid, type: 'personal'})">
+        <a class="item-content">
+          <img class="stamp-img" ng-if="diary.stampParams" ng-src="{{ diary.stampParams.stamp | fullUrl }}">
+
+          <div class="item item-avatar">
+            <img avatar="{{ diary.uid | avatar | defaultAvatar }}" ui-sref="diary.underling({id : diary.uid})" stop-propagation="click">
+            <i class="icon-favor" ng-if="diary.isfavor"></i>
+            <h3 class="coyness"  ui-sref="diary.underling({id : diary.uid})" stop-propagation="click">
+              {{ diary.uid | userInfo: 'realname' }}&nbsp;
+              <i class="icon-annex" ng-if="diary.attachmentid"></i>
+            </h3>
+            <i class="icon-annex" ng-if="diary.attachmentid"></i>
+            <span class="fs11 insipid"> {{ diary.addtime * 1000 | date : 'HH:mm' }}</span>
+          </div>
+
+          <p>{{ (diary.content | htmlToPlaintext) || '[图片]' }}</p>
+          <span class="item-note insipid" >
+              <i class="icon-comment"></i>
+              <span class="fs11 vam">{{ diary.commentcount }} &nbsp;</span>&nbsp;
+              <i class="icon-review"></i>
+              <span class="fs11 vam">{{ diary.readercount }} &nbsp;</span>
+          </span>
+        </a>
+      </div>
+    </div>
+
+    <button class="button button-full button-clear button-positive no-animation" ng-click="loadMore()" ng-if="pages.page < pages.pageCount - 1">加载更多</button>
+  </ion-content>
+</ion-view>

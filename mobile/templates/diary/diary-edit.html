@@ -1,0 +1,14 @@
+<ion-view title="编辑" class="lightyellow-bg">
+<!--   <ion-nav-buttons>
+    <button class="button-icon icon ion-ios-arrow-back button back-button" ng-click="goBack()"> 返回</button>
+  </ion-nav-buttons> -->
+
+  <ion-nav-buttons side="right">
+    <button class="button button-clear" ng-disabled="!allowSubmit() || isSubmitting" ng-click="submit()">完成</button>
+  </ion-nav-buttons>
+    
+  <ion-content>
+    <form name="diaryForm" ng-include="'templates/diary/diary-form.html'">
+    </form>
+  </ion-content>
+</ion-view>

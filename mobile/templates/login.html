@@ -1,0 +1,22 @@
+<ion-view title="Login" hide-back-button="true" hide-nav-bar="true" class="login-panel">
+  <ion-content>
+    <form name="loginForm" ng-submit="submitLogin()">
+      <div class="text-center">
+        <img src="img/logo.png" style="max-width: 90%;">
+      </div>
+      <div class="list list-inset">
+        <label class="item item-input">
+          <input type="text" placeholder="用户名" ng-model="user.username" name="username" required>
+        </label>
+        <label class="item item-input">
+          <input type="password" placeholder="密码" ng-model="user.password" name="password" required>
+        </label>
+      </div>
+      <div class="padding">
+        <button class="button button-block button-positive" ng-disabled="!loginForm.$valid || logining">
+          {{ logining ? '登录中...' : '登录' }}
+        </button>
+      </div>
+    </form>
+  </ion-content>
+</ion-view>

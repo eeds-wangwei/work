@@ -1,0 +1,48 @@
+<ion-modal-view>
+  <!-- <div class="bar-crm search-header-title-bar">商机</div> -->
+  <!--搜索框-->
+  <ion-header-bar class="item-input-inset search-header-bar">
+    <label class="item-input-wrapper">
+      <i class="ion-ios-search fsu coyness"></i>
+      <input type="text" placeholder="搜索" ng-model="search.key" focus-on="search.modal.isShown()" focus-delay="200">
+    </label>
+    <button type="button" class="button button-positive button-clear" ng-click="search.modal.hide()">
+      取消
+    </button>
+  </ion-header-bar>
+
+  <ion-content>
+    <!-- if(有搜索结果): -->
+    <div class="list" ng-if="search.result.list.length">
+      <crm-opp-item class="item item-complex item-text-wrap crm-common-item crm-oppo-item"
+                    ng-repeat="opp in search.result.list"
+                    opp="opp"
+                    ui-sref="crm.opportunityView(opp)">
+        <i class="crm-icon-client"></i>
+        <span class="fss coyness">
+          {{ opp.client && opp.client.fullname ? opp.client.fullname : '未关联客户' }}
+        </span>
+      </crm-opp-item>
+    </div>
+
+    <!-- elseif(未开始搜索): -->
+    <div class="margin-top margin-bottom padding text-center coyness"
+         ng-if="!search.result.list.length && !search.key && !search.searching"
+        >请输入标题或内容进行搜索~
+    </div>
+
+    <!-- elseif(搜索中): -->
+    <div class="margin-top margin-bottom padding text-center coyness"
+         ng-if="search.searching && !search.result.list.length"
+        >搜索中...
+    </div>
+
+    <!-- elseif(没有搜索结果): -->
+    <div class="margin-top margin-bottom padding text-center coyness"
+         ng-if="search.key && !search.searching && !search.result.list.length"
+        >没有找到相关商机~
+    </div>
+    <!-- endif; -->
+  </ion-content>
+
+</ion-modal-view>

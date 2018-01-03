@@ -1,0 +1,33 @@
+<ion-modal-view >
+  <ion-header-bar>
+    <button class="button back-button buttons button-clear header-item" ng-click="manageModel.hide();">
+      <span class="icon fs32" style="margin-top: -3px" >×</span>
+    </button>
+    <h1 class="title">管理模板</h1>
+    <button class="button back-button buttons button-clear header-item"  ng-click="openOrderList(); order = true">
+      <i class="icon-setting-order" ng-if="order == false "></i>
+    </button>
+
+    <button class="button back-button buttons button-clear header-item" ng-if="order == true" ng-click="orderFinish()">
+     <span class="positive">完成</span>
+    </button>
+  </ion-header-bar>
+
+  <ion-content class="sets-ctnr">
+    <ion-list class="list list-avatar-group light-bg rp-order-list" show-reorder="order == true">
+      <ion-item class="item-avatar" ng-repeat="tpl in settingTpls">
+        <i class="rp-tpl-icon rp-tpl-icon-30 rp-tpl-icon-{{tpl.pictureurl}}"></i>
+        <h2 style="margin-top: 12px;"> {{ tpl.tname }} </h2>
+        <button class="button-clear rp-tpl-add-button "
+                ng-disabled="!isSet"
+                ng-class="{ 'added': !isSet ,'add': isSet }"
+                ng-click="manageModel.hide(); openSettingModel(tpl.tid)">设置</button>
+        <ion-reorder-button on-reorder="moveTpl(tpl, $fromIndex, $toIndex)">
+          <i class="icon-order"></i>
+        </ion-reorder-button>
+      </ion-item>
+    </ion-list>
+
+  </ion-content>
+
+</ion-modal-view>

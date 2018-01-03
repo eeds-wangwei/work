@@ -1,0 +1,70 @@
+<ion-list>
+  <!-- 原计划 -->
+  <ion-item class="item-divider diary-date-item lightyellow-bg" ng-click="selectedStartDate()">
+    {{ formData.todayDate }}  {{ formData.todayDate | date:'EEEE' }} &nbsp; <i class="icon-calendar"></i>
+  </ion-item>
+
+  <ion-item class="diary-plan-item" ng-repeat="plan in originalPlanList">
+    <span class="diary-plan-index common-black">{{$index + 1}}.</span>
+    <div class="item-note" >
+      <select class="text-center vam" ng-model="formData.originalPlan[plan.recordid]" ng-options="item.value as item.percent for item in SCHEDULE"></select>
+    </div>
+    <div class="diary-plan-content coyness">{{ plan.content ||  plan.subject }}</div>
+  </ion-item>
+
+  <ion-item class="diary-plan-item"  ng-repeat="plan in formData.planOutside">
+    <span class="diary-plan-index common-black">{{ $index + 1 +  originalPlanList.length }}.</span>
+    <div class="item-note">
+      <select class="text-center vam" ng-model="plan.schedule" ng-options="item.value as item.percent for item in SCHEDULE"></select>
+      <i class="ion-ios-close-empty" ng-click="removeUnplanned($index)"></i>
+    </div>
+    <div class="diary-plan-content">
+      <input type="text" ng-model="plan.content" name="planOutside[{{$index}}][content]" placeholder="计划外..."></div>
+  </ion-item>
+
+  <div class="row text-center coyness light-bg">
+    <div class="col col-50 diary-plus-plan" ng-click="addUnplanned()"> <i class="ion-plus"></i>
+      添加一条
+    </div>
+    <div class="col col-50" ng-click="planfromschedule( formData.todayDate )">
+      <i class="icon-schedule"></i>
+      来自日程
+    </div>
+  </div>
+
+  <!-- 工作内容 -->
+  <ion-item class="item-text-wrap">
+    <textarea name="diaryContent" id="diaryContent" ng-model="formData.diaryContent"  class="diary-ct-area" placeholder="说一下这次的工作总结吧"></textarea>
+  </ion-item>
+
+  <!-- 工作计划 -->
+  <ion-item class="item-divider diary-date-item lightyellow-bg" ng-click="selectedEndDate()">
+    {{ formData.plantime }} {{ formData.plantime | date:'EEEE' }} &nbsp;
+    <i class="icon-calendar"></i>
+  </ion-item>
+
+  <ion-item class="diary-plan-item diary-plan-item-full" ng-repeat="plan in formData.plan">
+    <span class="diary-plan-index common-black">{{$index + 1}}.</span>
+    <div class="item-note">
+      <div class="positive text-center vam predict-box" ng-model="plan.timeremind" ng-click="delRemind(plan)" ng-if="plan.timeremind">
+        {{ plan.timeremind | diaryTimeRemind }}
+      </div>
+      <i class="ion-ios-alarm-outline" ng-if="isInstallCalendar && !plan.timeremind"  ng-click="setRemind(plan)"></i>
+      <i class="ion-ios-close-empty" ng-click="removePlan($index)"></i>
+    </div>
+    <div class="diary-plan-content">
+      <input type="text" ng-model="plan.content" name="plan[][content]" placeholder="写工作计划..."></div>
+  </ion-item>
+
+  <ion-item ng-click="addPlan()" class="text-center padding-vertical">
+    <i class="ion-plus"></i>
+    添加一条
+  </ion-item>
+
+  <div class="item-divider lightyellow-bg"></div>
+  <!-- 后台关闭共享功能时，不显示 -->
+  <ion-item class="diary-sharing" ng-if="dashboardConfig.sharepersonnel != 0" ng-click="openSharingModel()">
+    共享人员
+    <i class="item-note ion-chevron-right"></i>
+  </ion-item>
+</ion-list>

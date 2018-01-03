@@ -1,0 +1,75 @@
+<ion-view title="查看任务">
+  <ion-content>
+    <img ng-if="assignment.stamp != '0'" ng-src="{{getStampPath(assignment.stamp)|fullUrl}}" class="asm-stamp">
+    <div class="padding-horizontal">
+      <!-- 任务状态 -->
+      <span class="fr asm-corner-mark energized-bg" ng-if="assignment.status == '0'">未读</span>
+      <span class="fr asm-corner-mark positive-bg" ng-if="assignment.status == '1'">进行中</span>
+      <span class="fr asm-corner-mark balanced-bg" ng-if="assignment.status == '2'">已完成</span>
+      <span class="fr asm-corner-mark assertive-bg" ng-if="assignment.status == '3'">已评价</span>
+      <span class="fr asm-corner-mark coyness-bg" ng-if="assignment.status == '4'">已取消</span>
+
+      <h4 class="asm-detail-tt">{{assignment.subject}}</h4>
+      <div class="detail-info">
+        <p>{{assignment.description}}</p>
+        <p>{{assignment.st}} 至 {{assignment.et}}</p>        
+        <small class="assertive" ng-if="isOverdue()">[已过期]</small>
+        <small class="positive" ng-if="haveRemind()">[已设提醒]</small>
+      </div>
+    </div>
+    <div class="padding">
+      <div class="asm-dt-bar">
+        <img ng-src="{{assignment.designeeuid|avatar:'small'}}" class="asm-dt-avt">
+        <strong>{{assignment.designeeuid|userInfo:'realname'}}</strong>
+        <span class="padding-horizontal">指派给</span>
+        <img ng-src="{{assignment.chargeuid|avatar:'small'}}" class="asm-dt-avt">
+        <strong>{{assignment.chargeuid|userInfo:'realname'}}</strong>
+      </div>
+
+      <!-- 附件 -->
+      <attach-list attach="assignment.attach" ng-if="assignment.attachmentid" class="list-inset"></attach-list>
+
+      <!-- 参与人员 -->
+      <div ng-if="data.participantCount > 0">
+        <p>另外还有 <span class="asm-p-count">{{data.participantCount}}</span> 个参与人</p>
+        <p>{{data.participant}}</p>
+      </div>
+
+    </div>
+
+    <div class="padding">
+      <!-- 当前用户为指派人或负责人，且任务已读时，允许完成 -->
+      <button type="button"
+        class="button button-block button-balanced"
+        ng-if="(isDesignee || isCharge) && assignment.status == 1"
+        ng-disabled="submitting"
+        ng-click="done()"
+      >完成任务</button>
+      
+      <!-- 当前用户为指派人且任务未读时，允许催办 -->
+      <button type="button"
+        class="button button-block button-balanced"
+        ng-if="isDesignee && assignment.status == 0"
+        ng-disabled="submitting"
+        ng-click="urge()"
+      >催办提醒</button>
+      
+      <!-- 当前用户为指派人，且任务已完成，允许评价 -->
+      <button type="button"
+        class="button button-block button-assertive"
+        ng-if="isDesignee && assignment.status == 2"
+        ng-click="stampModal.show()"
+      >马上评价</button>
+    
+      <!-- 当前用户为指派人或负责人，且任务已完成、已评价、已取消时，允许重启 -->
+      <button type="button"
+        class="button button-block"
+        ng-if="(isDesignee || isCharge) && (assignment.status != 0 && assignment.status != 1)"
+        ng-disabled="submitting"
+        ng-click="restart()"
+      >重启任务</button>
+    </div>
+
+  </ion-content>
+</ion-view>
+

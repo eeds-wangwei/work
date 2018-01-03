@@ -1,0 +1,49 @@
+<ion-modal-view class="lightyellow-bg">
+  <ion-header-bar>
+    <button class="button back-button buttons button-clear header-item" ng-click="moveModel.hide()">
+      <span class="icon fs32" style="margin-top: -3px">×</span>
+    </button>
+    <h1 class="title">移动到</h1>
+    <button class="button-icon icon button button-clear" ng-disabled="!catid" ng-click="submit()">完成</button>
+  </ion-header-bar>
+
+  <ion-content>
+    <div class="news-folder-list" ng-repeat="item in categorys" ng-init="level = 0">
+      <i class="item-note"
+         ng-class="{
+           'ion-chevron-right': item.showChildrenList == false ,
+           'ion-chevron-down': item.childrenList
+        }"
+         ng-click="item.showChildrenList = !item.showChildrenList"
+          ></i>
+      <ion-checkbox  ng-model="item.checked" ng-click="selectCategory(item)">
+        <i class="icon-folder"></i>
+        <span>{{ item.name }}</span>
+      </ion-checkbox>
+
+      <div ng-if="item.childrenList.length" ng-include="'tpl_news_folder_tree'" ng-show="item.showChildrenList"></div>
+    </div>
+  </ion-content>
+
+
+  <script type="text/ng-template" id="tpl_news_folder_tree">
+
+    <div class="news-folder-list children-list" ng-repeat="item in item.childrenList">
+      <i class="item-note"
+         ng-class="{
+           'ion-chevron-right':  item.showChildrenList == false,
+           'ion-chevron-down': item.childrenList
+          }"
+         ng-click="item.showChildrenList = !item.showChildrenList"
+          ></i>
+      <ion-checkbox ng-model="item.checked" ng-click="selectCategory(item)">
+        <i class="icon-folder"></i>
+        <span>{{ item.name }}</span>
+
+      </ion-checkbox>
+      <div  class="news-folder-list-childern" ng-if="item.childrenList.length" ng-include="'tpl_news_folder_tree'" ng-show="item.showChildrenList"></div>
+    </div>
+
+  </script>
+
+</ion-modal-view>

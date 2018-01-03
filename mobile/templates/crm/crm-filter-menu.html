@@ -1,0 +1,21 @@
+<div class="crm-filter" ng-class="{ 'crm-filter-open': filterShown }">
+  <div class="item crm-filter-menu" ng-if="filterShown">
+    <div class="crm-filter-title" ng-repeat-start="filterGroup in filterGroups">{{ filterGroup.groupName }}</div>
+    <ion-scroll direction="x" scrollbar-x="false" ng-repeat-end>
+      <div class="crm-filter-row">
+      <span class="label" ng-repeat="item in filterGroup.items"
+        ng-class="{'active': filterGroup.selected === $index }"
+        ng-click="selectFilterItem(item, filterGroup)">{{ item.text }}</span>
+      </div>
+    </ion-scroll>
+  </div>
+  <div class="crm-filter-footer" ng-click="filterShown = !filterShown">
+    <i ng-if="filterShown" class="ion-ios-arrow-up"></i>
+    <span ng-if="!filterShown">
+      <span ng-if="filterGroups | crmFilterSelectedText" ng-bind="filterGroups | crmFilterSelectedText"></span>
+      <span ng-if="!(filterGroups | crmFilterSelectedText)">
+        <i class="ion-ios-arrow-down"></i>              
+      </span>
+    </span>
+  </div>
+</div>

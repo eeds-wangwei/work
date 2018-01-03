@@ -1,0 +1,30 @@
+<div class="item item-complex crm-contact-item item-indent" ui-sref="crm.contactView(contact)"
+  ng-class="{
+    'item-icon-right': mode !== 'edit',
+    'item-icon-left': mode === 'edit'
+  }"
+  >
+  <a class="item-content">
+    <i class="ion-minus-circled icon" ng-click="onRemove()" ng-if="mode === 'edit'" stop-propagation="click"></i>
+    <h2>
+      {{ contact.name }}
+      <span class="fs09 insipid" ng-if="mode === 'view'">
+        <span>{{ contact.department || '暂无部门' }} </span> • <span>{{ contact.position || '暂无岗位' }}</span>
+      </span>
+      <span ng-if="mode !== 'view'">
+        <!-- @Todo: 联系人角色：主办人、协办人等 -->
+      </span>
+    </h2>
+
+    <p class="fss coyness" ng-if="mode === 'view'">
+      <span>{{ contact.client && contact.client.fullname || '暂无' }}</span>
+    </p>
+    <p class="fss coyness" ng-if="mode !== 'view'">
+      <span>{{ contact.department || '暂无部门' }} </span> • <span>{{ contact.position || '暂无岗位' }}</span>
+    </p>
+  </a>
+  <div class="icon" ng-if="mode !== 'edit'">
+    <a class="ion-ios-telephone contact-telephone" href="tel:{{ contact.mobile }}" stop-propagation="click"></a>
+  </div>
+</div>
+

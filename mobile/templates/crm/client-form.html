@@ -1,0 +1,104 @@
+<form name="clientForm">
+<ion-view title="{{ stateName === 'crm.addClient' ? '新建客户' : '编辑客户' }}" hide-nav-bar="true" class="crm-bg">
+  <!-- <ion-nav-bar class="bar-crm">
+    <ion-nav-back-button default-nav-back-button ng-click="goBack()">{{ backTitle() }}</ion-nav-back-button>
+  </ion-nav-bar> -->
+
+  <!-- <ion-nav-buttons side="right">
+    <button class="button button-clear header-item" ng-click="submit()" ng-disabled="clientForm.$invalid">完成</button>
+  </ion-nav-buttons> -->
+
+  <ion-content class="crm-cm-form">
+    <div class="padding"></div>
+
+    <div class="list">
+      <label class="item item-input item-indent">
+        <span class="input-label">公司<span class="assertive">*</span></span>
+        <input type="text" placeholder="请输入客户公司名称" name="fullname" ng-model="form.fullname" required>
+      </label>
+      <label class="item item-input item-indent">
+        <span class="input-label">电话</span>
+        <input type="text" placeholder="请输入电话号码" name="phone" ng-model="form.phone">
+      </label>
+      <!-- @Todo -->
+      <!--
+      <label class="item item-input item-indent">
+        <span class="input-label">归属人</span>
+        <input type="text">
+      </label>
+      -->
+
+      <!--选择客户信息-->
+      <!-- 标签组 -->
+      <div class="item item-input item-select item-indent item-enter" ng-repeat="tagGroup in tagGroups">
+        <span class="input-label">{{ tagGroup.name }}</span>
+        <select ng-options="tag.tagid as tag.name for tag in tagGroup.taglist"
+          ng-model="form.tags[tagGroup.groupid]">
+        </select>
+        <i class="ion-ios-arrow-right"></i>
+      </div>
+    </div>
+
+    <div class="list">
+      <crm-contact-item ng-repeat="contact in form.contacts" contact="contact" mode="edit" on-remove="detachContact(contact)">
+      </crm-contact-item>
+      <div class="item padding-vertical text-center" ng-click="attachContact()">
+        <i class="ion-plus vam"></i>&nbsp;
+        添加关联联系人
+      </div>
+    </div>
+    
+    <div class="list" ng-if="!isClientInfoShowed">
+      <div class="item text-center padding-vertical" ng-click="addMoreInfo()">
+        <i class="crm-icon-chevron-dd"></i>
+        填写更多
+      </div>
+    </div>
+
+    <!--填写更多工作信息-->
+    <div class="list" ng-if="isClientInfoShowed">
+      <label class="item item-input item-indent">
+        <span class="input-label">邮箱</span>
+        <input type="text" placeholder="请输入邮箱" name="email" ng-model="form.email">
+      </label>
+      <div class="item item-input item-indent">
+        <span class="input-label">地址</span>
+        <input type="text" placeholder="请输入地址" name="address" ng-model="form.address">
+        <address-fetcher class="item-note padding-horizontal" ng-model="form.address">
+          <i class="crm-icon36-location" ng-class="{'animated infinite flash': $parent.locationing }"></i>
+        </address-fetcher>
+      </div>
+      <label class="item item-input item-indent">
+        <span class="input-label">邮编</span>
+        <input type="text" placeholder="邮编" name="zipcode" ng-model="form.zipcode">
+      </label>
+      <label class="item item-input item-indent">
+        <span class="input-label">网址</span>
+        <input type="text" placeholder="请输入网址" name="website" ng-model="form.website">
+      </label>
+      <!-- @Todo
+      <label class="item item-input item-indent">
+        <span class="input-label">编号</span>
+        <input type="text" placeholder="请输入编号" name="website" ng-model="form.website">
+      </label>
+      -->
+      <label class="item item-input item-indent" style="-webkit-align-items: baseline;align-items: baseline;">
+        <span class="input-label">备注</span>
+        <textarea placeholder="请输入备注" name="desc" ng-model="form.desc" rows="4"></textarea>
+      </label>
+    </div>
+
+    <div class="padding-horizontal15">
+      <button class="button button-block button-positive" ng-disabled="clientForm.$invalid" ng-click="submit()">保存</button>
+    </div>
+    <div class="padding-horizontal15" ng-if="stateName === 'crm.editClient'">
+      <button class="button button-block button-light" ng-click="removeClient()" ng-disabled="!form.canDel">
+        <span class="assertive" ng-if="form.canDel">删除</span>
+        <small ng-if="!form.canDel">无删除权限</small>
+      </button>
+    </div>
+
+    <div class="padding"></div>
+  </ion-content>  
+</ion-view>
+</form>

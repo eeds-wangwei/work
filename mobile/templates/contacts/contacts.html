@@ -1,0 +1,116 @@
+<ion-view title="{{ currentCategory.title || currentCategory.deptname }}" class="lightyellow-bg hidesearchbar">
+  <ion-nav-buttons side="right">
+    <button class="button back-button button-clear header-item"  ui-sref="contacts.group({ id: deptInfo.deptid })">
+      <i class="contact-icon-group"></i>
+    </button>
+  </ion-nav-buttons>
+
+  <div class="bar bar-subheader search-header-bar" ng-hide="search.show == true" ng-if="showsearchbar" >
+    <button class="button button-block button-small fsm button-light"  ng-click="search.key = ''; search.show = true">
+      <i class="ion-ios-search fsu vam"></i>&nbsp;姓名、拼音、工号
+    </button>
+  </div>
+
+  <div class="bar bar-subheader item-input-inset search-header-bar" ng-show="search.show == true" ng-if="showsearchbar">
+    <label class="item-input-wrapper">
+      <i class="ion-ios-search fsu coyness"></i>
+      <input type="text"  placeholder="姓名、拼音、工号" ng-model="search.key" focus-on="search.show" >
+    </label>
+    <button type="button" class="button button-positive button-clear" ng-click="search.show = false; search.result = []">
+      取消
+    </button>
+  </div>
+
+
+  <!--面包屑导航-->
+  <ion-scroll class="item-divider padding contact-route breadcrumbs"
+              direction="x" scrollbar-x="false"
+              delegate-handle="contact-breadcrumb-scroll"
+              ng-class="{
+                'has-header': !showsearchbar,
+                'has-subheader': showsearchbar
+              }"
+              ng-hide="search.show == true"
+      >
+    <a ng-repeat="cate in categorys" ng-click="toCategory($index)">{{ cate }}</a>
+    <span>{{ currentCategory.deptname}}</span>
+  </ion-scroll>
+
+  <ion-content  delegate-handle="contact-list"  ng-class="{
+    'has-searchbar': showsearchbar,
+    'contact-has-subheader': !showsearchbar || search.show == true
+    }" >
+
+    <div ng-hide="search.show == true"  >
+      <!--通讯录列表-->
+      <div class="contact-list">
+        <!-- 空值 -->
+        <div class="index-empty-tip" ng-if="!users.length && !categories.length ">
+          <i class="contact-empty"></i>
+          <p class="margin-top20 coyness">该部门还没有联系人哟！</p>
+        </div>
+
+        <div class="list list-avatar-group">
+          <div class="item item-avatar" ng-repeat="category in categories" ng-click="enterCategory(category)">
+            <i class="icon-section"></i>
+            <i class="item-note ion-ios-arrow-right"></i>
+            <h2>{{ category.deptname }}</h2>
+            <p>{{ category.deptnum }} 人</p>
+          </div>
+        </div>
+
+        <div class="contact-list" ng-class="{'margin-top20':deptInfo.depts.length > 0 }">
+          <div class="list list-avatar-group">
+            <div class="item item-avatar" ng-repeat="user in users" ui-sref="contacts.detail({ id: user.uid })">
+              <img ng-src="{{ user.uid | userInfo:'avatar_middle' | fullUrl }}">
+              <h2>{{ user.uid | userInfo:'realname' }}</h2>
+              <span class="contact-label" ng-if="user.isadmin">主管</span>
+              <p>{{ (user.uid | userInfo:'posname') || '暂无' }}</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!--搜索结果列表-->
+    <div ng-show="search.show == true" >
+      <!-- if(有搜索结果): -->
+      <div class="contact-list">
+        <div class="list list-avatar-group" ng-if="search.result.length">
+          <div class="item item-avatar" ng-repeat="user in search.result" ui-sref="contacts.detail({ id: user.uid })">
+            <img ng-src="{{ user.uid | userInfo:'avatar_middle' | fullUrl }}">
+            <h2>{{ user.uid | userInfo:'realname' }}</h2>
+            <span class="contact-label" ng-if="user.isadmin">主管</span>
+            <p>{{ (user.uid | userInfo:'posname') || '暂无' }}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- elseif(未开始搜索): -->
+      <div
+          class="margin-top margin-bottom padding text-center coyness"
+          ng-if="!search.result.length && !search.key && !search.searching"
+          >请输入姓名、拼音或工号进行搜索~
+      </div>
+
+      <!-- elseif(搜索中): -->
+      <div
+          class="margin-top margin-bottom padding text-center coyness"
+          ng-if="search.searching && !search.result.length"
+          >搜索中...
+      </div>
+
+      <!-- elseif(没有搜索结果): -->
+      <div
+          class="margin-top margin-bottom padding text-center coyness"
+          ng-if="search.key && !search.searching && !search.result.length"
+          >没有找到相关的联系人~
+      </div>
+      <!-- endif; -->
+    </div>
+
+  </ion-content>
+  <!--<div letter="contact_"></div>-->
+</ion-view>

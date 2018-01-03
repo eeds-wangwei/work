@@ -1,0 +1,47 @@
+<ion-view title="{{title}}">
+
+  <ion-content>
+    <ion-refresher
+      on-refresh="refresh()">
+    </ion-refresher>
+
+    <div class="item item-input-inset">
+      <label class="item-input-wrapper">
+        <input type="text" placeholder="搜索关键词" name="keyword" ng-model="prop.keyword">
+      </label>
+      <button class="button button-small button-clear" ng-click="list.search(prop.keyword)">
+        搜索
+      </button>
+    </div>
+
+    <div class="list-empty-tip" ng-if="list.checkNoData()">
+      暂无邮件
+    </div>
+
+    <ion-list>
+      <a class="item"
+        ng-repeat="mail in list.mails"
+        type="item-text-wrap"
+        on-hold="showMenu(mail)"
+        ui-sref="{{sref}}"
+        ng-click="list.view(mail.emailid)"
+      >
+        <h2 ng-class="{
+          'assertive': mail.important == '2',
+          'balanced': mail.important == '1'
+          }"
+        >
+          <span class="item-note">{{mail.sendtime * 1000|humanizedTime}}</span>
+          <i class="newmark" ng-if="mail.isread=='0'"></i> {{mail.fromuser}}
+        </h2>
+        <p>
+          <i class="assertive ion-ios-star fr fsu" ng-if="mail.ismark=='1'"></i>
+          {{mail.subject}}
+        </p>
+      </a>
+    </ion-list>
+        
+    <button class="button button-full button-clear button-positive" ng-if="list.mails.length && list.hasMore" ng-click="list.loadMore()">加载更多</button>
+
+  </ion-content>
+</ion-view>

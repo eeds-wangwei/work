@@ -1,0 +1,132 @@
+<ion-view class="gloomy-bg" hide-nav-bar="true">
+  <div class="bar bar-header" style="background: transparent; border: none;">
+    <button
+      class="button button-icon icon ion-ios-arrow-back back-button"
+      style="color: #fff;"
+      ng-if="$viewHistory.backView"
+      ng-click="$viewHistory.backView.go()"
+    >
+      返回
+    </button>
+    <button
+      class="button button-icon icon ion-ios-arrow-back back-button"
+      style="color: #fff;"
+      ng-if="!$viewHistory.backView"
+      ui-sref="thread.index"
+    >
+      我的主线
+    </button>
+  </div>
+
+  <ion-content>
+    <!-- 主线详细信息 -->
+    <ion-slide-box show-pager="true" on-slide-changed="slideChanged(index)" class="thread-slider">
+      <ion-slide>
+        <div>
+          <h3>{{ thread.subject || '主线名称' }}</h3>
+          <p>
+            <span>
+              {{ thread.starttime * 1000 |date:'MM月dd日' }}
+              -
+              {{ thread.endtime == '0' ? '未设置' : (thread.endtime * 1000 |date:'MM月dd日' ) }}
+            </span>
+            <span ng-if="dayLeft < 0">已过期</span>
+            <span ng-if="dayLeft > 0">剩 <strong>{{ dayLeft }}</strong> 天</span>
+          </p>
+
+          <!-- 成员列表 -->
+          <div class="thread-member-list">
+            <span ng-repeat="member in members.slice(0, 5)">
+              <img ng-src="{{ member.avatar | fullUrl }}">
+              <em ng-if="member.isCharge"></em>
+            </span>
+            <span class="thread-member-leave" ng-if="members.length > 5">
+              +<strong>{{ members.length - 5 }}</strong>
+            </span>
+          </div>
+        </div>
+      </ion-slide>
+      <!-- 有主线描述时显示 -->
+      <ion-slide ng-if="thread.description">{{ thread.description |htmlToPlaintext }}</ion-slide>
+    </ion-slide-box>
+
+    <!-- 其他相关信息 -->
+    <div>
+      <div class="tabs tabs-light thread-tabs">
+        <div class="tab-item" ng-class="{ 'tab-item-active': tab === 'assignment' }" ng-click="setTab('assignment')">任务</div>
+        <div class="tab-item" ng-class="{ 'tab-item-active': tab === 'feed' }" ng-click="setTab('feed')">动态</div>
+        <div class="tab-item" ng-class="{ 'tab-item-active': tab === 'email' }" ng-click="setTab('email')">邮件</div>
+        <div class="tab-item" ng-class="{ 'tab-item-active': tab === 'flow' }" ng-click="setTab('flow')">审批</div>
+        <div class="tab-item" ng-class="{ 'tab-item-active': tab === 'file' }" ng-click="setTab('file')">文件</div>
+      </div>
+      <div>
+        <!-- 任务 -->
+        <div class="list" ng-show="tab === 'assignment'">
+          <a class="item item-avatar" ng-repeat="am in assignment.list" ui-sref="assignment.detail({ id: am.assignmentid })">
+            <img ng-src="{{ am.chargeuid | avatar }}">
+            <span class="item-note">
+              <span class="label fss energized" ng-if="am.status == 0">未读</span>
+              <span class="label fss primary" ng-if="am.status == 1">进行中</span>
+              <span class="label fss balanced" ng-if="am.status == 2 || am.status == 3">已完成</span>
+              <span class="label fss" ng-if="am.status == 4">已取消</span>
+            </span>
+            <h2>{{ am.subject }}</h2>
+            <p>
+              {{ am.chargeuid | userInfo:'realname' }} 负责
+              {{ am.endtime * 1000 | date: 'M月d日 HH:mm' }} 结束
+            </p>
+          </a>
+          <h5 class="padding text-center coyness" ng-if="assignment.loading">加载中...</h5>
+          <h5 class="padding text-center coyness" ng-if="assignment.loaded && !assignment.list.length">暂无相关任务</h5>
+        </div>
+
+        <!-- 动态 -->
+        <div ng-show="tab === 'feed'">
+          <div class="item item-avatar" ng-repeat="fd in feed.list">
+            <img ng-src="{{ fd.uid | avatar }}">
+            <h2>{{ fd.uid | userInfo:'realname' }}</h2>
+            <p>{{ fd.content | htmlToPlaintext }}</p>
+          </div>
+          <h5 class="padding text-center coyness" ng-if="feed.loading">加载中...</h5>
+          <h5 class="padding text-center coyness" ng-if="feed.loaded && !feed.list.length">暂无相关动态</h5>
+        </div>
+
+        <!-- 邮件 -->
+        <div class="list" ng-show="tab === 'email'">
+          <a class="item" ng-repeat="em in email.list" ui-sref="email.detail({ id: em.emailid })">
+            <span class="item-note">{{ em.sendtime * 1000 | date: 'yyyy年MM月dd日' }}</span>
+            <h2><i class="newmark" ng-if="em.isread != 1"></i> {{ em.fromid | userInfo:'realname' }}</h2>
+            <p>{{ em.subject }}</p>
+          </a>
+          <h5 class="padding text-center coyness" ng-if="email.loading">加载中...</h5>
+          <h5 class="padding text-center coyness" ng-if="email.loaded && !email.list.length">暂无相关邮件</h5>
+        </div>
+
+        <!-- 审批 -->
+        <div class="list" ng-show="tab === 'flow'">
+          <a class="item" ng-repeat="flw in flow.list" ui-sref="workflow.handle({ key: flw.key })">
+            <h2 ng-class="{ 'primary': flw.flag != 1 }">{{ flw.name }}</h2>
+            <p>
+              {{ flw.beginuser | userInfo:'realname' }}
+              <span class="item-note">{{ flw.begintime * 1000 | date:'yyyy年MM月dd日' }}</span>
+            </p>
+          </a>
+          <h5 class="padding text-center coyness" ng-if="flow.loading">加载中...</h5>
+          <h5 class="padding text-center coyness" ng-if="flow.loaded && !flow.list.length">暂无相关审批</h5>
+        </div>
+
+        <!-- 文件 -->
+        <div class="list" ng-show="tab === 'file'">
+          <div class="item item-avatar" ng-repeat="f in file.list">
+            <img ng-src="{{ f.iconsmall | fullUrl }}">
+            <h2>{{ f.filename }}</h2>
+            <p>{{ f.filesize }}</p>
+          </div>
+          <h5 class="padding text-center coyness" ng-if="file.loading">加载中...</h5>
+          <h5 class="padding text-center coyness" ng-if="file.loaded && !file.list.length">暂无相关文件</h5>
+        </div>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>
+

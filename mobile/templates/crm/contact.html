@@ -1,0 +1,42 @@
+<ion-view title="联系人" hide-nav-bar="true" class="crm-bg">
+  <!-- <ion-nav-bar class="bar-crm">
+    <ion-nav-back-button default-nav-back-button ng-click="goBack()">{{ backTitle() }}</ion-nav-back-button>
+  </ion-nav-bar>
+
+  <ion-nav-buttons side="right">
+    <button class="button button-clear header-item button-icon ion-ios-plus-empty" ui-sref="crm.addContact"></button>
+  </ion-nav-buttons> -->
+
+  <ion-header-bar search-tab-bar="tabs" search-modal="search" on-tab="onTab($tab)" no-tap-scroll="true">
+  </ion-header-bar>
+
+  <ion-content>
+    <ion-refresher on-refresh="contactList.reload()"></ion-refresher>
+
+    <!--联系人列表-->
+    <ion-list class="list-avatar-group" ng-if="contactList.list.length">
+      <div class="item item-divider padding-horizontal15"
+        ng-repeat-start="letter in (contactList.list|groupAndOrder:orderType:orderDesc) as letters"
+        id="crm_contacts_item_{{ letter }}">
+        {{ letter }}
+      </div>
+
+      <crm-contact-item ng-repeat-end ng-repeat="contact in letters.grouped[letter]" contact="contact" mode="view">
+      </crm-contact-item>
+
+      <div class="item text-center insipid">
+        {{ contactList.total }} 位联系人
+      </div>
+    </ion-list>
+  
+    <crm-empty-tip ng-if="!contactList.list.length && !contactList.loading">
+    </crm-empty-tip>
+  </ion-content>
+
+  <div class="fixed-toolbar">
+    <button class="fixed-toolbar-btn button button-positive" ui-sref="crm.addContact">
+      <i class="ion-ios-plus-empty"></i>
+    </button>
+  </div>
+  <!-- <div letter="crm_contacts_item" class="has-header" ng-if="contactList.list.length && orderType == 'firstCase'"></div> -->
+</ion-view>

@@ -1,0 +1,45 @@
+<ion-modal-view>
+  <ion-header-bar>
+    <button class="button back-button button-clear header-item"ng-click="setModal.hide()" >
+      <i class="icon ion-ios-arrow-back"></i>
+      门户
+    </button>
+    <h1 class="title">设置</h1>
+    <button class="button back-button button-clear header-item" ng-click="orderModal.show()">
+      排序
+    </button>
+  </ion-header-bar>
+
+  <ion-content class="sets-ctnr">
+    <div class="item item-divider setting-header">
+      <span>显示与隐藏</span>
+      <div>
+        <span style="margin-right: 10px">图标</span>
+        <span>展示面板</span>
+      </div>
+    </div>
+      <ion-list class="list list-avatar-group light-bg">
+        <ion-item class="item-avatar"  ng-repeat="app in apps">
+          <img ng-src="{{ app.icon }}" alt="{{ app.title }}">
+          <h2>{{ app.title }}</h2>
+          <div class="sets-checkbox">
+            <label class="checkbox">
+              <input type="checkbox"
+                ng-checked="settings.icon.isShow(app)"
+                ng-click="settings.icon.toggleShow($event, app)"
+                ng-disabled="settings.icon.isDisabled(app)"
+                >
+            </label>
+            <label class="checkbox">
+              <input type="checkbox"
+                ng-checked="settings.panel.isShow(app)"
+                ng-click="settings.panel.toggleShow($event, app)"
+                ng-disabled="settings.panel.isDisabled(app)"
+                >
+            </label>
+          </div>
+        </ion-item>
+      </ion-list>
+  </ion-content>
+
+</ion-modal-view>

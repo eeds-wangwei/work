@@ -1,0 +1,22 @@
+<ion-tabs class="tabs-icon-top" ng-class="{ 'tabs-item-hide': $root.hideTabs }">
+
+  <ion-tab title="已发布" icon="ion-ios-filing" href="#/docs/published">
+    已发布
+    <ion-nav-view name="docs-published"></ion-nav-view>
+  </ion-tab>
+
+  <ion-tab title="未签收" icon="icon ion-ios-list-outline" href="#/docs/unsigned">
+    未签收
+    <ion-nav-view name="docs-unsigned"></ion-nav-view>
+  </ion-tab>
+
+  <ion-tab title="已签收" icon="icon ion-ios-list" href="#/docs/signed">
+    已签收
+    <ion-nav-view name="docs-signed"></ion-nav-view>
+  </ion-tab>
+
+  <ion-tab title="按分类" icon="icon ion-ios-folder" href="#/docs/category">
+    按分类
+    <ion-nav-view name="docs-category"></ion-nav-view>
+  </ion-tab>
+</ion-tabs>

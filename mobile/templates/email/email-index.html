@@ -1,0 +1,44 @@
+<ion-view title="邮件中心" hide-back-button="true">
+  <ion-nav-buttons side="left">
+    <button class="button back-button button-clear header-item" ui-sref="portal" nav-direction="back">
+      <i class="icon ion-ios-arrow-back"></i>
+      门户
+    </button>
+  </ion-nav-buttons>
+  
+  <ion-nav-buttons side="right">
+    <button class="button button-clear button-positive" ui-sref="email.create"> 写邮件</button>
+  </ion-nav-buttons>
+
+  <ion-content>
+    <ion-list>
+      <ion-item class="item-icon-left" ui-sref="email.inbox">
+        <!-- <i class="icon ion-archive"></i> -->
+        <i class="icon ion-ios-filing"></i>
+        收件箱
+      </ion-item>
+
+      <ion-item class="item-icon-left" ui-sref="email.todo">
+        <!-- <i class="icon ion-bookmark"></i> -->
+        <i class="icon ion-ios-star"></i>
+        待办邮件
+      </ion-item>
+
+      <ion-item class="item-icon-left" ui-sref="email.outbox">
+        <!-- <i class="icon ion-paper-airplane"></i> -->
+        <i class="icon ion-ios-paperplane"></i>
+        已发送
+      </ion-item>
+
+      <ion-item class="item-icon-left" ui-sref="email.trash">
+        <i class="icon ion-ios-trash"></i>
+        已删除
+      </ion-item>
+      <!-- 文件夹目前不做 -->
+      <!--
+      <ion-item class="item-divider">我的文件夹</ion-item>
+      <ion-item class="item-icon-left"><i class="icon ion-ios-folder"></i></ion-item>
+      -->
+    </ion-list>
+  </ion-content>
+</ion-view>

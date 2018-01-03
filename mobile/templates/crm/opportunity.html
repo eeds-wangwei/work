@@ -1,0 +1,44 @@
+<ion-view title="商机" hide-nav-bar="true" class="crm-bg">
+  <!-- <ion-nav-bar class="bar-crm">
+    <ion-nav-back-button default-nav-back-button ng-click="goBack()">{{ backTitle() }}</ion-nav-back-button>
+  </ion-nav-bar>
+
+  <ion-nav-buttons side="right">
+    <button class="button button-clear header-item button-icon ion-ios-plus-empty" ui-sref="crm.addOpportunity">
+    </button>
+  </ion-nav-buttons> -->
+
+  <ion-header-bar search-tab-bar="tabs" search-modal="search" on-tab="onTab($tab)" no-tap-scroll="true">
+  </ion-header-bar>
+
+  <crm-filter filter-groups="filterGroups" on-select="selectFilterItem"></crm-filter>
+
+  <ion-content class="crm-filter-header">
+    <ion-refresher on-refresh="oppList.reload()"></ion-refresher>
+    <!--商机列表-->
+    <div class="list">
+      <crm-opp-item ng-repeat="opp in oppList.list" opp="opp" ui-sref="crm.opportunityView(opp)">
+        <i class="crm-icon-client"></i>
+        <span class="fss coyness">
+          {{ opp.client && opp.client.fullname ? opp.client.fullname : '未关联客户' }}
+        </span>
+      </crm-opp-item>
+
+      <div ng-if="oppList.hasMore">
+        <button class="button button-clear button-positive button-block no-animation" ng-click="oppList.load()" ng-disabled="oppList.loading">
+          {{ oppList.loading ? '加载中...' : '加载更多' }}
+        </button>
+      </div>
+      
+      <div class="margin-top margin-bottom padding text-center coyness" ng-if="!oppList.hasMore && oppList.list.length">没有更多了...</div>
+    </div>
+    
+    <crm-empty-tip ng-if="!oppList.list.length && !oppList.loading"></crm-empty-tip>
+  </ion-content>
+  
+  <div class="fixed-toolbar">
+    <button class="fixed-toolbar-btn button button-positive" ui-sref="crm.addOpportunity">
+      <i class="ion-ios-plus-empty"></i>
+    </button>
+  </div>
+</ion-view>

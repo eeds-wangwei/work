@@ -1,0 +1,34 @@
+<!-- 申请延期模板 -->
+<ion-modal-view>
+  <ion-header-bar>
+    <button class="button button-icon icon" ng-click="delayModal.hide()">取消</button>
+    <h1 class="title">任务延期申请</h1>
+  </ion-header-bar>
+  <ion-content>
+    <form name="applyDelayForm">
+      <div class="list">
+        <textarea name="reason" class="padding w100p" ng-model="delayData.delayReason" placeholder="说说需要延期的理由..."  style="height: 100px;" required></textarea>
+        <div class="item item-input">
+          <span class="input-label">开始时间</span>
+          <input type="date" name="starttime" ng-model="delayData.starttime" data-tap-disabled="true" required />
+        </div>
+
+        <div class="item item-input">
+          <span class="input-label">结束时间</span>
+          <input type="date" name="endtime" ng-model="delayData.endtime" data-tap-disabled="true" required />
+        </div>
+      </div>
+      <div class="padding">
+        <button type="button"
+          class="button button-positive button-block"
+          ng-click="applyDelay(delayData.isDesignee)"
+          ng-disabled="applyDelayForm.$invalid || delayApplySubmitting"
+        >
+          <span ng-if="delayApplySubmitting">提交中...</span>
+          <span ng-if="!delayApplySubmitting">确定</span>
+        </button>
+      </div>
+    </form>
+  </ion-content>
+</ion-modal-view>
+

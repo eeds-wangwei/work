@@ -1,0 +1,40 @@
+<ion-view title="{{ title || '我的网盘' }}" hide-back-button="true">
+  
+  <ion-nav-buttons side="left">
+    <button class="button back-button button-clear header-item" ui-sref="portal" nav-direction="back">
+      <i class="icon ion-ios-arrow-back"></i>
+      门户
+    </button>
+  </ion-nav-buttons>
+  
+  <ion-content>
+    <ion-list class="cabinet-list">
+      <div class="item item-input-inset">
+        <label class="item-input-wrapper">
+          <input type="text" placeholder="搜索文件\文件夹" name="keyword" ng-model="keyword">
+        </label>
+        <button class="button button-small button-clear" ng-click="cb.search(keyword)">
+          搜索
+        </button>
+      </div>
+      <ion-item 
+        ng-repeat="file in cb.files"
+        class="item item-avatar"
+        type="item-text-wrap"
+        ng-click="cb.open(file)"
+        on-hold="cb.showMenu(file)"
+        >
+        <img ng-if="file.thumb" ng-src="{{file.thumb|fullUrl}}">
+        <img ng-if="file.type=='0' && !file.thumb" ng-src="{{ file.iconbig | filetypeIcon:'lt' }}">
+        <img ng-if="file.type=='1'" ng-src="img/cabinet/folder.png">
+        <div>
+          <h2>{{file.name}}</h2>
+          <p>
+            {{file.addtime*1000|date:'yyyy-MM-dd HH:mm'}}
+            <em class="item-note" ng-if="file.type=='0'">{{file.size|fileSize}}</em>
+          </p>
+        </div>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

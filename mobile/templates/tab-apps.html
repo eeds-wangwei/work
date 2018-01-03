@@ -1,0 +1,604 @@
+<ion-view title="门户" class="portal-pane gloomy-bg" transheader hide-back-button="true">
+
+  <ion-nav-buttons side="right">
+    <button class="button back-button button-clear header-item" ng-click="setModal.show()">
+      <i class="o-portal-settings"></i>
+    </button>
+  </ion-nav-buttons>
+
+  <ion-content>
+    <ion-refresher on-refresh="refresh()"></ion-refresher>
+    <div class="portal-user-bar" >
+      <div>
+        <img ng-src="{{ user.avatar_middle | fullUrl }}">
+        <p>{{ user.realname }}</p>
+      </div>
+    </div>
+    
+    <!-- 快捷入口栏 -->
+    <div class="portal-quickbar">
+      <div class="row" ng-repeat="partApps in settings.icon.apps | chunkBy:4">
+        <div class="col col-25" ng-repeat="app in partApps track by $index">
+          <div nav-direction="forward" ui-sref="{{ app.state }}">
+            <img ng-src="{{ app.icon }}" alt="{{ app.title }}">
+            <p>{{ app.title }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="list portal-block portal-{{ app.name }}" ng-include="'portal-' +  app.name + '-panel'" ng-repeat="app in settings.panel.apps">
+    </div>
+
+    <div class="portal-empty text-center light-bg" ng-if="!settings.panel.apps.length">
+      <i class="portal-empty-icon"></i>
+      <p>展示常用的模块，可以提高工作效率哦~</p>
+    </div>
+
+    <div class="portal-footer text-center">
+      <i class="footer-logo"></i>
+      <copyright></copyright>
+    </div>
+  </ion-content>
+</ion-view>
+
+<!-- 门户：日志 -->
+<script type="text/ng-template" id="portal-diary-panel">
+  <div ng-controller="AppsDiaryCtrl" class="light-bg">
+    <div class="item item-divider">
+      <img src="./img/modicon/diary.png">
+      日志
+      <span class="item-note positive" ui-sref="diary.create" nav-direction="forward">
+        <i class="ion-ios-compose-outline"></i> 新建
+      </span>
+    </div>
+    <!-- 暂时不显示评阅跟已关注 
+    <div class="tabs text-center">
+      <div class="tab-item" ng-class="{ 'active': tabOn == 'personal' }" ng-click="tab('personal')">我的</div>
+      <div class="tab-item" ng-class="{ 'active': tabOn == 'review' }" ng-click="tab('review')">评阅</div>
+      <div class="tab-item" ng-class="{ 'active': tabOn == 'follow' }" ng-click="tab('follow')">已关注</div>
+    </div>
+    -->
+
+    <!-- 我的 -->
+    <div class="portal-block-body" ng-if="tabOn == 'personal'">
+      <div class="portal-block-placeholder" ng-if="personal.loading">日志加载中...</div>
+      <div class="portal-block-placeholder" ng-if="!personal.loading && !(personal.list && personal.list.length)">
+        <i class="o-partal-mod-empty"></i>
+        你还没有日志哦~
+      </div>
+      <ion-list class="list list-avatar-group" ng-if="personal.list && personal.list.length">
+        <ion-item class="item-avatar" ng-repeat="item in (personal.list | before:4)" ui-sref="diary.detail({ id: item.diaryid })" nav-direction="forward">
+          <div class="item-image">
+            <p>{{ item.diarytime * 1000 | date:'M月d日' }}</p>
+            <h5>{{ item.diarytime * 1000 | date: 'EEEE'}}</h5>
+          </div>
+          <div class="item-note insipid fss" ng-if="item.isreview == 1">已阅</div>
+          <div class="media-body">
+            <h2>{{ item.content }}</h2>
+            <p>{{ item.addtime * 1000 | date: 'MM-dd HH:mm' }}</p>
+          </div>
+        </ion-item>
+        <div class="item text-center item-complex" ng-if="personal.list.length > 3" ui-sref="diary.personal" nav-direction="forward">
+          <a class="item-content">
+            查看所有
+            <i class="ion-ios-arrow-right"></i>
+          </a>
+        </div>
+      </ion-list>
+    </div>
+
+    <!-- 评阅 -->
+    <!--
+    <div class="portal-block-body" ng-if="tabOn == 'review'">
+      <div class="portal-block-placeholder" ng-if="review.loading">日志加载中...</div>
+      <div class="portal-block-placeholder" ng-if="!review.loading && !(review.list && review.list.length)">
+        <i class="o-partal-mod-empty"></i>
+        还没有评阅的日志哦~
+      </div>
+      <ion-list class="list list-avatar-group" ng-if="review.list && review.list.length">
+        <ion-item class="item-avatar" ng-repeat="item in (review.list | before:4)" ui-sref="diary.reviewDetail({ id: item.diaryid })" nav-direction="forward">
+          <img ng-src="{{ item.uid | userInfo:'avatar_middle' | fullUrl }}">
+          <div class="media-body">
+            <h2>{{ item.content | htmlToPlaintext }}</h2>
+            <p>{{ item.uid | userInfo:'realname' }} {{ item.addtime * 1000 | date: 'MM-dd HH:mm' }}</p>
+          </div>
+        </ion-item>
+        <div class="item text-center item-complex" ng-if="review.list.length > 3" ui-sref="diary.review" nav-direction="forward">
+          <a class="item-content">
+            查看所有
+            <i class="ion-ios-arrow-right"></i>
+          </a>
+        </div>
+      </ion-list>
+    </div>
+    -->
+
+    <!-- 已关注 -->
+    <!--
+    <div class="portal-block-body" ng-if="tabOn == 'follow'">
+      <div class="portal-block-placeholder" ng-if="follow.loading">日志加载中...</div>
+      <div class="portal-block-placeholder" ng-if="!follow.loading && !(follow.list && follow.list.length)">
+        <i class="o-partal-mod-empty"></i>
+        还没有关注日志哦~
+      </div>
+      <ion-list class="list list-avatar-group" ng-if="follow.list && follow.list.length">
+        <ion-item class="item-avatar" ng-repeat="item in (follow.list | before:4)" ui-sref="diary.followDetail({ id: item.diaryid })" nav-direction="forward">
+          <img ng-src="{{ item.user.avatar_middle | fullUrl }}">
+          <div class="media-body">
+            <h2>{{ item.content }}</h2>
+            <p>{{ item.realname }} {{ item.addtime * 1000 | date: 'MM-dd HH:mm' }}</p>
+          </div>
+        </ion-item>
+        <div class="item text-center item-complex" ng-if="follow.list.length > 3" ui-sref="diary.follow" nav-direction="forward">
+          <a class="item-content">
+            查看所有
+            <i class="ion-ios-arrow-right"></i>
+          </a>
+        </div>
+      </ion-list>
+    </div>
+    -->
+  </div>
+</script>
+
+<!-- 门户：工作流 -->
+<script type="text/ng-template" id="portal-workflow-panel">
+  <div ng-controller="AppsWorkflowCtrl" class="light-bg">
+    <div class="item item-divider">
+      <img src="./img/modicon/workflow.png">
+      工作流
+      <span class="item-note positive" ui-sref="workflow.create" nav-direction="forward">
+        <i class="ion-ios-compose-outline"></i> 新建
+      </span>
+    </div>
+
+    <div class="tabs text-center">
+      <div class="tab-item" ng-class="{ 'active': tabOn == 'todo' }" ng-click="tab('todo')">待办工作</div>
+      <div class="tab-item" ng-class="{ 'active': tabOn == 'follow' }" ng-click="tab('follow')">我关注的</div>
+      <div class="tab-item" ng-class="{ 'active': tabOn == 'done' }" ng-click="tab('done')">已完成</div>
+    </div>
+
+    <!-- 待办工作 -->
+    <div class="portal-block-body" ng-if="tabOn == 'todo'">
+      <div class="portal-block-placeholder" ng-if="todo.loading">工作流加载中...</div>
+      <div class="portal-block-placeholder" ng-if="!todo.loading && !(todo.list && todo.list.length)">
+        <i class="o-partal-mod-empty"></i>
+        你还没有工作哦~
+      </div>
+      <ion-list class="list" ng-if="todo.list && todo.list.length">
+        <ion-item class="item-indent" ng-repeat="item in (todo.list | before:4)" ui-sref="workflow.handle({ key: item.key })" nav-direction="forward">
+          <span class="item-note insipid fss">{{ item.flag | wfStatus }}</span>
+          <div>
+            <h2>{{ item.runName }}</h2>
+            <p>
+              <span>【{{ item.opflag == '1' ? '主办' : '经办' }}】</span>
+              {{ item.processtime * 1000 | date: 'MM-dd HH:mm' }}
+            </p>
+          </div>
+        </ion-item>
+        <div class="item text-center item-complex" ng-if="todo.list.length > 3" ui-sref="workflow.todo" nav-direction="forward">
+          <a class="item-content">
+            查看所有
+            <i class="ion-ios-arrow-right"></i>
+          </a>
+        </div>
+      </ion-list>
+    </div>
+
+    <!-- 我关注的 -->
+    <div class="portal-block-body" ng-if="tabOn == 'follow'">
+      <div class="portal-block-placeholder" ng-if="follow.loading">工作流加载中...</div>
+      <div class="portal-block-placeholder" ng-if="!follow.loading && !(follow.list && follow.list.length)">
+        <i class="o-partal-mod-empty"></i>
+        你还没有工作哦~
+      </div>
+      <ion-list class="list" ng-if="follow.list && follow.list.length">
+        <ion-item class="item-indent" ng-repeat="item in (follow.list | before:4)" ui-sref="workflow.detail({ key: item.key })" nav-direction="forward">
+          <span class="item-note insipid fss">{{ item.flag | wfStatus }}</span>
+          <div>
+            <h2>{{ item.runName }}</h2>
+            <p>
+              <span>【{{ item.opflag == '1' ? '主办' : '经办' }}】</span>
+              {{ item.processtime * 1000 | date: 'MM-dd HH:mm' }}
+            </p>
+          </div>
+        </ion-item>
+        <div class="item text-center item-complex" ng-if="follow.list.length > 3" ui-sref="workflow.follow" nav-direction="forward">
+          <a class="item-content">
+            查看所有
+            <i class="ion-ios-arrow-right"></i>
+          </a>
+        </div>
+      </ion-list>
+    </div>
+
+    <!-- 已完成 -->
+    <div class="portal-block-body" ng-if="tabOn == 'done'">
+      <div class="portal-block-placeholder" ng-if="done.loading">工作流加载中...</div>
+      <div class="portal-block-placeholder" ng-if="!done.loading && !(done.list && done.list.length)">
+        <i class="o-partal-mod-empty"></i>
+        你还没有工作哦~
+      </div>
+      <ion-list class="list" ng-if="done.list && done.list.length">
+        <ion-item class="item-indent" ng-repeat="item in (done.list | before:4)" ui-sref="workflow.detail({ key: item.key })" nav-direction="forward">
+          <span class="item-note insipid fss">{{ item.flag | wfStatus }}</span>
+          <div>
+            <h2>{{ item.runName }}</h2>
+            <p>
+              <span>【{{ item.opflag == '1' ? '主办' : '经办' }}】</span>
+              {{ item.processtime * 1000 | date: 'MM-dd HH:mm' }}
+            </p>
+          </div>
+        </ion-item>
+        <div class="item text-center item-complex" ng-if="done.list.length > 3" ui-sref="workflow.done" nav-direction="forward">
+          <a class="item-content">
+            查看所有
+            <i class="ion-ios-arrow-right"></i>
+          </a>
+        </div>
+      </ion-list>
+    </div>
+  </div>
+</script>
+
+<!-- 门户：日程 -->
+<script type="text/ng-template" id="portal-calendar-panel">
+  <div ng-controller="AppsCalendarCtrl" class="light-bg">
+    <div class="item item-divider">
+      <img src="./img/modicon/calendar.png">
+      日程
+      <span class="item-note positive" ui-sref="calendar-create" nav-direction="forward">
+        <i class="ion-ios-compose-outline"></i> 新建
+      </span>
+    </div>
+
+    <div class="portal-block-body">
+      <div class="portal-block-placeholder" ng-if="calendar.loading">日程加载中...</div>
+      <div class="portal-block-placeholder" ng-if="!calendar.loading && !(calendar.list && calendar.list.length)">
+        <i class="o-partal-mod-empty"></i>
+        你还没有日程哦~
+      </div>
+      <ion-list class="list" ng-if="calendar.list && calendar.list.length">
+        <ion-item class="item-indent" ng-repeat="item in (calendar.list | before:4)" ui-sref="calendar-detail({ calendarId: item.calendarid })" nav-direction="forward">
+          <div class="calendar-type" style="background-color: {{ item.category|calendarTheme }}"></div>
+          <div class="item-note insipid fss" ng-if="item.status == '1'">已完成</div>
+          <div>
+            <h2>{{ item.subject }}</h2>
+            <p>
+              <span ng-if="item.isalldayevent == '1' && !isInterDay(item)">{{ item.starttime|date:'MM-dd EEEE' }} 全天</span>
+              <span ng-if="item.isalldayevent == '1' && isInterDay(item)">{{ item.starttime|date:'MM-dd EEEE' }} 至 {{ item.endtime|date:'MM-dd EEEE' }}</span>
+              <span ng-if="item.isalldayevent != '1'">{{ item.starttime|date:'MM-dd EEEE' }} {{ item.starttime|date:'HH:mm' }} 至 {{ item.endtime|date:'HH:mm' }}</span>
+              <span ng-if="item.instancetype == 1"> [周期性日程]</span>
+            </p>
+          </div>
+        </ion-item>
+        <div class="item text-center item-complex" ng-if="calendar.list.length > 3" ui-sref="calendar" nav-direction="forward">
+          <a class="item-content">
+            查看所有
+            <i class="ion-ios-arrow-right"></i>
+          </a>
+        </div>
+      </ion-list>
+    </div>
+  </div>
+</script>
+
+<!-- 门户：任务指派 -->
+<script type="text/ng-template" id="portal-assignment-panel">
+  <div ng-controller="AppsAssignmentCtrl" class="light-bg">
+    <div class="item item-divider">
+      <img src="./img/modicon/assignment.png">
+      任务指派
+      <span class="item-note positive" ui-sref="assignment.create" nav-direction="forward">
+        <i class="ion-ios-compose-outline"></i> 新建
+      </span>
+    </div>
+
+    <div class="tabs text-center">
+      <div class="tab-item" ng-class="{ 'active': tabOn == 'unfinished' }" ng-click="tab('unfinished')">未完成</div>
+      <div class="tab-item" ng-class="{ 'active': tabOn == 'finished' }" ng-click="tab('finished')">已完成</div>
+    </div>
+
+    <!-- 未完成 -->
+    <div class="portal-block-body" ng-if="tabOn == 'unfinished'">
+      <div class="portal-block-placeholder" ng-if="unfinished.loading">任务加载中...</div>
+      <div class="portal-block-placeholder" ng-if="!unfinished.loading && !(unfinished.list && unfinished.list.length)">
+        <i class="o-partal-mod-empty"></i>
+        你还没有任务哦~
+      </div>
+      <ion-list class="list" ng-if="unfinished.list && unfinished.list.length">
+        <ion-item class="item-indent" ng-repeat="item in (unfinished.list | before:4)" ui-sref="assignment.detail({ id: item.assignmentid })" nav-direction="forward">
+          <div class="item-note insipid fss">{{ item.status | asmStatusText }}</div>
+          <h2>{{ item.subject }}</h2>
+          <p>
+            {{item.designeeuid|userInfo:'realname'}} 指派给 我&nbsp;&nbsp;{{ item.addtime | date:'MM-dd HH:mm' }}
+            &nbsp;
+            <small class="assertive" ng-if="isOverdue(item)">[已过期]</small>
+            <small class="positive" ng-if="haveRemind(item)">[已设提醒]</small>
+          </p>
+        </ion-item>
+        <div class="item text-center item-complex" ng-if="unfinished.list.length > 3" ui-sref="assignment.unfinished" nav-direction="forward">
+          <a class="item-content">
+            查看所有
+            <i class="ion-ios-arrow-right"></i>
+          </a>
+        </div>
+      </ion-list>
+    </div>
+
+    <!-- 已完成 -->
+    <div class="portal-block-body" ng-if="tabOn == 'finished'">
+      <div class="portal-block-placeholder" ng-if="finished.loading">任务加载中...</div>
+      <div class="portal-block-placeholder" ng-if="!finished.loading && !(finished.list && finished.list.length)">
+        <i class="o-partal-mod-empty"></i>
+        你还没有任务哦~
+      </div>
+      <ion-list class="list" ng-if="finished.list && finished.list.length">
+        <ion-item class="item-indent" ng-repeat="item in (finished.list | before:4)" ui-sref="assignment.detail({ id: item.assignmentid })" nav-direction="forward">
+          <h2>{{ item.subject }}</h2>
+          <p>
+            {{item.designeeuid|userInfo:'realname'}} 指派给 我&nbsp;&nbsp;{{ item.addtime | date:'MM-dd HH:mm' }}
+          </p>
+        </ion-item>
+        <div class="item text-center item-complex" ng-if="finished.list.length > 3" ui-sref="assignment.finished" nav-direction="forward">
+          <a class="item-content">
+            查看所有
+            <i class="ion-ios-arrow-right"></i>
+          </a>
+        </div>
+      </ion-list>
+    </div>
+  </div>
+</script>
+
+<!-- 门户：主线 -->
+<!--
+<script type="text/ng-template" id="portal-thread-panel">
+  <div>
+    <div class="item item-divider">
+      <img src="./img/modicon/thread.png">
+      主线
+     <span class="item-note">
+       <span>全部</span>
+       <i class="ion-chevron-right"></i>
+     </span>
+    </div>
+
+    <div class="light-bg">
+      <ion-list class="list list-avatar-group indent" >
+
+        <ion-item class="item-avatar">
+          <div class="media-body">
+            <h2>IBOS门户-排版</h2>
+            <div class="progress-bar">
+              <div class="progress-ctnr">
+                <div class="progress-bg">
+                  <div class="progress-active" style="width: 66%;"></div>
+                </div>
+              </div>
+              <span class="positive">66%</span>
+            </div>
+            <p>06-14 16:00 </p>
+          </div>
+        </ion-item>
+
+      </ion-list>
+    </div>
+  </div>
+</script>
+-->
+
+<!-- 门户：公文 -->
+<script type="text/ng-template" id="portal-docs-panel">
+  <div ng-controller="AppsDocsCtrl" class="light-bg">
+    <div class="item item-divider">
+      <img src="./img/modicon/docs.png">
+      公文
+    </div>
+
+    <div class="tabs text-center">
+      <div class="tab-item" ng-class="{ 'active': tabOn == 'unsigned' }" ng-click="tab('unsigned')">未签收</div>
+      <div class="tab-item" ng-class="{ 'active': tabOn == 'published' }" ng-click="tab('published')">已发布</div>
+    </div>
+
+    <!-- 未签收 -->
+    <div class="portal-block-body" ng-if="tabOn == 'unsigned'">
+      <div class="portal-block-placeholder" ng-if="unsigned.loading">公文加载中...</div>
+      <div class="portal-block-placeholder" ng-if="!unsigned.loading && !(unsigned.list && unsigned.list.length)">
+        <i class="o-partal-mod-empty"></i>
+        没有未签收的公文哦~
+      </div>
+      <ion-list class="list">
+        <ion-item class="item-indent" ng-repeat="item in (unsigned.list | before:4)" ui-sref="docs.detail({ id: item.docid })" nav-direction="forward">
+          <h2>{{ item.subject }}</h2>
+          <p>{{ item.author }} <span ng-bind-html="item.uptime"></span> </p>
+        </ion-item>
+        <div class="item text-center item-complex" ng-if="unsigned.list.length > 3" ui-sref="docs.unsigned" nav-direction="forward">
+          <a class="item-content">
+            查看所有
+            <i class="ion-ios-arrow-right"></i>
+          </a>
+        </div>
+      </ion-list>
+    </div>
+
+    <!-- 已发布 -->
+    <div class="portal-block-body" ng-if="tabOn == 'published'">
+      <div class="portal-block-placeholder" ng-if="published.loading">公文加载中...</div>
+      <div class="portal-block-placeholder" ng-if="!published.loading && !(published.list && published.list.length)">
+        <i class="o-partal-mod-empty"></i>
+        没有已发布的公文哦~
+      </div>
+      <ion-list class="list">
+        <ion-item class="item-indent" ng-repeat="item in (published.list | before:4)" ui-sref="docs.detail({ id: item.docid })" nav-direction="forward">
+          <div class="item-note insipid fss" ng-if="item.signStatus == 0">未签收</div>
+          <h2>{{ item.subject }}</h2>
+          <p>{{ item.author }} <span ng-bind-html="item.uptime"></span> </p>
+        </ion-item>
+        <div class="item text-center item-complex" ng-if="published.list.length > 3" ui-sref="docs.published" nav-direction="forward">
+          <a class="item-content">
+            查看所有
+            <i class="ion-ios-arrow-right"></i>
+          </a>
+        </div>
+      </ion-list>
+    </div>
+  </div>
+</script>
+
+<!-- 门户：信息中心 -->
+<script type="text/ng-template" id="portal-news-panel">
+  <div ng-controller="AppsNewsCtrl" class="light-bg">
+    <div class="item item-divider">
+      <img src="./img/modicon/news.png">
+      信息中心
+    </div>
+
+    <div class="tabs text-center">
+      <div class="tab-item" ng-class="{ 'active': tabOn == 'unread' }" ng-click="tab('unread')">未读</div>
+      <div class="tab-item" ng-class="{ 'active': tabOn == 'published' }" ng-click="tab('published')">已发布</div>
+    </div>
+
+    <!-- 未读 -->
+    <div class="portal-block-body" ng-if="tabOn == 'unread'">
+      <div class="portal-block-placeholder" ng-if="unread.loading">新闻加载中...</div>
+      <div class="portal-block-placeholder" ng-if="!unread.loading && !(unread.list && unread.list.length)">
+        <i class="o-partal-mod-empty"></i>
+        没有未读的新闻哦~
+      </div>
+      <ion-list class="list">
+        <ion-item class="item-indent" ng-repeat="item in (unread.list | before:4)" ui-sref="news.detail({ id: item.articleid })" nav-direction="forward">
+          <h2>{{ item.subject }}</h2>
+          <p>{{ item.author }} {{ item.uptime }} </p>
+        </ion-item>
+        <div class="item text-center item-complex" ng-if="unread.list.length > 3" ui-sref="news.unread" nav-direction="forward">
+          <a class="item-content">
+            查看所有
+            <i class="ion-ios-arrow-right"></i>
+          </a>
+        </div>
+      </ion-list>
+    </div>
+
+    <!-- 已发布 -->
+    <div class="portal-block-body" ng-if="tabOn == 'published'">
+      <div class="portal-block-placeholder" ng-if="published.loading">新闻加载中...</div>
+      <div class="portal-block-placeholder" ng-if="!published.loading && !(published.list && published.list.length)">
+        <i class="o-partal-mod-empty"></i>
+        没有未读的新闻哦~
+      </div>
+      <ion-list class="list">
+        <ion-item class="item-indent" ng-repeat="item in (published.list | before:4)" ui-sref="news.detail({ id: item.articleid })" nav-direction="forward">
+          <div class="item-note insipid fss" ng-if="item.readStatus != '1'">未读</div>
+          <h2>{{ item.subject }}</h2>
+          <p>{{ item.author }} {{ item.uptime }} </p>
+        </ion-item>
+        <div class="item text-center item-complex" ng-if="published.list.length > 3" ui-sref="news.published" nav-direction="forward">
+          <a class="item-content">
+            查看所有
+            <i class="ion-ios-arrow-right"></i>
+          </a>
+        </div>
+      </ion-list>
+    </div>
+  </div>
+</script>
+
+<!-- 门户：邮件 -->
+<script type="text/ng-template" id="portal-email-panel">
+  <div ng-controller="AppsEmailCtrl" class="light-bg">
+    <div class="item item-divider">
+      <img src="./img/modicon/email.png">
+      邮件
+      <span class="item-note positive" ui-sref="email.create" nav-direction="forward">
+        <i class="ion-ios-compose-outline"></i> 新建
+      </span>
+    </div>
+
+    <div class="tabs text-center">
+      <div class="tab-item" ng-class="{ 'active': tabOn == 'inbox' }" ng-click="tab('inbox')">收件箱</div>
+      <div class="tab-item" ng-class="{ 'active': tabOn == 'todo' }" ng-click="tab('todo')">待办邮件</div>
+    </div>
+
+    <!-- 收件箱 -->
+    <div class="portal-block-body" ng-if="tabOn == 'inbox'">
+      <div class="portal-block-placeholder" ng-if="inbox.loading">邮件加载中...</div>
+      <div class="portal-block-placeholder" ng-if="!inbox.loading && !(inbox.list && inbox.list.length)">
+        <i class="o-partal-mod-empty"></i>
+        没有收到的邮件哦~
+      </div>
+      <ion-list class="list">
+        <ion-item class="item-indent" ng-repeat="item in (inbox.list | before:4)" ui-sref="email.detail({ id: item.emailid })" nav-direction="forward">
+          <span class="item-note insipid fss" ng-if="item.isread != '1'">未读</span>
+          <h2>{{ item.subject }}</h2>
+          <p>{{ item.fromuser }} {{ item.sendtime | date:'MM-dd HH:mm' }}</p>
+        </ion-item>
+        <div class="item text-center item-complex" ng-if="inbox.list.length > 3" ui-sref="email.inbox" nav-direction="forward">
+          <a class="item-content">
+            查看所有
+            <i class="ion-ios-arrow-right"></i>
+          </a>
+        </div>
+      </ion-list>
+    </div>
+
+    <!-- 待办邮件 -->
+    <div class="portal-block-body" ng-if="tabOn == 'todo'">
+      <div class="portal-block-placeholder" ng-if="todo.loading">邮件加载中...</div>
+      <div class="portal-block-placeholder" ng-if="!todo.loading && !(todo.list && todo.list.length)">
+        <i class="o-partal-mod-empty"></i>
+        没有待办的邮件哦~
+      </div>
+      <ion-list class="list">
+        <ion-item class="item-indent" ng-repeat="item in (todo.list | before:4)" ui-sref="email.detail({ id: item.emailid })" nav-direction="forward">
+          <span class="item-note insipid fss" ng-if="item.isread != '1'">未读</span>
+          <h2>{{ item.subject }}</h2>
+          <p>{{ item.fromuser }} {{ item.sendtime | date:'MM-dd HH:mm' }}</p>
+        </ion-item>
+        <div class="item text-center item-complex" ng-if="todo.list.length > 3" ui-sref="email.todo" nav-direction="forward">
+          <a class="item-content">
+            查看所有
+            <i class="ion-ios-arrow-right"></i>
+          </a>
+        </div>
+      </ion-list>
+    </div>
+  </div>
+</script>
+
+<!-- 门户：文件柜 -->
+<script type="text/ng-template" id="portal-cabinet-panel">
+  <div>
+    <div class="item item-divider">
+      <img src="./img/modicon/cabinet.png">
+      文件柜
+    </div>
+
+    <!-- 
+    <div class="portal-netdisk light-bg">
+      <ion-list class="list list-avatar-group" >
+        <ion-item class="item-avatar">
+          <img src="./img/portalIcons/netdisk-corporation.png" style="width: 30px; height: 30px;">
+          <div class="media-body">
+            <h2>图标集</h2>
+            <p>包子 06-15 18:06</p>
+          </div>
+        </ion-item>
+        <ion-item class="item-avatar">
+          <img src="./img/portalIcons/netdisk-self.png" style="width: 30px; height: 30px;" >
+          <div class="media-body">
+            <h2>学习文档</h2>
+            <p>果子 06-15 18:06</p>
+          </div>
+        </ion-item>
+      </ion-list>
+    </div>
+    -->
+  </div>
+</script>
+
+<script type="text/ng-template" id="portal-activity-panel"></script>
+<script type="text/ng-template" id="portal-crm-panel"></script>
+<script type="text/ng-template" id="portal-report-panel"></script>
+<script type="text/ng-template" id="portal-vote-panel"></script>

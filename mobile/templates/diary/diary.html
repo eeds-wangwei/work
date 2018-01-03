@@ -1,0 +1,20 @@
+<ion-tabs class="tabs-icon-top" ng-class="{ 'tabs-item-hide': $root.hideTabs }">
+
+  <!-- Diary-Personal Tab -->
+  <ion-tab title="我的日志" icon="icon ion-ios-person" href="#/diary/personal">
+    我的日志
+    <ion-nav-view name="diary-personal"></ion-nav-view>
+  </ion-tab>
+
+  <!-- Diary-Review Tab -->
+  <ion-tab title="日志评阅" icon="icon ion-ios-paper" href="#/diary/review">
+    日志评阅
+    <ion-nav-view name="diary-review"></ion-nav-view>
+  </ion-tab>
+
+  <!-- Diary-Follow Tab -->
+  <ion-tab title="已关注" icon="icon ion-ios-star" href="#/diary/follow">
+    已关注
+    <ion-nav-view name="diary-follow"></ion-nav-view>
+  </ion-tab>
+</ion-tabs>

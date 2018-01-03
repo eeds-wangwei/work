@@ -1,0 +1,10 @@
+<ion-modal-view class="modal-full-screen">
+	<span class="img-preview-close" ng-click="closeModal()">
+		<i class="ion-ios-close-empty"></i>
+	</span>
+  <ion-slide-box class="img-preview-slide text-center" show-pager="false" delegate-handle="imgPreviewSlide">
+    <ion-slide ng-repeat="url in urls">
+      <img ng-src="{{ url }}" ng-doubletap="zoomImg($event)">
+    </ion-slide>
+  </ion-slide-box>
+</ion-modal-view>

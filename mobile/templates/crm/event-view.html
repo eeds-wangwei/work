@@ -1,0 +1,60 @@
+<ion-view title="跟进详情" hide-nav-bar="true">
+  <!-- <ion-nav-bar class="bar-crm">
+    <ion-nav-back-button></ion-nav-back-button>
+  </ion-nav-bar>
+
+  <ion-nav-buttons side="right">
+    <button class="button button-clear header-item button-icon ion-ios-more" ng-click="moreOperation()">
+    </button>
+  </ion-nav-buttons> -->
+
+  <ion-content class="crm-bg">
+
+    <div class="list">
+      <div class="item item-indent item-text-wrap padding-vertical">
+        <div>
+          <span class="item-note fss insipid">{{ ev.createtime * 1000 | humanizedDateTime }}</span>
+          <crm-user uid="{{ ev.uid }}"></crm-user>
+        </div>
+        <h2 class="crm-event-view-title">{{ ev.content }}</h2>
+      </div>
+
+      <!-- <div class="item item-indent padding-vertical">
+        <i class="vam" ng-class="{
+          'crm-icon36-location': !ev.location,
+          'crm-icon36-location-b': ev.location
+        }"></i>
+        <span class="fsl common-black vam">{{ ev.location || '暂无位置信息' }}</span>
+      </div> -->
+      
+      <div class="item item-divider crm-view-item-divider">基本信息</div>
+
+      <div class="item item-input item-indent item-text-wrap" ng-repeat="tag in ev.tags">
+        <span class="input-label">{{ tag.name }}</span>
+        <div class="input-content text-right">{{ tag.tag.name }}</div>
+      </div>
+      <div class="item item-input item-indent item-text-wrap" ng-if="ev.client && ev.client.fullname">
+        <span class="input-label">关联客户</span>
+        <div class="input-content text-right">{{ ev.client.fullname }}</div>
+      </div>
+      <div class="item item-input item-indent item-text-wrap" ng-if="ev.opportunity && ev.opportunity.subject">
+        <span class="input-label">关联商机</span>
+        <div class="input-content text-right">{{ ev.opportunity.subject  }}</div>
+      </div>
+      <!-- 跟进时间 -->
+
+      <!-- <div class="item item-input item-text-wrap" ng-if="ev.contacts && ev.contacts.length">
+        <span class="input-label coyness">关联联系人</span>
+        <div class="input-content common text-right">{{ ev.contacts | map:'name' | join:',' }}</div>
+      </div> -->
+
+      <div class="item item-divider crm-view-item-divider" ng-if="ev.contacts.length">联系人</div>
+      <crm-contact-item ng-repeat="contact in ev.contacts" contact="contact" mode="attach" ng-if="ev.contacts.length"></crm-contact-item>
+    </div>
+    
+    <div class="padding-horizontal15" ng-if="ev.canEdit" ui-sref="crm.editEvent({ eventid: ev.eventid })">
+      <button class="button button-block button-positive">编辑</button>
+    </div>
+  </ion-content>
+
+</ion-view>

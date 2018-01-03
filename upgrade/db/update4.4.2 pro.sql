@@ -1,0 +1,25 @@
+DROP TABLE IF EXISTS `{{notify_alarm}}`;
+CREATE TABLE `{{notify_alarm}}` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
+  `uid` mediumint(8) unsigned NOT NULL DEFAULT '0' COMMENT '用户ID',
+  `node` varchar(50) NOT NULL COMMENT '事件节点',
+  `module` char(30) NOT NULL COMMENT '模块名称',
+  `title` varchar(250) NOT NULL COMMENT '标题',
+  `body` text NOT NULL COMMENT '内容',
+  `ctime` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '添加时间',
+  `url` varchar(200) NOT NULL DEFAULT '' COMMENT '链接地址',
+  `receiveuids` text NOT NULL COMMENT '接收提醒的用户ID,逗号隔开',
+  `stime` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '自定义发送时间',
+  `alarmtype` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '提醒类型：0为自定义时间，1为关联事件时间',
+  `issend` tinyint(1) unsigned NOT NULL DEFAULT '0' COMMENT '状态：0未发送，1已发送',
+  `diffetime` int(10) NOT NULL DEFAULT '0' COMMENT '差异量:分钟数,负数代表提前，正数代表增加',
+  `eventid` varchar(60) NOT NULL DEFAULT '0' COMMENT '事件ID',
+  `tablename` varchar(50) NOT NULL COMMENT '关联事件表名',
+  `fieldname` varchar(50) NOT NULL COMMENT '关联事件时间字段名',
+  `uptime` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '修改时间',
+  `idname` varchar(50) NOT NULL COMMENT '关联事件时间id名',
+  `timenode` varchar(50) NOT NULL COMMENT '事件时间节点',
+  PRIMARY KEY (`id`),
+  KEY `notify_state` (`issend`) USING BTREE,
+  KEY `notify_uid` (`uid`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=775 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;

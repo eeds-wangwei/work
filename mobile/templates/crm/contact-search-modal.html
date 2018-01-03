@@ -1,0 +1,42 @@
+<ion-modal-view>
+  <!--搜索框-->
+  <ion-header-bar class="item-input-inset search-header-bar">
+    <label class="item-input-wrapper">
+      <i class="ion-ios-search fsu coyness"></i>
+      <input type="text" placeholder="搜索" ng-model="search.key" focus-on="search.modal.isShown()" focus-delay="200">
+    </label>
+    <button type="button" class="button button-positive button-clear" ng-click="search.modal.hide()">
+      取消
+    </button>
+  </ion-header-bar>
+
+  <ion-content>
+    <!-- if(有搜索结果): -->
+    <ion-list class="list-avatar-group" ng-if="search.result.list.length">
+      <div class="item item-divider padding-horizontal15"
+        ng-repeat-start="letter in (search.result.list|groupAndOrder:orderType:orderDesc) as letters"
+        id="crm_contacts_item_{{ letter }}">
+        {{ letter }}
+      </div>
+
+      <crm-contact-item ng-repeat-end ng-repeat="contact in letters.grouped[letter]" contact="contact" mode="view">
+      </crm-contact-item>
+    </ion-list>
+
+
+    <div class="margin-top margin-bottom padding text-center coyness">
+      <!-- elseif(未开始搜索): -->
+      <span ng-if="!search.result.list.length && !search.key && !search.searching">
+        请输入标题或内容进行搜索~
+      </span>
+      <!-- elseif(搜索中): -->
+      <span ng-if="search.searching && !search.result.list.length">搜索中...</span>
+      <!-- elseif(没有搜索结果): -->
+      <span ng-if="search.key && !search.searching && !search.result.list.length">
+        没有找到相关联系人~
+      </span>
+      <!-- endif; -->
+    </div>
+  </ion-content>
+
+</ion-modal-view>

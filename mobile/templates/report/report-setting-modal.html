@@ -1,0 +1,59 @@
+<ion-modal-view title="设置模板" class="lightyellow-bg">
+
+  <ion-header-bar>
+    <button class="button back-button buttons button-clear header-item" ng-click="settingModel.hide()">
+      <span class="icon fs32" style="margin-top: -3px" >×</span>
+    </button>
+    <h1 class="title">设置模板</h1>
+
+    <button class="button button-clear header-item button-positive" ng-click="setTemplate()">
+       完成
+    </button>
+  </ion-header-bar>
+
+
+  <ion-content>
+
+    <div class="light-bg rp-item-select-user">
+      <p>使用模板权限</p>
+      <user-avatar-selector ng-model="formData.defaultShareList" name="setting-share" ></user-avatar-selector>
+    </div>
+
+    <ion-item class="item-divider padding lightyellow-bg">
+      设置后只有模板使用者可见，不设置则全局可见
+    </ion-item>
+
+    <ul class="light-bg rp-item-select-user cslist nowrap">
+      <p>默认发给谁</p>
+      <div class="rp-item-select-manage" ng-click="outRemoveTypeMode()">
+        <li class="cslist" ng-if="manageTypes.length" ng-repeat="type in manageTypes">
+          <i class="o40-minus-assertive-so" ng-show="removeTypeMode" ng-click="removeType($event, type)" ></i>
+          <div class="cslist-plus-icon manager-icon">{{type.upname.substr(0,2)}}</div>
+          <div class="cslist-desc ellipsis">{{type.upname}}</div>
+        </li>
+
+        <li class="cslist-plus">
+          <div class="cslist-plus-icon" ng-click="openSelectManagerModal()">
+            <i class="ion-ios-plus-empty"></i>
+          </div>
+        </li>
+
+        <li class="cslist-plus" ng-show="!removeTypeMode && manageTypes.length" ng-click="toRemoveTypeMode($event)">
+          <div class="cslist-plus-icon">
+            <i class="ion-ios-minus-empty"></i>
+          </div>
+        </li>
+      </div>
+    </ul>
+
+    <ul class="light-bg rp-item-select-user cslist" style="border-top: 1px solid #ddd">
+      <user-avatar-selector ng-model="formData.defaultReceiveList" name="setting-receive"></user-avatar-selector>
+    </ul>
+
+    <div class="item-divider padding lightyellow-bg">
+      选择后，相关主管将做为该模块默认接收人。
+    </div>
+
+  </ion-content>
+
+</ion-modal-view>

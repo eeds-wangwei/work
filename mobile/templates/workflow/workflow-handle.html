@@ -1,0 +1,248 @@
+<ion-view title="办理工作">
+  <ion-nav-buttons side="left">
+    <button class="button back-button button-clear header-item" ng-if="!hasBackView()" ui-sref="workflow.index" nav-direction="back">
+      <i class="icon ion-ios-arrow-back"></i>
+      工作流
+    </button>
+  </ion-nav-buttons>
+  <form name="flowForm">
+  <ion-content class="page-wf">
+    <input type="hidden" name="key" value="{{key}}">
+    <input type="hidden" name="hidden" value="{{flow['hidden']}}">
+    <input type="hidden" name="readonly" value="{{flow['readonly']}}">
+    <input type="hidden" name="attachmentid" id="attachmentid" value="{{flow['run']['attachmentid']}}">
+    <input type="hidden" name="fbattachmentid" id="fbattachmentid" value="">
+    <input type="hidden" name="topflag" value="{{flow['rp']['opflag']}}">
+    <input type="hidden" name="saveflag">
+    <input type="hidden" name="formhash" value="{{formhash}}">
+    <input type="hidden" name="enablefiled" value="{{flow['enablefiled'] + ''}}">
+    <!-- 主表单 -->
+    <div class="wf-form">
+      <!-- 表单基本信息，非空项（不可填） -->
+      <div class="wf-card no-border-top no-margin-bottom" ng-class="{'no-border-bottom': !flow.valueArr || !flow.valueArr.length}">
+        <div class="padding">
+          <h4 class="fsl">{{flow.run.name}}</h4>
+          <div>
+            <p>[{{flow.run.runid}}] {{flow.flow.name}}</p>
+            <p>发起人：{{flow.run.beginuser|userInfo:'realname'}}</p>
+            <p>发起时间：{{flow.run.begintime * 1000|date:'yyyy年MM月dd日，EEEE'}}</p>
+          </div>
+          <div class="view-origin-form">
+            <a ng-click="viewSource()">查看原表</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="wf-card has-value no-border-top" >
+        <!-- 表单已有值的项 -->
+        <wf-ic-value-fields fields="flow.valueArr" hidden-field="flow.hidden"></wf-ic-value-fields>
+
+        <!-- 表单空项（不可填） -->
+        <wf-ic-empty-fields fields="flow.emptyArr"></wf-ic-empty-fields>
+      </div>
+
+      <!-- 表单可填项 -->
+      <div class="wf-card" ng-if="flow.enableArr && flow.enableArr.length">
+        <div class="item item-input item-indent item-text-wrap" ng-repeat-start="item in flow.enableArr"
+          ng-if="
+          item['data-type'] !== 'listview' &&
+          item['data-type'] !== 'imgupload' &&
+          item['data-type'] !== 'label' &&
+          item['data-type'] !== 'sign' &&
+          item['data-type'] !== 'fileupload'
+          ">
+          <span class="input-label coyness">{{item['data-title']}}</span>
+          <!-- 如果是主办人，则显示表单控件 -->
+          <ic
+            ng-if="flow | wfIsSponsor"
+            data="item"
+            ics="ics"
+            name="data_{{ item['data-id'] }}"
+            ng-model="form['data_' + item['data-id']]"
+            pattern-type="{{ item['data-title'] | icPatternType:flow.checkItem }}"
+          ></ic>
+          
+          <!-- 如果是经办人，只显示值-->
+          <div ng-if="!(flow | wfIsSponsor)" class="input-content">{{ item | wfic }}</div>
+        </div>
+        
+        <!-- 标签类型 -->
+        <div class="item item-indent item-text-wrap" ng-if="item['data-type'] === 'label'">
+          <ic-label data="item"></ic-label>
+        </div>
+
+        <!-- 列表类型 -->
+        <div class="item item-indent item-text-wrap" ng-if="item['data-type'] === 'listview'">
+          <h2 class="coyness margin-bottom">{{ item['data-title'] }}</h2>
+          <ic-listview ng-if="flow | wfIsSponsor" data="item" ng-model="form['data_' + item['data-id']]"></ic-listview>
+          <ic-listview-view ng-if="!(flow | wfIsSponsor)" data="item" ng-model="form['data_' + item['data-id']]"></ic-listview-view>
+        </div>
+
+        <!-- 签章手写类型 -->
+        <div class="item item-input item-indent item-text-wrap" ng-if="item['data-type'] === 'sign'">
+          <span class="input-label coyness">{{item['data-title']}}</span>
+          <div class="input-content">
+            <ic-sign ng-if="flow | wfIsSponsor" data="item" ng-model="form['data_' + item['data-id']]"
+              pattern-type="{{ item['data-title'] | icPatternType:flow.checkItem }}"
+              ></ic-sign>
+            <!-- <a href="javascript:;" class="anchor">点击开始签名</a> -->
+          </div>
+        </div>
+
+        <!-- 文件上传类型 -->
+        <div class="item item-indent item-text-wrap" ng-if="item['data-type'] === 'fileupload'">
+          <h2 class="coyness margin-bottom">{{ item['data-title'] }}</h2>
+          <ic-fileupload ng-if="flow | wfIsSponsor" data="item" ng-model="form['data_' + item['data-id']]"></ic-fileupload>
+          <ic-fileupload-view ng-if="!(flow | wfIsSponsor)" data="item" ng-model="form['data_' + item['data-id']]"></ic-fileupload-view>
+          <input type="hidden" ng-model="form['fileid_' + item['data-id']]" ng-init="form['fileid_' + item['data-id']] = item['origin-value']">
+        </div>
+        
+        <!-- 图片上传类型 -->
+        <div class="item item-indent item-text-wrap" ng-repeat-end ng-if="item['data-type'] === 'imgupload'">
+          <h2 class="coyness margin-bottom">{{ item['data-title'] }}</h2>
+          <ic-imgupload ng-if="flow | wfIsSponsor" data="item" ng-model="form['data_' + item['data-id']]"></ic-imgupload>
+          <ic-imgupload-view ng-if="!(flow | wfIsSponsor)" data="item" ng-model="form['data_' + item['data-id']]"></ic-imgupload-view>
+          <input type="hidden" ng-model="form['imgid_' + item['data-id']]" ng-init="form['imgid_' + item['data-id']] = item['origin-value']">
+        </div>
+      </div>
+    </div>
+
+    <!-- 
+      @Todo#zcs: 这里模板代码需要整理
+      process.attachpriv 附件权限
+      1 新建
+      2 编辑
+      3 删除
+      4 下载
+      5 打印
+    -->
+    <!--图片-->
+    <div class="wf-card" ng-if="flow.allowAttach || imageAttach.length">
+      <div class="wf-card-header">
+        <h4 class="wf-card-title">图片</h4>
+      </div>
+
+      <div class="upload-img-box" ng-hide="!imageAttach.length && flow.process.attachpriv.indexOf(1) === -1 && flow.process.attachpriv.indexOf(3) === -1">
+        <div class="img" ng-repeat="item in imageAttach">
+          <i ng-show="showDelImg && !item.uploading && item.delete" ng-click="removeImage($index)"></i>
+          <img ng-src="{{item.url}}" alt="img" img-preview>
+          <ion-spinner class="rp-form-spinner item-note" ng-show="item.uploading"></ion-spinner>
+        </div>
+        <div class="img add" ng-if="flow.allowAttach && flow.process.attachpriv.indexOf(1) !== -1">
+          <input type="file" class="input-file" multiple accept="image/*" file-on-change="addImage">
+        </div>
+        <div class="img cut" ng-click="showDelImg = !showDelImg" ng-show="flow.process.attachpriv.indexOf(3) !== -1"></div>
+      </div>  
+    </div> 
+
+    <!-- 文件 -->
+    <div class="wf-card" ng-if="flow.allowAttach || fileAttach.length">
+      <div class="wf-card-header">
+        <div class="wf-card-header-btn" ng-click="checkIos()" ng-if="flow.allowAttach && flow.process.attachpriv.indexOf(1) !== -1">
+          上传
+          <input type="file" class="input-file" multiple file-on-change="addFile" ng-if="!isIos">
+        </div>
+        <h4 class="wf-card-title">文件</h4>
+      </div>
+
+      <div class="file-item" ng-repeat="item in fileAttach">
+        <div class="left">
+          <img ng-src="{{ item.filename | fileIconByFilename:'lt' }}">
+          <div class="info">
+            <p class="name" ng-bind-html="item.filename | wfFilenameFormat"></p>
+            <p class="size">{{item.filesize}}</p>
+          </div>
+        </div>
+        <div class="right">
+          <button class="icon-download" ng-show="!item.uploading && item.down && flow.process.attachpriv.indexOf(4) !== -1" ng-click="downloadFile(item)"></button>
+          <button class="icon-delete" ng-show="!item.uploading && item.delete && flow.process.attachpriv.indexOf(3) !== -1" ng-click="removeFile($index)"></button>
+          <ion-spinner class="rp-form-spinner item-note" ng-show="item.uploading" ng-click="item.xhr && item.xhr.abort()"></ion-spinner>
+        </div>
+      </div>
+    </div>
+
+    <!-- 会签 -->
+    <div class="wf-card">
+      <div class="wf-card-header">
+        <h4 class="wf-card-title">会签</h4>
+      </div>
+      <div class="padding feedback" ng-repeat="feedback in flow.feedback">
+        <img ng-src="{{feedback.user.avatar_middle | fullUrl}}">
+        <div class="info">
+          <p class="name">{{feedback.user.realname}}</p>
+          <p class="content">{{feedback.content}}</p>
+          <div class="mata">
+            <span class="label light">{{feedback.processid}}</span>
+            <span class="fsm">{{feedback.name}}</span>
+            <time ng-bind-html="feedback.edittime"></time>
+          </div>
+        </div>
+      </div>
+
+      <!-- 会签内容 -->
+      <div class="padding" ng-if="flow.allowFeedback">
+        <textarea name="content" class="w100p feedback-content" placeholder="填写你的会签意见..." ng-required="flow.process.feedback == '2'" ng-model="form.content"></textarea>
+        <!-- 强制会签 -->
+        <div ng-if="flowForm.content.$invalid" class="assertive fss">本步骤为强制会签，请填写会签意见</div>
+      </div>
+    </div>
+
+    <!-- 进度 -->
+    <wf-process process="flow.rpcache"></wf-process>
+
+  </ion-content>
+
+  <ion-footer-bar class="page-wf-bottom">
+    <div class="tabs tabs-light tabs-icon-only toolbar-tabs">
+      <!-- 子流程？
+      <a class="tab-item positive"
+        ng-if="flow.run.parentrun == '0' && flow.rp.processid == '1' && flow.rp.autonew">
+        取消
+      </a>
+      -->
+
+      <!-- 如果是主办人、配置允许回退且不为第一步 -->
+      <div class="tab-item return" ng-if="flow.rp.opflag == '1' && flow.allowBack && flow.rp.flowprocess != '1'">
+        <button type="button" 
+          class="button button-block button-clear" 
+          ng-click="rollback()">回退</button>
+      </div>
+
+      <!-- 如果自由流程且满足必要条件，则可以手动结束流程 -->
+      <div class="tab-item return" ng-if="flow.defaultEnd || flow.otherEnd">
+        <button type="button" 
+          class="button button-block button-clear"
+          ng-click="end()">结束</button>
+      </div>
+
+      <!-- 如果是主办人 -->
+      <div class="tab-item save" ng-if="flow.rp.opflag == '1'">
+        <button type="button" 
+          class="button button-block button-clear"
+          ng-click="save()">保存</button>
+      </div>
+
+      <div class="tab-item forwarded" ng-if="flow.rp.opflag == '1'">
+        <button type="button" 
+          class="button button-block button-clear"
+          ng-disabled="flowForm.$invalid"
+          ng-click="handover()">转交</button>
+      </div>
+
+      <!-- 如果是经办人 -->
+      <div 
+        class="tab-item" 
+        ng-if="flow.rp.opflag == '0'">
+        <button type="button" 
+          class="button button-block button-clear button-positive"
+          ng-disabled="flowForm.$invalid"
+          ng-click="sign()"
+          >办理完毕</button>
+      </div>
+    </div>
+
+    <ic-script data="flow.script"></ic-script>
+  </ion-footer-bar>
+  
+  </form>
+</ion-view>

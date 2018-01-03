@@ -1,0 +1,35 @@
+<ion-view title="发起工作" hide-back-button="true">
+
+  <ion-nav-buttons side="left">
+    <button class="button back-button button-clear header-item" ng-if="hasBackView()" ng-click="$ionicGoBack()"  nav-direction="back">
+      <i class="icon ion-ios-arrow-back"></i>
+      返回
+    </button>
+    <button class="button back-button button-clear header-item" ng-if="!hasBackView()" ui-sref="workflow.index" nav-direction="back">
+      <i class="icon ion-ios-arrow-back"></i>
+      工作流
+    </button>
+  </ion-nav-buttons>
+
+  <ion-content>
+    <div class="list">
+      <div class="item item-divider">常用流程</div>
+      <div class="item" ng-repeat="process in processes" ng-click="process.enabled ? create(process) : false" ng-class="{ 'coyness': !process.enabled }">
+        {{process.name}}
+      </div>
+      <div class="item text-center" ng-if="loading">
+        <ion-spinner></ion-spinner>
+      </div>
+
+      <div class="item item-divider">按分类</div>
+      <div class="item item-icon-left wf-cate-item" ng-repeat="category in categories" ng-click="openCate(category)">
+        <i class="icon ion-ios-folder"></i>
+        <h2>{{category.name}}</h2>
+        <p>共 {{category.flowcount}} 个工作</p>
+      </div>
+      <div class="item text-center" ng-if="loading">
+        <ion-spinner></ion-spinner>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

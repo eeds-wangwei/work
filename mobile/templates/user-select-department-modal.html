@@ -1,0 +1,43 @@
+<!-- @Template: 部门选择控件 -->
+<ion-modal-view>
+  <ion-header-bar>
+    <h1 class="title">选择部门</h1>
+    <button class="button button-icon" ng-click="modal.hide()">取消</button>
+  </ion-header-bar>
+
+  <ion-content class="has-footer">
+    <ion-list>
+      <div class="item item-checkbox item-indent" ng-if="isSelectAllShow()">
+        <label class="checkbox">
+          <input type="checkbox" ng-click="toggleSelectAll($event)">
+        </label>
+        <h2 class="coyness">全选</h2>
+      </div>
+      <div class="item item-divider" id="userselect_{{usid}}_{{letter}}" ng-repeat-start="(letter, dids) in groups">{{letter}}</div>
+
+      <div class="item item-checkbox" ng-repeat-end ng-repeat="did in dids">
+        <label class="checkbox">
+          <input type="checkbox" value="{{did}}" ng-checked="isSelected(did)" ng-click="toggleSelect(did)">
+        </label>
+        {{did|departmentInfo:'deptname'}}            
+      </div>
+
+    </ion-list>
+  </ion-content>
+
+  <div class="bar bar-footer us-footer-bar">
+    <div class="us-scroll-wrap">
+      <ion-scroll delegate-handle="us-scroll" direction="x" scrollbar-x="false" >
+        <div class="us-selected">
+          <div class="us-selected-item" ng-repeat="id in selected" ng-click="toggleSelect(id)">
+            <div class="us-selected-letter">{{ id | departmentInfo:'deptname' }}</div>
+          </div>
+        </div>
+      </ion-scroll>
+    </div>
+    <div class="us-footer-button-bar">
+      <button type="button" class="button button-positive fr" ng-disabled="!selected.length" ng-click="save()">确定({{ getSelectedCount() }})</button>
+    </div>
+  </div>
+  <div letter="userselect_{{usid}}" class="has-header has-footer"></div>
+</ion-modal-view>

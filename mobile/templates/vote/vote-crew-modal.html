@@ -1,0 +1,23 @@
+<ion-modal-view title="投票人数" >
+  <ion-header-bar>
+    <button class="button back-button buttons button-clear header-item" ng-click="crewModal.hide()">
+      <span class="icon fs32 ion-ios-close-empty" style="margin-left: 10px"></span>
+    </button>
+    <h1 class="title">投票人数</h1>
+  </ion-header-bar>
+
+  <ion-content>
+    <div class="list-empty-tip" ng-if="voteUsers.length === 0 ">
+      <i class="news-icon-empty"></i>
+      <p class="margin-top coyness">暂时还没有人投票哟！</p>
+    </div>
+       <div class="list list-avatar-group vote-crew-list" ng-repeat="group in voteUsers">
+         <div class="item-divider">{{ group.deptname }}</div>
+         <div class="item item-avatar" ng-repeat="item in group.users">
+           <img  ng-src="{{ item | avatar }}">
+           {{ item | userInfo: 'realname' }}
+         </div>
+       </div>
+  </ion-content>
+
+</ion-modal-view>

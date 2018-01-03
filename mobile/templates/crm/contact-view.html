@@ -1,0 +1,110 @@
+<ion-view title="联系人详情" hide-nav-bar="true" class="crm-bg">
+  
+  <!-- <ion-nav-bar class="bar-crm">
+    <ion-nav-back-button></ion-nav-back-button>
+  </ion-nav-bar>
+
+  <ion-nav-buttons side="right">
+    <button class="button button-clear header-item button-icon ion-ios-more" ng-click="moreOperation()">
+    </button>
+  </ion-nav-buttons> -->
+
+  <ion-content class="contact-view">
+    <div class="padding"></div>
+
+    <div class="item padding-vertical">
+      <h2>
+        {{ contact.name }}
+        <i class="icon-men" ng-if="contact.gender == '0'"></i>
+        <i class="icon-women" ng-if="contact.gender == '1'"></i>
+      </h2>
+      <p class="fss inspid">
+        <span>{{ contact.department || '暂无部门' }} </span> • <span>{{ contact.position || '暂无岗位' }}</span>
+      </p>
+    </div>
+
+    <div class="item item-divider crm-view-item-divider">基本信息</div>
+    <div class="list">
+      <div class="item item-indent item-input" ng-switch>
+        <span class="input-label">性别</span>
+        <div class="input-content text-right" ng-switch="contact.gender">
+          <span ng-switch-when="0">男</span>
+          <span ng-switch-when="1">女</span>
+          <span ng-switch-default>未知</span>
+        </div>
+      </div>
+      
+      <div class="item item-indent item-input item-icon-right">
+        <span class="input-label">手机</span>
+        <div class="input-content text-right" style="padding-right: 50px;">
+          {{ contact.mobile }}
+        </div>
+        <div class="icon">
+          <a class="ion-ios-telephone contact-telephone" href="tel:{{ contact.mobile }}"></a>
+        </div>
+      </div>
+
+      <div class="item item-indent item-input" ng-if="contact.qq">
+        <span class="input-label">QQ</span>
+        <div class="input-content text-right">{{ contact.qq }}</div>
+      </div>
+
+      <div class="item item-indent item-input" ng-if="contact.email">
+        <span class="input-label">邮箱</span>
+        <div class="input-content text-right"><a class="anchor" href="mailto:{{ contact.email }}">{{ contact.email }}</a></div>
+      </div>
+
+      <div class="item item-indent item-input" ng-if="contact.address">
+        <span class="input-label">地址</span>
+        <div class="input-content text-right">{{ contact.address }}</div>
+      </div>
+
+
+      <!-- @Todo: 归属人 -->
+      <div class="item item-indent item-input" ng-if="contact.client && contact.client.fullname">
+        <span class="input-label">关联客户</span>
+        <div class="input-content text-right">{{ contact.client.fullname }}</div>
+      </div>
+
+      <!-- 标签组 -->
+      <div class="item item-indent item-input" ng-repeat="tagGroup in contact.tags">
+        <span class="input-label">{{ tagGroup.name }}</span>
+        <div class="input-content text-right">{{ tagGroup.tag.name }}</div>
+      </div>
+
+      <div class="item item-divider crm-view-item-divider" ng-if="
+      (contact.birthday && contact.birthday != 0) ||
+      contact.department ||
+      contact.position ||
+      contact.remark
+      ">详细信息</div>
+
+      <div class="item item-indent item-input" ng-if="contact.birthday && contact.birthday != 0">
+        <span class="input-label">生日</span>
+        <div class="input-content text-right">{{ contact.birthday * 1000 | date: 'yyyy-MM-dd' }}</div>
+      </div>
+
+      <div class="item item-indent item-input" ng-if="contact.department">
+        <span class="input-label">部门</span>
+        <div class="input-content text-right">{{ contact.department }}</div>
+      </div>
+
+      <div class="item item-indent item-input" ng-if="contact.position">
+        <span class="input-label">职务</span>
+        <div class="input-content text-right">{{ contact.position }}</div>
+      </div>
+
+      <div class="item item-indent item-text-wrap" ng-if="contact.remark">
+        <span class="common-black">备注</span>
+        <div class="padding-vertical">{{ contact.remark }}</div>
+      </div>
+    </div>
+
+    <div class="padding-horizontal15" ng-if="contact.canEdit" ui-sref="crm.editContact({ contactid: contact.contactid })">
+      <button class="button button-block button-positive">编辑</button>
+    </div>
+
+    <div class="padding"></div>
+  </ion-content>
+
+</ion-view>

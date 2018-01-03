@@ -1,0 +1,111 @@
+<ion-view title="客户信息" class="crm-bg" hide-nav-bar="true">
+  <!--
+  <ion-nav-bar class="bar-crm">
+    <ion-nav-back-button></ion-nav-back-button>
+  </ion-nav-bar>
+
+  <ion-nav-buttons side="right">
+    <button class="button button-clear header-item button-icon ion-ios-more" ng-click="moreOperation()">
+    </button>
+  </ion-nav-buttons>
+  -->
+  <ion-content>
+    <!--头部资料-->
+    <div class="item item-text-wrap crm-mn-card crm-client-view-header">
+      <i class="item-note ion-ios-plus-outline" ng-click="openAttachModal()"></i>
+      <div class="crm-mn-card-title">{{ client.fullname || '----' }}</div>
+      <div>
+        <span class="fss vam">归属人</span>&nbsp;&nbsp;
+        <crm-user uid="{{ client.uid }}" class="crm-user-light"></crm-user>
+      </div>
+      <div class="crm-mn-card-footer">
+        <i class="icon-browser"></i>
+        <a href="{{ client.website | httpPrefix }}" class="fss" ng-if="client.website">{{ client.website }}</a>
+        <span class="fss" ng-if="!client.website">暂无网址</span>
+      </div>
+    </div>
+
+    <div class="crm-nb-tabs row">
+      <div class="col col-33" ng-class="{'active':activeTab === 'survey' }"  ng-click="setClientTab('survey')">详情</div>
+      <div class="col col-33" ng-class="{'active':activeTab === 'event' }"  ng-click="setClientTab('event')">跟进</div>
+      <div class="col col-33" ng-class="{'active':activeTab === 'opportunity' }"  ng-click="setClientTab('opportunity')">商机</div>
+    </div>
+
+    <!--客户详情-->
+    <div ng-if="activeTab === 'survey'">
+      <div class="item-divider crm-divider" ng-if="client.contacts.length">联系人</div>
+      <div ng-if="client.contacts.length">
+        <crm-contact-item ng-repeat="contact in client.contacts" contact="contact" mode="attach"></crm-contact-item>
+      </div>
+      
+      <div class="item-divider crm-divider">基本信息</div>
+      <!--选择客户信息-->
+      <div class="item item-input item-indent" ng-repeat="tagGroup in tagGroups">
+        <span class="input-label">{{ tagGroup.name }}</span>
+        <div class="input-content text-right">
+          {{ (tagGroup.taglist | where:{ tagid: client.tags[tagGroup.groupid] })[0].name }}
+        </div>
+        <!-- <select ng-options="tag.tagid as tag.name for tag in tagGroup.taglist"
+          ng-change="onTagChange()"
+          ng-model="client.tags[tagGroup.groupid]"
+          disabled>
+        </select> -->
+      </div>
+
+      <div class="item item-input item-indent" ng-if="client.phone">
+        <span class="input-label">电话</span>
+        <div class="input-content text-right">
+          <a href="tel:{{ client.phone }}" class="anchor">{{ client.phone }}</a>
+        </div>
+      </div>
+      <div class="item item-input item-indent" ng-if="client.address">
+        <span class="input-label">地址</span>
+        <div class="input-content text-right">
+          {{ client.address }}
+        </div>
+      </div>
+
+      <div class="item item-input item-indent" ng-if="client.email">
+        <span class="input-label">邮箱</span>
+        <div class="input-content text-right">
+          <a href="mailto:{{ client.email }}" class="anchor">{{ client.email }}</a>
+        </div>
+      </div>
+
+      <div class="item item-input item-indent" ng-if="client.desc">
+        <span class="input-label">简介</span>
+        <div class="input-content text-right">
+          {{ client.desc }}
+        </div>
+      </div>
+    
+      <div class="item-divider crm-divider" ng-if="client.attaches.length">附件</div>
+      <attach-list attach="client.attaches" ng-if="client.attaches.length"></attach-list>
+
+      <div class="padding-vertical padding-horizontal15" ng-if="client.canEdit" ui-sref="crm.editClient({ cid: client.cid })">
+        <button class="button button-block button-positive">编辑</button>
+      </div>
+    </div>
+
+    <!--客户跟进-->
+    <div ng-if="activeTab === 'event'">
+      <div class="list">
+        <crm-event-item ng-repeat="ev in eventList" ev="ev">
+        </crm-event-item>
+      </div>
+
+      <crm-empty-tip ng-if="!eventList.length"></crm-empty-tip>
+    </div>
+
+    <!--客户商机-->
+    <div ng-if="activeTab === 'opportunity'">
+      <!--商机列表-->
+      <div class="list">
+        <crm-opp-item ng-repeat="opp in oppList" opp="opp" ui-sref="crm.opportunityView(opp)"></crm-opp-item>
+      </div>
+      
+      <crm-empty-tip ng-if="!oppList.length"></crm-empty-tip>
+    </div>
+  </ion-content>
+
+</ion-view>

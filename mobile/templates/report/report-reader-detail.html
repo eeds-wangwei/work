@@ -1,0 +1,21 @@
+<ion-modal-view>
+  <ion-header-bar>
+    <button class="button back-button buttons button-clear header-item" ng-click="readerTetailModal.hide()">
+      <span class="icon fs32" style="margin-top: -3px">×</span>
+    </button>
+    <h1 class="title">查阅情况</h1>
+  </ion-header-bar>
+
+  <ion-content class="news-reader">
+    <div class="list">
+      <div class="item item-divider lightyellow-bg padding">查阅情况 {{ report.readers.length }} </div>
+      <ul class="row text-center" ng-repeat-end ng-repeat="group in (report.readers | chunkBy:6:null)">
+        <li class="col" ng-repeat="item in group track by $index">
+          <img avatar="{{ item | avatar | defaultAvatar }}" ng-if="item">
+          <div class="fsm common-black" ng-if="item">{{ item | userInfo: 'realname' }}</div>
+        </li>
+      </ul>
+    </div>
+  </ion-content>
+
+</ion-modal-view>

@@ -1,0 +1,100 @@
+﻿<form name="oppForm">
+<ion-view title="{{ stateName == 'crm.addOpportunity' ? '新建商机' : '编辑商机' }}" hide-nav-bar="true" class="crm-bg">
+  
+  <!--
+  <ion-nav-bar class="bar-crm">
+    <ion-nav-back-button default-nav-back-button ng-click="goBack()">{{ backTitle() }}</ion-nav-back-button>
+  </ion-nav-bar>
+
+  <ion-nav-buttons side="right">
+    <button class="button button-clear header-item" ng-click="submit()" ng-disabled="oppForm.$invalid">完成</button>
+  </ion-nav-buttons>
+  -->
+
+  <ion-content class="crm-cm-form crm-add-opportunity">
+    <div class="padding"></div>
+    <div class="list">
+      <div class="item item-input item-indent">
+        <span class="input-label">商机主题<span class="assertive">*</span></span>
+        <input type="text" placeholder="请输入商机主题" name="subject" ng-model="form.subject" required>
+      </div>
+
+      <div class="item item-input item-indent">
+        <span class="input-label">预计收入</span>
+        <input type="text" placeholder="0.00" name="expectincome" ng-model="form.expectincome" ng-currency currency-symbol="">
+        <span class="padding-horizontal">元</span>
+      </div>
+
+      <div class="item item-input item-indent item-enter">
+        <span class="input-label">预计成交日</span>
+        <input type="date" placeholder="请输入结束时间" name="expectendtime" ng-model="form.expectendtime">
+        <i class="ion-ios-arrow-right"></i>
+      </div>
+
+      <!-- 标签组 -->
+      <div class="item item-input item-indent item-select item-enter" ng-repeat="tagGroup in tagGroups">
+        <span class="input-label">{{ tagGroup.name }}</span>
+        <select
+          ng-options="tag.tagid as tag.name for tag in tagGroup.taglist"
+          ng-model="form.tags[tagGroup.groupid]">
+        </select>
+        <i class="ion-ios-arrow-right"></i>
+      </div>
+
+      <div class="item item-input item-indent item-select item-enter">
+        <span class="input-label">成交机率</span>
+        <select name="dealchance" ng-model="form.dealchance" ng-options="(idx + '%') for idx in ([]|range:11|mapMultiply)"></select>
+        <i class="ion-ios-arrow-right"></i>
+      </div>
+
+      <!-- @Todo: 归属人 -->
+      
+      <div class="item item-input item-indent item-enter" ng-click="attachClient()">
+        <span class="input-label">关联客户<span class="assertive">*</span></span>
+        <div class="input-content">{{ client.fullname }}</div>
+        <i class="ion-ios-arrow-right"></i>
+        <input type="hidden" name="client" ng-model="client" required>
+      </div>
+    </div>
+
+    <!-- 需要先关联客户才会出现联系人 -->
+    <div class="list" ng-if="client">
+      <crm-contact-item ng-repeat="contact in contacts" contact="contact" mode="edit" on-remove="detachContact(contact)">
+      </crm-contact-item>
+      <div class="item padding-vertical text-center" ng-click="attachContact()">
+        <i class="ion-plus vam"></i>&nbsp;
+        添加关联联系人
+      </div>
+    </div>
+
+    <div class="list" ng-if="!isOppFormMoreShowed">
+      <div class="item text-center  padding-vertical" ng-click="showOppFormMore()">
+        <i class="crm-icon-chevron-dd"></i>
+        填写更多
+      </div>
+    </div>
+
+    <div class="list" ng-if="isOppFormMoreShowed">
+      <!-- @Todo: 编号 -->
+
+      <label class="item item-input item-indent" style="-webkit-align-items: baseline;align-items: baseline;">
+        <span class="input-label">备注</span>
+        <textarea placeholder="请输入备注" name="remark" ng-model="form.remark" rows="4"></textarea>
+      </label>
+    </div>
+
+    <div class="padding-horizontal15">
+      <button class="button button-block button-positive" ng-click="submit()" ng-disabled="oppForm.$invalid">保存</button>
+    </div>
+
+    <div class="padding-horizontal15" ng-if="stateName === 'crm.editOpportunity'">
+      <button class="button button-block button-light" ng-click="removeOpp()" ng-disabled="!form.canDel">
+        <span class="assertive" ng-if="form.canDel">删除</span>
+        <small ng-if="!form.canDel">无删除权限</small>
+      </button>
+    </div>
+    
+    <div class="padding"></div>
+  </ion-content>
+</ion-view>
+</form>

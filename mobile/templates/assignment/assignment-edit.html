@@ -1,0 +1,49 @@
+<ion-view title="编辑任务">
+  <ion-nav-buttons side="right">
+    <button type="submit" class="button button-clear button-positive" ng-disabled="isDisabledSubmit()" ng-click="save()">保存</button>
+  </ion-nav-buttons>
+
+  <form name="assignmentForm">
+    <ion-content>
+      <div class="list">
+        <label class="item ">
+          <input type="text" class="asm-form-subject w100p" name="subject" ng-model="form.subject" placeholder="写下要做的事情..." required>
+          <span class="asm-subject-charcount"></span>
+          <div class="asm-subject-charcount">还可以输入 <charcount max="25" countdown="true" ng-model="form.subject" ></charcount> 字</div>
+        </label>
+
+        <div class="item item-text-wrap item-user-select clearfix">
+          <span class="fl">负责人：</span>
+          <i class="icon ion-ios-plus positive" ng-model="form.chargeuid" user-selector-trigger max-selection="1"></i>
+          <user-selector ng-model="form.chargeuid" name="chargeuid" ng-value="form.chargeuid" required></user-selector>
+        </div>
+        
+        <label class="item item-input">
+          <span class="input-label">开始时间：</span>
+          <input type="date" name="starttime" ng-model="form.starttime" data-tap-disabled="true" required />
+        </label>
+
+        <label class="item item-input">
+          <span class="input-label">结束时间：</span>
+          <input type="date" name="endtime" ng-model="form.endtime" data-tap-disabled="true" required />
+        </label>
+
+        <div class="item item-text-wrap item-user-select clearfix">
+          <span class="fl">参与人：</span>
+          <i class="icon ion-ios-plus positive" ng-model="form.participantuid" user-selector-trigger></i>
+          <user-selector ng-model="form.participantuid" name="participantuid" ng-value="form.participantuid"></user-selector>
+        </div>
+      </div>
+      <div class="asm-description">
+        <textarea
+          name="description"
+          ng-model="form.description"
+          class="padding-horizontal w100p"
+          rows="3"
+          placeholder="任务详细说明..."
+        ></textarea>
+        <charcount max="140" ng-model="form.description" class="asm-description-charcount">/140</charcount>  
+      </div>
+    </ion-content>
+  </form>
+</ion-view>

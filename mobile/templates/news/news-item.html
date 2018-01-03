@@ -1,0 +1,18 @@
+<span class="news-circle" ng-if="!n.readstatus"></span>
+<h2 ng-class="{'positive': !n.readstatus}" ng-bind-html="n.subject | asHtml"></h2>
+
+<!-- 文章内容 -->
+<p ng-if="n.type == 0" ng-bind="n.content | stripTags" ></p>
+<!-- 图片内容 -->
+<p ng-if="n.type == 1">[图片]</p>
+<!-- 超链接 -->
+<p ng-if="n.type == 2">[链接]</p>
+
+<span class="fs11 insipid">{{ n.author}}&nbsp;&nbsp;{{ n.uptime * 1000 | humanizedDate}}</span>
+<span class="item-note fs11 insipid">
+  <i class="icon-comment" ng-if=" n.commentstatus == 1"></i>
+  <span class="vam" ng-if="n.commentstatus == 1" >{{ n.commentcount || 0 }}</span>
+  &nbsp;&nbsp;
+  <i class="icon-review"></i>
+  <span class="vam">{{ n.clickcount || 0 }}</span>
+</span>

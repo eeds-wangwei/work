@@ -1,0 +1,30 @@
+<ion-view title="{{title}}">
+
+  <ion-content>
+    <ion-refresher on-refresh="refresh()"></ion-refresher>
+
+    <div class="list-empty-tip" ng-if="list.checkNoData()">暂无相关工作</div>
+
+    <ion-list>
+      <a class="item"
+        ng-repeat="flow in list.items"
+        type="item-text-wrap"
+        on-hold="showMenu(flow)"
+        ui-sref="{{sref}}"
+      >
+        <h2 ng-class="{'positive': flow.flag == '1'}">{{flow.runName}}</h2>
+        <p>
+          <span>[{{flow.runid}}]</span>
+          <span>{{flow.stepname}}</span>
+          <span class="item-note">
+            <i class="icon ion-star assertive"></i>
+            <time class="fss">{{flow.begintime * 1000|humanizedTime:'yyyy年MM月dd日'}}</time>
+          </span>
+        </p>
+      </a>
+    </ion-list>
+        
+    <button class="button button-full button-clear button-positive" ng-if="list.items.length && list.hasMore" ng-click="list.loadMore()">加载更多</button>
+
+  </ion-content>
+</ion-view>

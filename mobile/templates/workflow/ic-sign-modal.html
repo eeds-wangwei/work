@@ -1,0 +1,15 @@
+<div class="wfic-sign-modal">
+  <div pw-canvas options="pwCanvas.options" version="pwCanvas.version"></div>
+  <div class="wfic-sign-modal-footer">
+    <div class="row">
+      <div class="col col-50">
+        <button class="button button-light button-block" ng-click="reset()">
+          {{ pwCanvas.version === 0 ? '取消' : '重写' }}
+        </button>
+      </div>
+      <div class="col col-50">
+        <button class="button button-positive button-block" ng-click="done()">完成</button>
+      </div>
+    </div>
+  </div>
+</div>

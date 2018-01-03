@@ -1,0 +1,73 @@
+<ion-view title="活动报名" class="activity-bg">
+  <ion-nav-buttons side="left">
+    <button class="button back-button button-clear header-item" ui-sref="activity.index" ng-if="!hasBackView()">
+      <i class="icon ion-ios-arrow-back"></i> 活动中心
+    </button>
+  </ion-nav-buttons>
+
+  <ion-content class="activity-view">
+    <div class="item padding-vertical">
+      <i class="activity-signup-stamp" ng-if="item.issignup"></i>
+      <h2 class="fsu">{{ item.title }}</h2>
+      <p class="fsm">
+        <span ng-if="item.flag == '1'" class="positive">活动进行中</span>
+        <span ng-if="item.flag == '2'">距活动开始还剩：<span class="positive">{{ item.ndaysleft }}</span></span>
+        <span ng-if="item.flag == '3'">活动已结束</span>
+        <span ng-if="item.flag == '4'" class="assertive">活动异常</span>
+      </p>
+    </div>
+
+    <div class="item row activity-info-bar" ng-if="item.issignup == '1'">
+      <div class="col col-50" ui-sref="activity.info({ id: activityId })">
+        <i class="icon-more"></i>
+        我的报名信息
+      </div>
+      <div class="col col-50" ui-sref="activity.arrange({ id: activityId })">
+        <i class="icon-plan"></i>
+        我的活动安排
+      </div>
+    </div>
+
+    <div class="item item-divider">活动内容</div>
+
+    <div class="activity-plan">
+      <div class="item padding-vertical activity-period-item">
+        <p>时间</p>
+        <span class="common">{{ item.begin * 1000 | date: 'yyyy-MM-dd HH:mm' }}</span>
+        <span class="cut-line"> 一 </span>
+        <span class="common">{{ item.end * 1000 | date: 'yyyy-MM-dd HH:mm' }}</span>
+      </div>
+
+      <div class="item padding-vertical">
+        <p>地点</p>
+        <i class="item-note o-activity-map" ng-click="openMap()"></i>
+        <div class="common item-text-wrap">{{ item.address }}</div>
+      </div>
+      
+      <div class="item item-text-wrap padding-vertical">
+        <p>内容</p>
+        <div class="activity-content editor-content" ng-class="{ 'unfurl' : toggleOpen == false }" ng-bind-html="item.content | phoneCrawler | editorContent">
+        </div>
+      </div>
+    </div>
+
+    <div class="item activity-toggle" ng-click="toggleView()">
+      {{ toggleOpen === true? '展开详情': '收起详情' }}
+    </div>
+    
+    <div class="item item-divider" ng-if="item.attachments && item.attachments.length">附件</div>
+    <attach-list attach="item.attachments"></attach-list>
+    <div class="padding"></div>
+  </ion-content>
+
+  <!-- 已报名和已结束的都不显示报名按钮 -->
+  <ion-footer-bar class="bar-button-full" ng-class="{'ng-hide': item.issignup || item.flag == '3'}"> 
+    <button class="button button-full button-positive" ui-sref="activity.create({ id: item.activityid })" ng-if="item.whethersignup == '1'">
+      参加报名
+    </button>
+    <button class="button button-full button-positive" disabled ng-if="item.whethersignup != '1'">
+      未开启报名
+    </button>
+  </ion-footer-bar>
+
+</ion-view>

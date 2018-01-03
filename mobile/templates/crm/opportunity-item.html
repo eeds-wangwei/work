@@ -1,0 +1,26 @@
+<div class="item item-complex item-indent item-text-wrap crm-common-item crm-oppo-item">
+  <a class="item-content">
+    <span class="item-note fss insipid">
+      {{ opp.createtime * 1000 | humanizedDateTime }}
+    </span>
+    <h2>{{ opp.subject }}</h2>
+    <div ng-transclude></div>
+    <p>
+      <span class="item-note energized">
+        <span class="fsl">{{ opp.expectincome }}</span>
+        <span class="fs09">元</span>
+      </span>
+      <span class="crm-tags-section" ng-switch="opp.status">
+        <i class="crm-icon-sandglass"></i>
+        <span ng-switch-when="2">已失败</span>
+        <span ng-switch-when="1">已成交</span>
+        <span ng-switch-default>进行中</span>
+      </span>
+      &nbsp;&nbsp;
+      <span class="crm-tags-section" ng-if="opp.status == '0'">
+        <i class="crm-icon-clock"></i>
+        <span>{{ opp.tags[0].tag.name }}</span>
+      </span>
+    </p>
+  </a>
+</div>

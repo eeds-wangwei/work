@@ -1,0 +1,69 @@
+<ion-view title="联系人详情" class="lightyellow-bg">
+  <ion-content overflow-scroll="true">
+    <div class="item item-thumbnail-left contact-info" style="background-image: url({{ user.bgsmall | fullUrl }})">
+      <div class="item-image">
+        <img ng-src="{{user.uid|avatar:'big'}}" alt="{{ user.uid | userInfo: 'realname' }}">
+      </div>
+      <h2 class="selectable">
+        <strong>{{ user.uid | userInfo: 'realname' }}</strong>
+        <i class="icon-men" ng-class="{'icon-women': user.gender === '0'}"></i>
+      </h2>
+
+     <div class="common">
+       <span >{{ user.uid | userInfo: 'deptname' }}</span>
+       <span ng-if="(user.uid | userInfo: 'posname') && (user.uid | userInfo: 'deptname')"> • </span>
+       <span>{{ user.uid | userInfo: 'posname'}} </span>
+       <span ng-if="(!( user.uid | userInfo: 'deptname' ) && !(user.uid | userInfo: 'posname') && !(user.uid | userInfo: 'deptname') )"> 暂无 </span>
+     </div>
+    </div>
+
+    <div class="list list-indent contact-info-list">
+
+      <div class="item item-input">
+        <span class="input-label">手机</span>
+        <a href="tel:{{ user.phone }}" class="positive" ng-if="user.phone">{{ user.phone }}</a>
+        <span ng-if="!user.phone">暂无</span>
+      </div>
+
+      <div class="item item-input">
+        <span class="input-label">QQ</span>
+        {{( user.qq ) || '暂无' }}
+      </div>
+
+      <div class="item item-input">
+        <span class="input-label">邮箱</span>
+        <a href="mailto:{{ user.email }}" class="positive" ng-if="user.email">{{ user.email }}</a>
+        <span ng-if="!user.email">暂无</span>
+      </div>
+
+      <div class="item item-input">
+        <span class="input-label">生日</span>
+        <span ng-if="user.birthday !=='0' && user.birthday !== '' ">{{ user.birthday | date : 'yyyy-MM-dd'}}</span>
+        <span ng-if="user.birthday === '' || user.birthday ==='0' "> 暂无 </span>
+      </div>
+    </div>
+
+    <div class="list list-indent contact-info-list">
+      <div  class="item item-input">
+        <span class="input-label">辅助部门</span>
+        <span class="auxiliary" ng-if="user.auxiliarydept.length > 0">
+        <span ng-repeat="item in user.auxiliarydept">{{ item.deptname}}</span>
+      </span>
+        <span style="margin-left: 5px"  ng-if="user.auxiliarydept.length == '0'">暂无</span>
+      </div>
+
+      <div class="item item-input">
+        <span class="input-label">辅助岗位</span>
+        <span class="auxiliary" ng-if="user.auxiliaryposition.length > 0">
+          <span ng-repeat="item in user.auxiliaryposition">{{ item.posname }}</span>
+        </span>
+        <span ng-if="user.auxiliaryposition.length == '0'">暂无</span>
+      </div>
+
+      <div class="item item-input">
+        <span class="input-label">工号</span>
+        {{ (user.jobnumber) || '暂无' }}
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

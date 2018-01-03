@@ -1,0 +1,17 @@
+<div class="wfic-fileupload">
+  <div class="item item-avatar padding-vertical" ng-if="file">
+    <div class="item-image">
+      <img ng-src="{{file.type|fileIconByExtname:'lt'}}" alt="{{ file.name }}" width="44" height="44">
+    </div>
+    <h2>{{file.name}}</h2>
+    <p>
+      <a href="javascript:;" class="anchor" ng-if="file.src" ng-click="download()">下载</a>
+      <a href="javascript:;" class="anchor" ng-click="removeFile()">删除</a>
+    </p>
+  </div>
+  
+  <div class="wfic-fileupload-btn" ng-if="!file">
+    <button type="button" class="button button-light">上传文件</button>
+    <input type="file" file-on-change="selectFile"/>
+  </div>
+</div>

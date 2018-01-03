@@ -1,0 +1,75 @@
+<ion-view title="{{vote.subject}}">
+  
+  <ion-content>
+    <div class="item vote-item vote-view-header">
+      <span class="common-black">{{ vote.subject}}</span>
+      <span class="vote-status-ctnr" ng-class="{'light-gray': vote.status === 2 }">{{ vote.status === 2 ? '已结束': '进行中'}}</span><!--{{ item.status === '0'? '进行中'：'已结束'}} 假设后端返回0为正在进行中 1已结束-->
+      <p >{{ vote.realname }}发布于 {{ vote.starttime * 1000 | date : 'yyyy-MM-dd'}}</p>
+      <div class="participant">
+        <span>参与人: {{ vote.readscopes.departmentNames }} {{ vote.readscopes.positionNames }} {{ vote.readscopes.roleNames }} {{ vote.readscopes.uidNames }} 共{{ vote.allusernum }}人 </span>
+
+      </div>
+      <div class="fsm coyness">截止时间 {{ vote.endtime *1000 | date: 'yyyy-MM-dd HH:mm'}}</div>
+      <div class="description">
+        <span ng-class="{'open': isOpenMore }">描述: {{ vote.content }}</span>
+        <div class="more" ng-if=" !isOpenMore && vote.content.length >20 " ng-click="openMore()">
+          更多
+          <i class="ion-ios-arrow-down"></i>
+        </div>
+      </div>
+    </div>
+    <div class="vote-content">
+        <div class="item" ng-repeat="topic in topics">
+          <div class="vote-title">
+            {{ $index + 1 }}、{{ topic.subject }}
+            <span ng-if=" topic.maxselectnum !== '1'">(多选 | 最多选{{ topic.maxselectnum }}项)</span>
+          </div>
+          <div class="vote-checkbox" ng-repeat="item in topic.items">
+            <label class="item item-checkbox" ng-class="{'voted': vote.isvote || !vote.canvote }">
+              <div class="checkbox checkbox-input-hidden" ng-if="!vote.isvote && vote.canvote">
+                <input ng-if="topic.maxselectnum != '1'" type="checkbox" name="item{{ topic.itemid }}"
+                       ng-model="form.topics[item.topicid][item.itemid]"
+                       ng-click="checkMaxSelected(topic.topicid, topic.maxselectnum, item.itemid)"
+                       ng-disabled="vote.status === 2">
+
+                <input ng-if="topic.maxselectnum == '1'" type="radio" name="item{{ topic.topicid }}"
+                  ng-model="form.topics[item.topicid]"
+                  ng-value="{{ item.itemid }}"
+                  ng-disabled="vote.status === 2">
+                <i class="checkbox-icon" ng-class="{ 'radio': topic.maxselectnum === '1'}"></i>
+              </div>
+              <div class="picture" ng-if="topic.type === '2'">
+                <img  ng-src="{{ item.picpath | fullUrl }}">
+              </div>
+              <div class="item-content disable-pointer-events">
+                {{ item.content }}
+                <i class="ion-checkmark positive" ng-if="topic.selectitemid.indexOf(item.itemid) !== -1 "></i>
+              </div>
+            </label>
+            <div class="progress-bar row" ng-if="item.isvisible === '0' ||  item.votepercent">
+              <div class="col col-70 progress-bar-bg">
+                <div class="progress" style="width: {{ item.votepercent }} ;"></div> <!--{{ item.votepercent }}-->
+              </div>
+              <div class="col col-30 item-note">{{ item.number }}人({{ item.votepercent }})</div>
+            </div>
+          </div>
+        </div>
+    </div>
+
+    <!-- <div class="vote-button" ng-class="{'light-gray': vote.status === 2 || vote.isvote } "> -->
+    <div class="padding text-center">
+      <button class="button button-positive vote-button"
+        ng-disabled="vote.status === 2 || vote.isvote || !validForm()"
+        ng-if="vote.canvote" ng-click="submit()">
+        {{ vote.status === 2 ? '已结束' : (vote.isvote ? '已投票' : '投票')  }}
+      </button>
+    </div>
+    <!-- </div> -->
+  </ion-content>
+
+  <ion-footer-bar class="vote-view-footer">
+    <span class="common-black fsm">已投票: {{ vote.joinedusernum }}人</span>
+    <div class="item-note positive" ng-click="openCrewModal()">查看全部</div>
+  </ion-footer-bar>
+
+</ion-view>

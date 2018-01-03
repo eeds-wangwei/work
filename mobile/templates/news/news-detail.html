@@ -1,0 +1,100 @@
+<ion-view title="查看新闻" hide-tabs hide-back-button="true">
+  
+  <ion-nav-buttons side="left">
+    <button class="button back-button button-clear header-item" ng-if="hasBackView()" ng-click="$ionicGoBack()"  nav-direction="back">
+      <i class="icon ion-ios-arrow-back"></i>
+      返回
+    </button>
+    <button class="button back-button button-clear header-item" ng-if="!hasBackView()" ui-sref="news.published" nav-direction="back">
+      <i class="icon ion-ios-arrow-back"></i>
+      信息中心
+    </button>
+  </ion-nav-buttons>
+
+  <ion-nav-buttons side="right">
+    <button class="button button-clear header-item news-more" ng-click="showMore()">···</button>
+  </ion-nav-buttons>
+
+  <ion-content>
+    <div class="padding-horizontal15">
+      <h4>{{news.subject}}</h4>
+    </div>
+    <div class="padding-horizontal15 clearfix detail-info">
+      <span class="positive fr" ng-click="showInfoDetail = !showInfoDetail">
+        {{ showInfoDetail ? '收起' : '详情' }}
+      </span>
+      <p> {{ news.createtime }}</p>
+      <div ng-show="showInfoDetail">
+        <div class="news-detail">
+          <span class="coyness">发布人：</span>
+          <span> {{ news.author || '/' }} </span>
+        </div>
+
+        <div class="news-detail">
+          <span class="coyness">审核人：</span>
+          <span> {{ news.approver }} </span>
+        </div>
+
+        <div class="news-detail">
+          <span class="coyness">类别：</span>
+          <span> {{ news.categoryName }} </span>
+        </div>
+
+        <div class="news-detail">
+          <span class="coyness">范围：</span>
+          <span> {{ news.departmentNames }} &nbsp;{{ news.positionNames }}&nbsp; {{ news.uidNames }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 文章内容 -->
+    <div ng-show="news.type=='0'" class="padding-vertical padding-horizontal15 editor-content" img-preview ng-bind-html="news.content | editorContent | asHtml"></div>
+    <!-- 图片内容 -->
+    <div ng-show="news.type=='1'" class="padding-vertical padding-horizontal15" img-preview>
+      <div ng-repeat="pic in news.pictureData" class="margin-bottom">
+        <img ng-src="{{ pic.filepath | fullUrl }}" class="full-image"/>
+      </div>
+    </div>
+
+    <!-- 评论 -->
+    <div class="news-comment" ng-if="news.commentstatus != 0">
+      <div class="item item-divider">
+        <span>评论 {{ news.commentcount }}</span>
+        <i class="item-note icon-comment-gray" ng-click="openComment('comment')"></i>
+      </div>
+
+      <div class="item text-center" ng-if="news.commentcount <=  0">暂时还没有评论哦！</div>
+
+      <div class="list"  ng-if="commentList">
+        <div class="item item-avatar item-text-wrap detail-list item-indent" ng-repeat="cm in commentList | before:4" ng-click="openComment('reply',cm)">
+          <img ng-src="{{ cm.uid | userInfo:'avatar_middle' | fullUrl }}">
+          <span class="item-note insipid fs11">{{ cm.ctime * 1000 | date:'MM-dd HH:mm' }}</span>          
+          <h2 class="coyness">{{ cm.uid | userInfo:'realname' }}</h2>
+          <p class="somber" ng-bind-html="cm.content | editorContent"></p>
+        </div>
+
+        <div class="item padding text-center common-black" ng-if="commentList.length > 3" ng-click="openCommentDetail()">查看更多</div>
+      </div>
+    </div>
+
+    <!-- 附件 -->
+    <attach-list attach="news.attach" ng-if="news.attachmentid" class="list-inset"></attach-list>
+
+    <div class="news-reader" ng-if="news.readers.length > 0">
+      <div class="item item-divider">查阅情况 {{ news.readers.length }} </div>
+        <ul class=" row text-center">
+          <li class="col" ng-repeat="item in [] | range: 6">
+              <div ng-if="news.readers[$index] && ($index < 5 || ($index == 5 && news.readers.length === 6))">
+                <img  ng-src="{{ news.readers[$index].avatar_middle | fullUrl  }}">
+                <div class="fsm common-black">{{ news.readers[$index].realname }}</div>
+              </div>
+              <div ng-if="$index == 5  && news.readers.length > 6" ng-click="openReaderDetail()">
+                <span>···</span>
+                <div class="fsm common-black"> 更多</div>
+              </div>
+          </li>
+        </ul>
+    </div>
+  </ion-content>
+
+</ion-view>

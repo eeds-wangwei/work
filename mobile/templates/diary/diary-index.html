@@ -1,0 +1,50 @@
+<ion-view title="日志" hide-back-button="true" class="lightyellow-bg">
+
+  <ion-nav-buttons side="left">
+    <button class="button back-button buttons button-clear header-item" ui-sref="portal">
+      <i class="icon ion-ios-arrow-back"></i>  门户
+    </button>
+  </ion-nav-buttons>
+
+  <ion-nav-buttons side="right">
+    <button class="button back-button buttons button-clear header-item" ng-click="openSettingModel()">
+      <i class="icon-setting"></i>
+    </button>
+  </ion-nav-buttons>
+
+  <ion-content>
+
+    <div class="diary-entry-block bdb-h-dadfe6">
+      <div class="diary-entry-btn" ui-sref="diary.create">
+        <div class="diary-create">
+          <i class="diary-icon-create"></i>
+        </div>
+        <div>写日志</div>
+      </div>
+    </div>
+
+    <div class="diary-entry-block">
+      <div class="text-center diary-entry-btn" ui-sref="diary.personal">
+        <div class="diary-icon-ctnr diary-self">
+          <i class="diary-icon-self"></i>
+        </div>
+        <div>我的日志</div>
+      </div>
+
+      <div class="text-center diary-entry-btn" ui-sref="diary.review">
+        <div class="diary-icon-ctnr diary-comment">
+          <i class="diary-icon-comment"></i>
+        </div>
+        <div>点评下属</div>
+      </div>
+
+      <div class="text-center diary-entry-btn" ui-sref="diary.follow">
+        <div class="diary-icon-ctnr diary-discussion">
+          <i class="diary-icon-discussion"></i>
+        </div>
+        <div>交流日志</div>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>
+

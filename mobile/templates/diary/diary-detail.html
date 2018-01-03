@@ -1,0 +1,112 @@
+<ion-view view-title="{{ $root.user.uid === diary.uid ? '我的日志' : diary.realname }}"  class="lightyellow-bg">
+  <ion-nav-buttons side="left">
+    <button class="button back-button button-clear header-item" ui-sref="diary.index" nav-direction="back" ng-if="!$root.hasBackView()">
+      <i class="icon ion-ios-arrow-back"></i>
+    </button>
+  </ion-nav-buttons>
+
+  <ion-nav-buttons side="right">
+    <button class="button-icon icon button button-clear no-animation" ng-if="$root.user.uid === diary.uid && !diary.lock" ng-click="showMore()">更多</button>
+    <button class="button-icon icon button button-clear no-animation" ng-if="isSup || (isShare && dashboardConfig.sharecomment != 0)" ng-click="showCommentModal('comment')">点评</button>
+  </ion-nav-buttons>
+
+  <ion-content class="diary-detail">
+    <!-- 图章 -->
+    <img ng-if="stampUrl" ng-src="{{ stampUrl | fullUrl }}" class="diary-detail-stamp"/>
+
+    <!-- 日志概要信息 -->
+    <div class="item item-avatar diary-detail-header">
+      <img avatar="{{ diary.uid | userInfo:'avatar_middle'| fullUrl }}">
+      <div>
+        <h2>{{ diary.realname}}</h2>
+        <p>{{ diary.diarytime.year + '-' + diary.diarytime.month + '-' + diary.diarytime.day }} &nbsp; {{ diary.diarytime.weekday }} </p>
+      </div>
+    </div>
+
+    <div class="list">
+      <!-- 计划外 -->
+      <ion-item ng-if="originalPlan.length > 0" class="diary-detail-title padding-bottom0">原计划</ion-item>
+      <ion-item class="diary-plan-item detail-list item-indent" ng-if="originalPlan.length > 0" ng-repeat="plan in originalPlan">
+        <!--<p class="diary-plan-index somber">{{ $index + 1 }}.</p>-->
+        <div class="item-note">
+          <span class="positive">{{ plan.schedule | diaryPercentage }}</span>
+        </div>
+        <div class="diary-plan-content somber">
+          {{ plan.content }}
+        </div>
+      </ion-item>
+
+      <ion-item ng-if="unplanned.length > 0" class="diary-detail-title padding-bottom0">计划外</ion-item>
+      <ion-item class="diary-plan-item detail-list item-indent" ng-if="unplanned.length > 0" ng-repeat="plan in unplanned">
+        <!--<p class="diary-plan-index somber">{{ $index + 1 }}.</p>-->
+        <div class="item-note">
+          <span class="positive">{{ plan.schedule | diaryPercentage }}</span>
+        </div>
+        <div class="diary-plan-content somber">
+          {{ plan.content }}
+        </div>
+      </ion-item>
+
+      <!-- 工作内容 -->
+      <ion-item class="item-text-wrap">
+        <div class="diary-detail-content" ng-bind-html=" diary.content | editorContent " class="editor-content" img-preview></div>
+      </ion-item>
+
+      <!-- 工作计划 -->
+      <ion-item class="item-divider diary-date-item">
+        {{ nextDay.year }}-{{ nextDay.month }}-{{ nextDay.day }}-{{ nextDay.weekday }}
+      </ion-item>
+      <ion-item class="diary-detail-title padding-bottom0" ng-if="plans.length > 0">工作计划
+      </ion-item>
+      <ion-item class="diary-plan-item diary-plan-item-full detail-list item-indent" ng-if="plans.length > 0" ng-repeat="plan in plans">
+        <!--<p class="diary-plan-index somber">{{ $index + 1 }}.</p>-->
+        <div class="item-note">
+          <span class="positive">{{ plan.timeremind | diaryTimeRemind }}</span>
+        </div>
+        <span class="item-note positive"></span>
+        <div class="diary-plan-content somber">
+          {{ plan.content}}
+        </div>
+      </ion-item>
+    </div>
+
+    <!-- 附件列表 -->
+    <div class="margin-bottom20" ng-if="diary.attachmentid">
+      <div class="item diary-detail-title">附件</div>
+      <attach-list attach="attach"></attach-list>
+    </div>
+
+    <!-- 查阅人员列表 -->
+    <div class="margin-bottom20 light-bg" ng-if="readers.length">
+      <div class="item diary-detail-title padding-bottom0">查阅 {{ readers.length }} 人</div>
+      <ion-scroll direction="x" scrollbar-x="false" class="scroll-view ionic-scroll">
+        <ul class="diary-detail-readers">
+          <li ng-repeat="reader in readers" >
+            <img avatar ="{{ reader | userInfo:'avatar_middle' | fullUrl }}">
+          </li>
+        </ul>
+      </ion-scroll>
+    </div>
+
+    <!-- 评论列表（只显示评论列表） -->
+    <div class="comment diary-detail-comment" ng-if="commentList.length > 0" >
+      <div class="item diary-detail-title">评论</div>
+      <div class="list">
+        <div class="item item-avatar item-text-wrap item-indent" ng-repeat="cm in commentList" ng-click="showCommentModal('reply', cm)">
+          <img avatar="{{ cm.avatar | fullUrl }}">
+          <span class="item-note insipid">{{ cm.ctime * 1000 | date: 'MM-dd' }} {{ cm.ctime *1000| date: 'HH:mm' }}</span>
+          <h2 class="coyness">{{ cm.realname }}</h2>
+          <p class="somber fsm">{{ cm.content | asHtml }}</p>
+        </div>
+        <!-- 如里当前用户是此日志所属用户的上级或被分享者，则允许评论 -->
+      </div>
+    </div>
+  </ion-content>
+
+  <ion-footer-bar class="bar-stable">
+    <button class="button button-clear col col-33" ng-disabled="!prev || prev == 0" ng-click="toDiary(prev)">上一篇</button>
+    <button class="button button-clear col col-33" ng-disabled="!next || next == 0" ng-click="toDiary(next)">下一篇</button>
+  </ion-footer-bar>
+
+</ion-view>
+
