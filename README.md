@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 ## 简介
 
@@ -44,3 +45,7 @@ IBOS 是一个基于PHP开发、Yii框架、免费开源的，快速、高效的
 * 技术文档： http://doc.ibos.com.cn/ibosopen
 * 客户端：   http://www.ibos.cn
 * 交流群：   346679925
+=======
+# work
+办公管理系统
+>>>>>>> 4690a9cc5face811b38ff628fbbc54cefa2535c8
